@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Function to conditionally print to terminal
+function log () {
+	if [[ $_V -eq 1 ]]; then
+		if [ -n "$1" ]; then
+			IN="$1"
+		else
+			read IN # This reads a string from stdin and stores it in a variable called IN
+		fi
+		if [ ! -z "$IN" ]; then
+			echo -e "$IN"
+		fi
+	fi
+}
+
+# Check for verbose argument
+while getopts "v" OPTION; do
+  case $OPTION in
+    v) _V=1
+       ;;
+  esac
+done
+shift $(expr $OPTIND - 1 )
+
+filename="$1"
+filenameNoPath="${filename##*/}"
+filenameNoExt="${filenameNoPath%.*}"
+
+tempdir="$(mktemp -d)"
+tempfile="${tempdir}/${filenameNoExt}.csv"
+
+# Workaround for CLI calls to avoid using the running instance of LibreOffice
+# Ref: https://bugs.documentfoundation.org/show_bug.cgi?id=37531
+libreEnvTempdir="$(mktemp -d --suffix=.libreoffice-alt)"
+libreEnvWorkaround="-env:UserInstallation=file://${libreEnvTempdir}"
+
+log "File to convert: $filename"
+log "Temp CSV directory: $tempdir"
+log "Temp file: $tempfile"
+libreoffice "$libreEnvWorkaround" --headless --convert-to csv --outdir "$tempdir" "$filename" 2>&1 | log
+cat "$tempfile"
+
+# Cleanup
+cleanup () {
+  rm -rf "$tempdir"
+  rm -rf "$libreEnvTempdir"
+}
+trap cleanup EXIT
