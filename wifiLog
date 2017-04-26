@@ -1,0 +1,74 @@
+#!/bin/bash
+
+# Function to conditionally print to terminal
+function log () {
+	if [[ $_VERBOSE -eq 1 ]]; then
+		if [ -n "$1" ]; then
+			IN="$1"
+      echo -e "$IN"
+		else
+			# This reads a string from stdin and stores it in a variable called IN
+			while read INPUT; do
+			  echo "$INPUT"
+			done
+		fi
+	fi
+	unset IN
+}
+
+function wifiGetName () { iwconfig 2>&1 | grep -oP '^[a-zA-Z0-9]+(?=[ ]+IEEE.*)'; }
+function wifiGetSsid () { iwconfig 2>&1 | grep -oP '(?<=ESSID:").*(?=")'; }
+function fixDatabase () {
+	local wifiName="$1"
+	local owner=vnstat
+	local dataDir="/var/lib/vnstat"
+	local database="$dataDir/$wifiName"
+	if [ ! -f "$database" ]; then
+		log "Creating vnstat database for \"${wifiName}\" since \"${database}\" does not exist"
+		vnstat --create -i "$wifiName" 2>&1 | log
+		service vnstat restart 2>&1 | log
+	fi
+	chown -R $owner "$dataDir" 2>&1 | log
+	chgrp -R $owner "$dataDir" 2>&1 | log
+}
+
+
+
+# NOTE: This requires GNU getopt.  On Mac OS X and FreeBSD, you have to install this
+# separately; see below.
+TEMP="$(getopt -o vdm: --long "verbose,enable,debug,disable,debugfile:" -n 'wifiLog' -- "$@")"
+
+if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
+
+# Note the quotes around `$TEMP': they are essential!
+eval set -- "$TEMP"
+
+_VERBOSE=0
+_DEBUG=0
+_DEBUGFILE=
+_ENABLE=1
+while true; do
+  case "$1" in
+    -v | --verbose ) _VERBOSE=1; shift ;;
+    -d | --debug ) _DEBUG=1; shift ;;
+    --enable ) _ENABLE=1; shift ;;
+    --disable ) _ENABLE=0; shift ;;
+    --debugfile ) _DEBUGFILE="$2"; shift 2 ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+targetSsid=fitzNexus5x
+wifiName=$(wifiGetName)
+wifiSsid="$(wifiGetSsid)"
+if [ "$wifiSsid" == "$targetSsid" ] && [ "$_ENABLE" -eq 1 ]; then
+  log "Enabling vnstat logging for \"${wifiName}\" connected to \"${wifiSsid}\""
+	fixDatabase "$wifiName"
+	service vnstat start
+	vnstat -i "$wifiName" --enable 2>&1 | log
+else
+  log "Disabling vnstat logging for \"${wifiName}\""
+  vnstat -i "$wifiName" --disable 2>&1 | log
+	service vnstat stop
+fi

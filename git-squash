@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# git-squash
+# Ref: https://coderwall.com/p/bt93ia/extend-git-with-custom-commands
+
+source "$(command git --exec-path)/git-sh-setup"
+
+USAGE="COMMITS"
+function _squash () {
+	if [[ $# == 1 ]]; then
+		if [[ -n $(git rev-parse --verify --quiet HEAD~$1) ]]; then
+			# Typical way to do this:
+			# git rebase -i HEAD~$1
+
+			# Ref: http://stackoverflow.com/a/5201642/4146779
+			git reset --soft HEAD~$1
+		else
+			die "HEAD~$1 does not exist"
+		fi
+	else
+		usage
+	fi
+}
+
+function _commit() {
+	git commit --edit -m"$(git log --format=%B --reverse HEAD..HEAD@{1})"
+}
+
+_squash $1
+_commit $1

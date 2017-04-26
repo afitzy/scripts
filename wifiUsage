@@ -1,0 +1,14 @@
+#!/bin/bash
+
+function wifiGetName () { iwconfig 2>&1 | grep -oP '^[a-zA-Z0-9]+(?=[ ]+IEEE.*)'; }
+function wifiGetSsid () { iwconfig 2>&1 | grep -oP '(?<=ESSID:").*(?=")'; }
+function wifiPlot () {
+  local plot=$(mktemp --suffix=.png)
+  vnstati -vs -i $(wifiGetName) -o ${plot}
+  gwenview ${plot}
+  rm -f ${plot}
+}
+
+
+wifiName="$(wifiGetName)"
+vnstat -i "$wifiName" --xml d | python /usr/local/bin/wifiUsageParser.py
