@@ -18,4 +18,4 @@ log "fwdPortLocal=$fwdPortLocal"
 log "fwdPortRemote=$fwdPortRemote"
 
 ssh -f -N -4 -C -c aes256-gcm@openssh.com -L ${fwdPortLocal}:localhost:${fwdPortRemote} -p ${remoteSshPort} "${remoteSshUser}@${remoteSshAddr}"
-synergy
+#synergy
