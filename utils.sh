@@ -39,3 +39,13 @@ function getPackages () {
 function getOsVers () {
 	echo $(lsb_release -r | grep -oP "[0-9]+[.][0-9]+")
 }
+
+function verifyContinue () {
+	if [[ $_INTERACTIVE -eq 1 ]]; then
+		read -p "Do you want to continue? [y/n] " -n 1 -r
+		echo
+		if [[ ! $REPLY =~ ^[Yy]$ ]] ; then
+			[[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1 # handle exits from shell or function but don't exit interactive shell
+		fi
+	fi
+}
