@@ -40,6 +40,15 @@ function getOsVers () {
 	echo $(lsb_release -r | grep -oP "[0-9]+[.][0-9]+")
 }
 
+function getPythonPackage () {
+	local package="$1"
+	local piplist="$(pip list 2>/dev/null)"
+	if [[ "$piplist" != *"$package"* ]]; then
+		log "Python package ${package} not installed. Installing it now"
+		pip install "$package"
+	fi
+}
+
 function verifyContinue () {
 	if [[ $_INTERACTIVE -eq 1 ]]; then
 		read -p "Do you want to continue? [y/n] " -n 1 -r
