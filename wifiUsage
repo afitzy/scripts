@@ -10,5 +10,6 @@ function wifiPlot () {
 }
 
 
+scriptPath="$(dirname "$(readlink -f "$0")")"
 wifiName="$(wifiGetName)"
-vnstat -i "$wifiName" --xml d | python /usr/local/bin/wifiUsageParser.py
+vnstat -i "$wifiName" --xml d | python "$scriptPath/wifiUsageParser.py"
