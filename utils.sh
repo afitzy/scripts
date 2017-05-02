@@ -49,6 +49,14 @@ function getPythonPackage () {
 	fi
 }
 
+# Verify that the required package has been installed
+function getPythonPackages () {
+	log "Verifying and installing these packages if needed: $@"
+	for p in "$@"; do
+		getPythonPackage "$p"
+	done
+}
+
 function verifyContinue () {
 	if [[ $_INTERACTIVE -eq 1 ]]; then
 		read -p "Do you want to continue? [y/n] " -n 1 -r
