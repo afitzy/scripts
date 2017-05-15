@@ -69,7 +69,7 @@ for f in $(find ${path} -name "*.${ext}"); do
 	#local filePath="${f%/*}"
 	outFile="${f##*/}"
 	outFull="$tempdir/$outFile"
-	log "Cropping $f to $tempdir"
+	log "Cropping $f to $outFull"
 	convert "$f" -crop 2480x3300+0+0 "$outFull" | log
 done
 unset IFS
