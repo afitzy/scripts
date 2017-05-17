@@ -66,3 +66,21 @@ function verifyContinue () {
 		fi
 	fi
 }
+
+# Clones a git repo to src dir
+function cloneGitRepo () {
+	local srcDir="$1"
+	local repoAddr="$2"
+	local repoName="${repoAddr##*/}"
+
+	pushd "$srcDir"
+	if [[ ! -d "$repoName" ]]; then
+		sudo git clone "$repoAddr" | log
+	else
+		log "Source file location already exists at \"$srcDir/$repoName\""
+		log "Assuming it's a git repo and trying to pull updates."
+		sudo git -C "$repoName" pull
+	fi
+	cd "$repoName"
+	popd
+}
