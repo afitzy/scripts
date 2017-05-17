@@ -8,6 +8,9 @@ function installMork ()
 {
 	local binDir="/usr/local/bin"
 	local srcDir="/usr/local/src"
+
+	sudo apt-get install python-ply
+
 	cloneGitRepo "$srcDir" "https://github.com/KevinGoodsell/mork-converter"
 	sudo ln -s "${srcDir}/python-mork-converter/src/mork" "${binDir}/mork"
 }
