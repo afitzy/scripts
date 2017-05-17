@@ -42,7 +42,8 @@ def usdToCad(date, val=1.0):
 			endDate=dateStr)
 		r = requests.get(reqStr, timeout=3)
 		rate = float(findItem(r.json(), 'Close'))
-	except:
+	except Exception as e:
+		# print "Error: {}".format(e.message)
 		print "Warning: USD to CAD conversion request failed. Using predefined rate of {}".format(rate)
 
 	return val * rate
