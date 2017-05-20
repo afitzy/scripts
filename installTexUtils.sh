@@ -8,7 +8,7 @@ _VERBOSE=1
 # Recommended TeX distribution: TeX Live
 
 if [[ "$(getOsVers)" == "16.04" ]]; then
-	getPackages "texmaker" "texlive" "texlive-generic-extra" "biber"
+	getPackages "texmaker" "texlive" "texlive-generic-extra" "biber" "latexmk"
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
