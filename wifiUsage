@@ -13,7 +13,7 @@ function wifiPlot () {
 
 function installDependencies () {
 	if [[ "$(getOsVers)" == "16.04" ]]; then
-		getPackages "python-pip"
+		getPackages "vnstat" "python-pip"
 		getPythonPackages "bs4" "lxml" "python-dateutil"
 	else
 		log "Unrecognized OS version. Not installed pre-requisites."

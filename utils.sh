@@ -68,10 +68,12 @@ function verifyContinue () {
 }
 
 # Clones a git repo to src dir
+# Pushes 2 levels deep
 function cloneGitRepo () {
 	local srcDir="$1"
 	local repoAddr="$2"
 	local repoName="${repoAddr##*/}"
+	local repoName="${repoName%%.*}"
 
 	pushd "$srcDir"
 	if [[ ! -d "$repoName" ]]; then
@@ -81,6 +83,17 @@ function cloneGitRepo () {
 		log "Assuming it's a git repo and trying to pull updates."
 		sudo git -C "$repoName" pull
 	fi
-	cd "$repoName"
-	popd
+	pushd "$repoName"
+}
+
+# Trim whitespace
+# Ref: https://stackoverflow.com/a/3352015
+trim()
+{
+    local var="$*"
+    # remove leading whitespace characters
+    var="${var#"${var%%[![:space:]]*}"}"
+    # remove trailing whitespace characters
+    var="${var%"${var##*[![:space:]]}"}"   
+    echo -n "$var"
 }
