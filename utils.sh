@@ -24,7 +24,7 @@ function getPackage () {
 	local package="$1"
 	if [ $(dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
 		log "Package ${package} not installed. Installing it now."
-		sudo apt-get --force-yes --yes install "${package}"
+		sudo apt-get --yes install "${package}"
 	fi
 }
 
@@ -94,6 +94,6 @@ trim()
     # remove leading whitespace characters
     var="${var#"${var%%[![:space:]]*}"}"
     # remove trailing whitespace characters
-    var="${var%"${var##*[![:space:]]}"}"   
+    var="${var%"${var##*[![:space:]]}"}"
     echo -n "$var"
 }
