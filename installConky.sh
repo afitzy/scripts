@@ -56,3 +56,4 @@ fi
 
 conky -c ~/.conky/.conkyDateTime &
 conky -c ~/.conky/.conkySysStats &
+conky -c ~/.conky/.conkyFortune &
