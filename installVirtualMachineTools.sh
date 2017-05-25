@@ -4,6 +4,11 @@ source utils.sh
 
 function installWine ()
 {
+	# Remove existing
+	sudo apt-get remove --purge wine*
+	sudo apt-get clean
+	sudo apt-get autoremove
+
 	wget https://repos.wine-staging.com/wine/Release.key
 	sudo apt-key add Release.key
 	sudo apt-add-repository 'https://dl.winehq.org/wine-builds/ubuntu/'
