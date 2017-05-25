@@ -29,14 +29,21 @@ function installHub ()
 
 	# Install prereqs
 	getPackages "golang-go" "ruby" "ruby-dev"
-	
+
 	# Install ruby gems
 	sudo gem install bundler
-	
+
 	cloneGitRepo "$srcDir" "$repoAddr"
 	make install prefix="$instPrefix"
 	popd
 	popd
+}
+
+function installKdeDolphinPlugin ()
+{
+	# Ref: http://aeciosantos.com/2012/10/06/using-dolphinkde-to-manage-git-repositories-or-other-vcs/
+	getPackages "kdesdk-dolphin-plugins"
+	echo "You have to manually configure dolphin to use the git plugin"
 }
 
 
@@ -46,9 +53,12 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 
 	# For Thunderbird diffs
 	installMork
-	
+
 	# Hub tools (works best when aliased to git in bash profile)
 	installHub
+
+	# KDE Dolphin plugins
+	installKdeDolphinPlugin
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
