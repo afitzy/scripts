@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#source "$(command git --exec-path)/git-sh-setup"
+
+shopt -s expand_aliases
+eval "$(hub alias -s)"
+
+# git-issuecsv
+#
+# Writes git issues to a file with a header
+# Arguments are passed directly to git
+
+datestamp=$(date --iso-8601="seconds")
+gitIssueFile="gitIssues_${datestamp}.csv"
+
+echo "Num,Title,Tags,URL,Milestone,Timestamp,Assignees" > "$gitIssueFile"
+git issue -f '%I,"%t","%l",%U,"%Mt",%uI,"%as"%n' $@ >> "$gitIssueFile"
