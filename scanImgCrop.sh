@@ -66,11 +66,20 @@ numFiles=0
 IFS=$'\n'
 for f in $(find ${path} -name "*.${ext}"); do
 	numFiles=$((numFiles+1))
-	#local filePath="${f%/*}"
+	
 	outFile="${f##*/}"
 	outFull="$tempdir/$outFile"
-	log "Cropping $f to $outFull"
-	convert "$f" -crop 2480x3300+0+0 "$outFull" | log
+	
+	width="$(convert "$f" -format "%w" info:)"
+        height="$(convert "$f" -format "%h" info:)"
+        
+        xoff="$(convert xc: -format "%[fx:$width*0/100]" info:)"
+        yoff="$(convert xc: -format "%[fx:$height*0/100]" info:)"
+        ww="$(convert xc: -format "%[fx:$width*93/100]" info:)"
+        hh="$(convert xc: -format "%[fx:$height*75/100]" info:)"
+        
+        log "Cropping $f to $outFull \"${ww}x${hh}+${xoff}+${yoff}\""
+        convert "$f" -crop ${ww}x${hh}+${xoff}+${yoff} "$outFull" | log
 done
 unset IFS
 
