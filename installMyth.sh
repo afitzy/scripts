@@ -9,7 +9,7 @@ source utils.sh
 function installMythtv () {
 	sudo add-apt-repository --yes ppa:mythbuntu/0.28
 	sudo apt-get update
-	getPackages "mythtv mythplugins"
+	getPackages "mythtv" "mythplugins"
 }
 
 
