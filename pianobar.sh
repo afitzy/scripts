@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source utils.sh
 
 # NOTE: This requires GNU getopt.  On Mac OS X and FreeBSD, you have to install this
 # separately; see below.
@@ -27,12 +28,22 @@ while true; do
 	esac
 done
 
+# Install prereqs for getFreeUsProxies.py
+getPythonPackages "enum34"
 proxies=("$(getFreeUsProxies.py --max=1 --port=80 --startIdx=${_START_IDX})")
+
 for proxy in ${proxies[@]}; do
 	echo "Trying proxy $proxy"
 	proxyEsc=${proxy//\//\\\/}
 	# echo "Escaped $proxyEsc"
-	perl -pi -e "s/(?<=control_proxy = ).*/$proxyEsc/" ~/.config/pianobar/config
+
+	# Uncomment control_proxy line if necessary
+	perl -pi -e "s/^#(?=control_proxy)//" "${HOME}/.config/pianobar/config"
+
+	# Add a proxy address
+	perl -pi -e "s/(?<=control_proxy = ).*/$proxyEsc/" "${HOME}/.config/pianobar/config"
+
+	# Start pianobar
 	# if [ "$(pianobar | grep -o "error")" == "error" ] ; then
 	# 	echo "epic fail"
 	# fi
