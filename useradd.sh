@@ -1,6 +1,6 @@
 #!/bin/bash
 
-skeletonDir = "/home/skeleton"
+skeletonDir="/home/skeleton"
 if [[ -f "$skeletonDir" ]]; then
 	useradd --create-home --skel "$skeletonDir" $@
 else
