@@ -83,6 +83,7 @@ function cloneGitRepo () {
 		log "Assuming it's a git repo and trying to pull updates."
 		sudo git -C "$repoName" pull
 	fi
+	sudo chown -R "$USER" "$repoName"
 	pushd "$repoName"
 }
 
