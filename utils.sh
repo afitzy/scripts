@@ -7,8 +7,8 @@ function log () {
 			IN="$@"
 		else
 			# This reads a string from stdin and stores it in a variable called IN
-			while read -t 0 INPUT; do
-				IN+="$INPUT\n"
+			while read LINE; do
+				IN+="$LINE\n"
 			done
 		fi
 		if [ ! -z "$IN" ]; then
