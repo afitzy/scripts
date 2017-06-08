@@ -35,17 +35,18 @@ proxies=("$(getFreeUsProxies.py --max=1 --port=80 --startIdx=${_START_IDX})")
 
 for proxy in ${proxies[@]}; do
 	echo "Trying proxy $proxy"
-	proxyEsc=${proxy//\//\\\/}
-	# echo "Escaped $proxyEsc"
 
 	# Uncomment control_proxy line if necessary
 	perl -pi -e "s/^#(?=control_proxy)//" "${HOME}/.config/pianobar/config"
 
 	# Add a proxy address
+	proxyEsc=${proxy//\//\\\/}
 	perl -pi -e "s/(?<=control_proxy = ).*/$proxyEsc/" "${HOME}/.config/pianobar/config"
 
 	# Start pianobar
-	# if [ "$(pianobar | grep -o "error")" == "error" ] ; then
-	# 	echo "epic fail"
-	# fi
+	pianobar
+	rc=$?
+	if [[ $rc == 0 ]]; then
+		exit
+	fi
 done
