@@ -2,17 +2,15 @@
 
 source utils.sh
 
-# NOTE: This requires GNU getopt.  On Mac OS X and FreeBSD, you have to install this
-# separately; see below.
-PARSED="$(getopt --options vdi: --long "verbose,debug,install,startIdx:" -n 'pianobar.sh' -- "$@")"
+scriptName="$(basename "$0")"
 
+# NOTE: This requires GNU getopt.  On Mac OS X and FreeBSD, you have to install this separately
+PARSED="$(getopt --options vdi: --long "verbose,debug,install,startIdx:" -n "$scriptName" -- "$@")"
 if [ $? != 0 ] ; then
 	log "getopt has complained about wrong arguments to stdout"
 	echo "Terminating..." >&2
 	exit 1
 fi
-
-# Note the quotes around `$PARSED': they are essential!
 eval set -- "$PARSED"
 
 _VERBOSE=0
