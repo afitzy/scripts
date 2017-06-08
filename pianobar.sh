@@ -46,8 +46,14 @@ for proxy in ${proxies[@]}; do
 	perl -pi -e "s/(?<=control_proxy = ).*/$proxyEsc/" "${HOME}/.config/pianobar/config"
 
 	# Start pianobar
-	pianobar
+	stdout="$(pianobar | tee >(cat - >/dev/tty))"
 	rc=$?
+
+	if [[ $stdout == *"Network error:"* ]]; then
+		echo "Caught network error!"
+		continue
+	fi
+
 	if [[ $rc == 0 ]]; then
 		exit
 	fi
