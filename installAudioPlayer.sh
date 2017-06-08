@@ -15,6 +15,7 @@ function installPianobar ()
 	local repoName="${repoName%%.*}"
 
 	# Install prereqs
+	getPackages "make" "pkg-config"
 	getPackages "libao-dev" "libgcrypt20-dev" "libjson-c-dev" "libavcodec-dev" "libavfilter-dev" "libavformat-dev" "libcurl4-gnutls-dev"
 
 	cloneGitRepo "$srcDir" "$repoAddr"
