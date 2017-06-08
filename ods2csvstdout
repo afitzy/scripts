@@ -1,11 +1,11 @@
 #!/bin/bash
 
-source util.sh
+source utils.sh
 
 scriptName="$(basename "$0")"
 
 # NOTE: This requires GNU getopt.  On Mac OS X and FreeBSD, you have to install this separately
-PARSED="$(getopt --options vdn --long "verbose,debug,nointeract" -n ${scriptName} -- "$@")"
+PARSED="$(getopt --options vd --long "verbose,debug" -n ${scriptName} -- "$@")"
 
 if [ $? != 0 ] ; then
 	log "getopt has complained about wrong arguments to stdout"
