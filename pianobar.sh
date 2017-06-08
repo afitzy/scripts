@@ -29,8 +29,8 @@ while true; do
 done
 
 # Install prereqs for getFreeUsProxies.py
-getPackages "pip" "beautifulsoup4"
-getPythonPackages "enum34" "requests"
+getPackages "pip"
+getPythonPackages "enum34" "requests" "beautifulsoup4"
 proxies=("$(getFreeUsProxies.py --max=1 --port=80 --startIdx=${_START_IDX})")
 
 for proxy in ${proxies[@]}; do
