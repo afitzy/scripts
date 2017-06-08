@@ -34,7 +34,7 @@ if [[ $_INSTALL -eq 1 ]]; then
 	getPythonPackages "enum34" "requests" "beautifulsoup4"
 fi
 
-proxies=("$(getFreeUsProxies.py --max=1 --port=80 --startIdx=${_START_IDX})")
+proxies=("$(getFreeUsProxies.py --max=20 --port=80 --startIdx=${_START_IDX})")
 for proxy in ${proxies[@]}; do
 	echo "Trying proxy $proxy"
 
@@ -46,15 +46,14 @@ for proxy in ${proxies[@]}; do
 	perl -pi -e "s/(?<=control_proxy = ).*/$proxyEsc/" "${HOME}/.config/pianobar/config"
 
 	# Start pianobar
-	stdout="$(pianobar | tee >(cat - >/dev/tty))"
-	rc=$?
+	stdout=$(pianobar | tee >(cat - >/dev/tty))
+	pianobarExitCode=${PIPESTATUS[0]}
 
 	if [[ $stdout == *"Network error:"* ]]; then
-		echo "Caught network error!"
 		continue
 	fi
 
-	if [[ $rc == 0 ]]; then
+	if [[ $pianobarExitCode == 0 ]]; then
 		exit
 	fi
 done
