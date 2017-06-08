@@ -29,7 +29,7 @@ while true; do
 done
 
 # Install prereqs for getFreeUsProxies.py
-getPythonPackages "enum34"
+getPythonPackages "enum34" "requests"
 proxies=("$(getFreeUsProxies.py --max=1 --port=80 --startIdx=${_START_IDX})")
 
 for proxy in ${proxies[@]}; do
