@@ -1,52 +1,86 @@
 #!/bin/bash
 
-source utils.sh
+# Function to conditionally print to terminal
+function log () {
+	if [[ $_V -eq 1 ]]; then
+		if [ -n "$1" ]; then
+			IN="$1"
+		else
+			# This reads a string from stdin and stores it in a variable called IN
+			while read INPUT; do
+			  IN+="$INPUT\n"
+			done
+		fi
+		if [ ! -z "$IN" ]; then
+			echo -e "$IN"
+		fi
+	fi
+	unset IN
+}
 
-scriptName="$(basename "$0")"
+# Verify that the required package has been installed
+# Ref: http://stackoverflow.com/a/10439058
+function getPackage () {
+	package="gnumeric"
+	if [ $(dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
+		echo "Package ${package} not installed. Installing it now."
+		sudo apt-get --force-yes --yes install "${package}"
+	fi
+}
 
-# NOTE: This requires GNU getopt.  On Mac OS X and FreeBSD, you have to install this separately
-PARSED="$(getopt --options vd --long "verbose,debug" -n ${scriptName} -- "$@")"
-
-if [ $? != 0 ] ; then
-	log "getopt has complained about wrong arguments to stdout"
-	echo "Terminating..." >&2
-	exit 1
-fi
-
-eval set -- "$PARSED"
-
-_VERBOSE=0
-_DEBUG=0
-while true; do
-	case "$1" in
-		-v | --verbose ) _VERBOSE=1; shift ;;
-		-d | --debug ) _DEBUG=1; shift ;;
-		-- ) shift; break ;;
-		* ) break ;;
-	esac
+# Check for verbose argument
+while getopts "v" OPTION; do
+  case $OPTION in
+    v) _V=1
+       ;;
+  esac
 done
+shift $(expr $OPTIND - 1 )
+
+getPackage
 
 filename="$1"
-filenameNoPath="${filename##*/}"
-filenameNoExt="${filenameNoPath%.*}"
+log "File to convert: $filename"
 
-tempdir="$(mktemp -d)"
-tempfile="${tempdir}/${filenameNoExt}.csv"
-
+# LibreOffice solution
 # Workaround for CLI calls to avoid using the running instance of LibreOffice
 # Ref: https://bugs.documentfoundation.org/show_bug.cgi?id=37531
-libreEnvTempdir="$(mktemp -d --suffix=.libreoffice-alt)"
-libreEnvWorkaround="-env:UserInstallation=file://${libreEnvTempdir}"
+#filenameNoPath="${filename##*/}"
+#filenameNoExt="${filenameNoPath%.*}"
+#tempdir="$(mktemp -d)"
+#tempfile="${tempdir}/${filenameNoExt}.csv"
+#log "Temp CSV directory: $tempdir"
+#log "Temp file: $tempfile"
+#libreEnvTempdir="$(mktemp -d --suffix=.libreoffice-alt)"
+#libreEnvWorkaround="-env:UserInstallation=file://${libreEnvTempdir}"
+#libreoffice "$libreEnvWorkaround" --headless --convert-to csv --outdir "$tempdir" "$filename" 2>&1 | log
+#cat "$tempfile"
 
-log "File to convert: $filename"
-log "Temp CSV directory: $tempdir"
-log "Temp file: $tempfile"
-libreoffice "$libreEnvWorkaround" --headless --convert-to csv --outdir "$tempdir" "$filename" 2>&1 | log
-cat "$tempfile"
+# Gnumeric solution printing sheet name.
+# Doesn't work with spaces or dashes in sheet names.
+#sheetNames="$(unzip -p "$filename" content.xml | grep -oP '(?<=table:name=")[a-zA-Z0-9 ]+(?=")')"
+#IFS=$'\n' # make newlines the only separator
+#for sheetName in $sheetNames; do
+#	echo "Sheetname: $sheetName"
+#	ssconvert --export-options="sheet=${sheetName}" --export-type=Gnumeric_stf:stf_assistant "$filename" fd://0 2>&-
+#done
+#unset IFS
+
+# Gnumeric solution
+# Output directed to stdout. Note the %d appears to just be truncated.
+sheetNames="$(unzip -p "$filename" content.xml | grep -oP '(?<=table:name=")[a-zA-Z0-9 ]+(?=")')"
+IFS=$'\n' # make newlines the only separator
+printf "Sheetnames:"
+for sheetName in $sheetNames; do
+	printf " %s;" "$sheetName"
+done
+unset IFS
+printf "\n"
+ssconvert -S --export-type=Gnumeric_stf:stf_assistant "$filename" fd://1%d 2> >(log)
 
 # Cleanup
-cleanup () {
-  rm -rf "$tempdir"
-  rm -rf "$libreEnvTempdir"
-}
-trap cleanup EXIT
+#cleanup () {
+#  rm -rf "$tempdir"
+#  rm -rf "$libreEnvTempdir"
+#}
+#trap cleanup EXIT
