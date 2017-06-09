@@ -29,6 +29,7 @@ filename="$1"
 
 if [[ $_INSTALL -eq 1 ]]; then
 	getPackages "gnumeric"
+	exit
 fi
 
 log "File to convert: $filename"

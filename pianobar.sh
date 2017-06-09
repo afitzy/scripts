@@ -32,6 +32,7 @@ if [[ $_INSTALL -eq 1 ]]; then
 	# Prereqs for getFreeUsProxies.py
 	getPackages "python-pip"
 	getPythonPackages "enum34" "requests" "beautifulsoup4"
+	exit
 fi
 
 proxies=("$(getFreeUsProxies.py --max=20 --port=80 --startIdx=${_START_IDX})")
