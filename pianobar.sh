@@ -48,7 +48,7 @@ for proxy in ${proxies[@]}; do
 	perl -pi -e "s/(?<=control_proxy = ).*/$proxyEsc/" "${HOME}/.config/pianobar/config"
 
 	# Start pianobar
-	stdout=$(pianobar | tee >(cat - >/dev/tty))
+	stdout="$(pianobar | tee >(cat - >/dev/tty))"
 	pianobarExitCode=${PIPESTATUS[0]}
 
 	idx=$((idx + 1))
