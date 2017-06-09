@@ -35,8 +35,9 @@ if [[ $_INSTALL -eq 1 ]]; then
 fi
 
 proxies=("$(getFreeUsProxies.py --max=20 --port=80 --startIdx=${_START_IDX})")
+idx=$_START_IDX
 for proxy in ${proxies[@]}; do
-	echo "Trying proxy $proxy"
+	echo "Trying proxy $idx: $proxy"
 
 	# Uncomment control_proxy line if necessary
 	perl -pi -e "s/^#(?=control_proxy)//" "${HOME}/.config/pianobar/config"
@@ -49,6 +50,7 @@ for proxy in ${proxies[@]}; do
 	stdout=$(pianobar | tee >(cat - >/dev/tty))
 	pianobarExitCode=${PIPESTATUS[0]}
 
+	idx=$((idx + 1))
 	if [[ $stdout == *"Network error:"* ]]; then
 		continue
 	fi
