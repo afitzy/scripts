@@ -1,20 +1,6 @@
 #!/bin/bash
 
-# Function to conditionally print to terminal
-function log () {
-	if [[ $_VERBOSE -eq 1 ]]; then
-		if [ -n "$1" ]; then
-			IN="$1"
-			echo -e "$IN"
-		else
-			# This reads a string from stdin and stores it in a variable called IN
-			while read INPUT; do
-			  echo "$INPUT"
-			done
-		fi
-	fi
-	unset IN
-}
+source util.sh
 
 function echoerr() { echo "$@" 1>&2; }
 
@@ -66,18 +52,18 @@ numFiles=0
 IFS=$'\n'
 for f in $(find ${path} -name "*.${ext}"); do
 	numFiles=$((numFiles+1))
-	
+
 	outFile="${f##*/}"
 	outFull="$tempdir/$outFile"
-	
+
 	width="$(convert "$f" -format "%w" info:)"
         height="$(convert "$f" -format "%h" info:)"
-        
+
         xoff="$(convert xc: -format "%[fx:$width*0/100]" info:)"
         yoff="$(convert xc: -format "%[fx:$height*0/100]" info:)"
         ww="$(convert xc: -format "%[fx:$width*93/100]" info:)"
         hh="$(convert xc: -format "%[fx:$height*75/100]" info:)"
-        
+
         log "Cropping $f to $outFull \"${ww}x${hh}+${xoff}+${yoff}\""
         convert "$f" -crop ${ww}x${hh}+${xoff}+${yoff} "$outFull" | log
 done

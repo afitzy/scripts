@@ -14,9 +14,7 @@ function installMythtv () {
 	getPackages "mythtv" "mythplugins"
 
 	# Database Configuration
-	# If you get a message saying that Myth could not connect to the database, check that the password on the screen matches the one in /etc/mythtv/mysql.txt
-	# sudo cat /etc/mythtv/mysql.txt
-	# If there is a mismatch, change the one on the screen to match.
+	cp /etc/mythtv/mysql.txt "$HOME/.mythtv/"
 }
 
 
