@@ -6,11 +6,11 @@ _VERBOSE=1
 
 if [[ "$(getOsVers)" == "16.04" ]]; then
 	# python2
-	getPackages "python-pip"
+	getPackages "python-pip" "ipython"
 
 	# python3
-	getPackages "python3-pip"
-	getPythonPackages "pyoctopart"
+	getPackages "python3-pip" "ipython3" "python3-dateutil"
+	getPythonPackages "pyoctopart" "dateutil" "money"
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
