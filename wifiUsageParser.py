@@ -51,6 +51,8 @@ if __name__ == '__main__':
 		exchgRateDate = bill['end'] + relativedelta(days=1)
 		UtilCurrency.setCurrency(currencyBase="CAD", currencyExchg=["USD", "CAD"], date=exchgRateDate)
 
+		# See this for how to fix currency rounding
+		# https://github.com/python-babel/babel/issues/90
 		mnyFrmt = u"\xa0#,##0.0000"
 		print "{} thru {}; {:0.03f} GB; ${:0.02f} USD; {} USD:CAD exchg rate ${}; ${}".format(
 			bill['start'],
