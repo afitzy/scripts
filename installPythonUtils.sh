@@ -6,7 +6,7 @@ _VERBOSE=1
 
 if [[ "$(getOsVers)" == "16.04" ]]; then
 	# python2
-	getPackages "python-pip" "ipython"
+	getPackages "python-pip" "ipython" "Babel"
 	getPythonPackages "money"
 
 	# python3
