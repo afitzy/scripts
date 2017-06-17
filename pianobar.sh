@@ -4,6 +4,26 @@ source utils.sh
 
 scriptName="$(basename "$0")"
 
+function monitorForError () {
+	while IFS= read -r line; do
+		if [[ $line == *"Network error:"* ]]; then
+			echo 1
+			return
+		fi
+	done
+
+	echo 0
+	return
+}
+
+# Function to cleanup
+function cleanup () {
+	log "Killing descendant processes"
+	pkill -P $$
+	killall pianobar 2>&1 > /dev/null
+}
+
+
 # NOTE: This requires GNU getopt.  On Mac OS X and FreeBSD, you have to install this separately
 PARSED="$(getopt --options vdi: --long "verbose,debug,install,startIdx:" -n "$scriptName" -- "$@")"
 if [ $? != 0 ] ; then
@@ -28,6 +48,8 @@ while true; do
 	esac
 done
 
+trap cleanup EXIT
+
 if [[ $_INSTALL -eq 1 ]]; then
 	# Prereqs for getFreeUsProxies.py
 	getPackages "python-pip"
@@ -36,8 +58,9 @@ if [[ $_INSTALL -eq 1 ]]; then
 fi
 
 proxies=("$(getFreeUsProxies.py --max=20 --port=80 --startIdx=${_START_IDX})")
-idx=$_START_IDX
+idx=$(($_START_IDX - 1))
 for proxy in ${proxies[@]}; do
+	idx=$((idx + 1))
 	echo "Trying proxy $idx: $proxy"
 
 	# Uncomment control_proxy line if necessary
@@ -48,15 +71,10 @@ for proxy in ${proxies[@]}; do
 	perl -pi -e "s/(?<=control_proxy = ).*/$proxyEsc/" "${HOME}/.config/pianobar/config"
 
 	# Start pianobar
-	stdout="$(pianobar 2>&1 | tee >(cat - >/dev/tty))"
+	hadError=$(stdbuf -oL pianobar 2>&1 | tee >(cat - >/dev/tty) | monitorForError)
 	pianobarExitCode=${PIPESTATUS[0]}
 
-	idx=$((idx + 1))
-	if [[ $stdout == *"Network error:"* ]]; then
-		continue
-	fi
-
-	if [[ $pianobarExitCode == 0 ]]; then
+	if [[ $hadError == 0 ]] && [[ $pianobarExitCode == 0 ]]; then
 		exit
 	fi
 done
