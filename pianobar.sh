@@ -19,7 +19,7 @@ function monitorForError () {
 # Function to cleanup
 function cleanup () {
 	log "Killing descendant processes"
-	pkill -P $$
+	pkill -P $$ 2>&1 > /dev/null
 	killall pianobar 2>&1 > /dev/null
 }
 
