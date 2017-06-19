@@ -4,7 +4,7 @@ source utils.sh
 
 _VERBOSE=1
 
-function installAtom () 
+function installAtom ()
 {
     sudo add-apt-repository --yes "ppa:webupd8team/atom"
     sudo apt-get update
@@ -14,6 +14,7 @@ function installAtom ()
 
 if [[ "$(getOsVers)" == "16.04" ]]; then
 	installAtom
+	getPackages "cscope"
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
