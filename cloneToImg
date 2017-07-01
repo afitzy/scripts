@@ -1,0 +1,72 @@
+outputFile#!/bin/bash
+
+# This script functions similarly to dd, except that it gives periodic update prints to the terminal.
+# Ref: https://www.raspberrypi.org/documentation/installation/installing-images/linux.md
+
+
+# Verify that the required package has been installed
+# Ref: http://stackoverflow.com/a/10439058
+function getPackage () {
+	package="dcfldd"
+	if [ $(dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
+		echo "Package ${package} not installed. Installing it now."
+		sudo apt-get --force-yes --yes install "${package}"
+	fi
+}
+
+# Ref: http://unix.stackexchange.com/a/259254
+bytesToHuman() {
+	b=${1:-0}; d=''; s=0; S=(Bytes {K,M,G,T,E,P,Y,Z}iB)
+	while ((b > 1024)); do
+		d="$(printf ".%02d" $((b % 1024 * 100 / 1024)))"
+		b=$((b / 1024))
+		let s++
+	done
+	echo "$b$d ${S[$s]}"
+}
+
+getPackage
+
+if [ "$#" -ne 2 ]; then
+	echo "Illegal number of parameters"
+	exit -1
+fi
+
+scriptName="$(basename "$0")"
+dateStamp=$(date --iso-8601="seconds")
+src="$1"
+dest="$2"
+outputFile="${dest}/${scriptName}_${dateStamp}.img.gz"
+blockSize="64k"
+
+if [[ ! -b $src ]]; then
+	echo "ERROR: Source is not a block device: $src"
+	exit
+fi
+
+if [[ -f $outputFile ]]; then
+	echo "ERROR: Destination file exists: $outputFile"
+	exit
+fi
+
+srcSize="$(sudo blockdev --getsize64 $src)"
+srcSize="$(bytesToHuman ${srcSize})"
+
+destFreespace="$(command df --human-readable "$outputFile" | head -n 2 | tail -n 1 | tr --squeeze-repeats ' ' | cut  --delimiter=" " -f 3)"
+
+echo "Preparing to clone ${src} (${srcSize}) to ${outputFile} (Free space: ${destFreespace}) in ${blockSize} chunks"
+
+read -p "Are you sure? " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]] ; then
+	[[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1 # handle exits from shell or function but don't exit interactive shell
+fi
+
+# Ref: https://wiki.archlinux.org/index.php/disk_cloning#Create_disk_image
+sudo dcfldd conv=sync,noerror bs="${blockSize}" statusinterval=64 if="$src" | gzip -c > "$outputFile"
+
+# TODO: Put this "info" file into the gzip
+fdisk -l "$src" > "${outputFile}.info"
+
+echo "Syncing cached writes"
+sync
