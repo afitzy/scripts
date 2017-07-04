@@ -1,4 +1,4 @@
-outputFile#!/bin/bash
+#!/bin/bash
 
 # This script functions similarly to dd, except that it gives periodic update prints to the terminal.
 # Ref: https://www.raspberrypi.org/documentation/installation/installing-images/linux.md
