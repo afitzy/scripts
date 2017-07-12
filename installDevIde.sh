@@ -15,6 +15,9 @@ function installAtom ()
 if [[ "$(getOsVers)" == "16.04" ]]; then
 	installAtom
 	getPackages "cscope"
+
+	# Static code analysis
+	getPackages "cppcheck"
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
