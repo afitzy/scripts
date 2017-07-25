@@ -36,6 +36,9 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 	# Network monitoring
 	getPackages "nethogs"
 
+	# File compression
+	getPackages "unrar"
+
 	# fortunes
 	getPackages "fortune-mod" "fortunes" "fortunes-min" "fortunes-off" "fortunes-spam" "cookietool"
 
