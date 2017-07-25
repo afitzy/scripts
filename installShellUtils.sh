@@ -24,6 +24,8 @@ function installDropboxCli ()
 	tar -xvzf dropbox.tar.gz
 
 	${HOME}/.dropbox-dist/dropboxd &
+
+	# TODO: Add hooks to run automatically at system boot-up
 }
 
 
