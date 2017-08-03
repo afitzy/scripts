@@ -37,7 +37,8 @@ function getPackages () {
 }
 
 function getOsVers () {
-	echo $(lsb_release -r | grep -oP "[0-9]+[.][0-9]+")
+	#echo $(lsb_release -r | grep -oP "[0-9]+[.][0-9]+")
+	lsb_release -r | cut -f2
 }
 
 function getPythonPackage () {
