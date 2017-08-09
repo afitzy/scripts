@@ -100,26 +100,9 @@ trim()
     echo -n "$var"
 }
 
-# Join strings
-# @param $1: string used for joining
-# @param >$1: string sto be joined
-# @returns All strings joined using joinStr
-function strJoin () {
-	local joinStr="$1"; shift;
-	local strings="$@"
-
-	local flat=""
-	local idx=0
-	for s in $strings; do
-		if [ $idx -eq 0 ]; then
-			flat+="$s"
-		else
-			flat+="$joinStr $s"
-		fi
-		idx=$((idx + 1))
-	done
-	echo "$flat"
-}
+# Join strings. Supports multicharacter delimiters and ignores empty strings.
+# Ref: http://stackoverflow.com/questions/1527049/bash-join-elements-of-an-array
+function strJoin { perl -e '$s = shift @ARGV; @ARGV = grep { $_ } @ARGV; print join($s, @ARGV);' "$@"; }
 
 # Pre/post-pend array entries
 # @param $1: prepend string
