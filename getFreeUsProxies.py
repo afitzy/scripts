@@ -74,7 +74,7 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--startIdx', '-i', type=checkCounting, default=1, metavar='startIdx', help='starting index [startIdx...startIdx + maxNum] into proxy list')
 	parser.add_argument('--max', '-m', type=checkNatural, default=1, metavar='maxNum', help='max number of proxies returned')
-	parser.add_argument('--port', '-p', nargs='+', type=checkNatural, default=[80], metavar='port', help='port numbers(s)')
+	parser.add_argument('--port', '-p', nargs='+', type=checkNatural, default=[], metavar='port', help='port numbers(s)')
 	parser.add_argument('--anonymity', '-a', nargs='+', type=checkAnonymity, default=[Anonymity.elite, Anonymity.anonymous],
 		metavar='anonymity', help='anonymity level(s)')
 	args = parser.parse_args()
@@ -83,7 +83,13 @@ if __name__ == '__main__':
 
 	scraped = parseTypes(scrape())
 	#print("Scraped count = {}".format(len(scraped)))
-	filtered = list(filter(lambda d: (d['Port'] in args.port) and (d['Anonymity'] in args.anonymity), scraped))
+
+	filtered = scraped
+	if len(args.port):
+		filtered = list(filter(lambda d: (d['Port'] in args.port), filtered))
+	if len(args.anonymity):
+		filtered = list(filter(lambda d: (d['Anonymity'] in args.anonymity), filtered))
+
 	startIdx = min(len(filtered), args.startIdx) - 1
 	filtered = filtered[startIdx:(startIdx + args.max)]
 	#print("Filtered count = {}".format(len(filtered)))
