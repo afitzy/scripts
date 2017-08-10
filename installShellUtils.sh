@@ -24,6 +24,8 @@ function installDropboxCli ()
 	tar -xvzf dropbox.tar.gz
 
 	${HOME}/.dropbox-dist/dropboxd &
+
+	# TODO: Add hooks to run automatically at system boot-up
 }
 
 
@@ -35,6 +37,9 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 
 	# Network monitoring
 	getPackages "nethogs"
+
+	# File compression
+	getPackages "unrar"
 
 	# fortunes
 	getPackages "fortune-mod" "fortunes" "fortunes-min" "fortunes-off" "fortunes-spam" "cookietool"
