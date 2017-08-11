@@ -50,7 +50,7 @@ function installKdeDolphinPlugin ()
 
 if [[ "$(getOsVers)" == "16.04" ]]; then
 	# For office diffs
-	getPackages "docx2txt" "catdoc" "odt2txt" "pdf2txt" "python-excelerator" "xlsx2csv"
+	getPackages "docx2txt" "catdoc" "odt2txt" "pdf2txt" "python-excelerator" "xlsx2csv" "antiword"
 
 	# For Thunderbird diffs
 	installMork
