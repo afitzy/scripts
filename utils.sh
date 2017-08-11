@@ -104,23 +104,6 @@ trim()
 # Ref: http://stackoverflow.com/questions/1527049/bash-join-elements-of-an-array
 function strJoin { perl -e '$s = shift @ARGV; @ARGV = grep { $_ } @ARGV; print join($s, @ARGV);' "$@"; }
 
-# Pre/post-pend array entries
-# @param $1: prepend string
-# @param $2: postpend string
-# @param >$2: strings to be modified
-# @returns All modified strings, suitable to be stored into an array
-function prePostStrs () {
-	local strPre="$1"; shift;
-	local strPost="$1"; shift;
-	local strings="$@"
-
-	local retval=""
-	for s in $strings; do
-		retval+="\"${strPre}${s}${strPost}\"\n"
-	done
-	echo -e $retval
-}
-
 # Ref: http://unix.stackexchange.com/a/259254
 bytesToHuman() {
 	b=${1:-0}; d=''; s=0; S=(Bytes {K,M,G,T,E,P,Y,Z}iB)
