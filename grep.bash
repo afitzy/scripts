@@ -62,7 +62,7 @@ function grepdocx () {
 	local declare path="$1"; shift;
 	local declare fargs="-type f"
 	local declare gargs="--no-messages --with-filename --line-number --color=always"
-	local declare exts=(doc)
+	local declare exts=(docx)
 	local declare files=()
 	local declare ignores=()
 	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
