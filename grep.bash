@@ -22,7 +22,7 @@ match = "\( " + match + " \)" if len(match) else ""
 
 limitMatch = join(" -and ", [ignore, match])
 
-print join(" ", ["find", args.path, args.args, match])
+print join(" ", ["find", args.path, args.args, limitMatch])
 '
 
 function grepsrc () {
