@@ -45,6 +45,9 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 	getPackages "fortune-mod" "fortunes" "fortunes-min" "fortunes-off" "fortunes-spam" "cookietool"
 
 	installDropboxCli
+
+	# test processing
+	getPackages "wdiff"
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
