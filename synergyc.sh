@@ -1,9 +1,11 @@
 #!/bin/bash
 
-source utils.sh
-source config.sh
-
 scriptName="$(basename "$0")"
+scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "${scriptDir}/utils.sh"
+source "${scriptDir}/config.sh"
+
 cmdSsh="ssh -f -N -4 -c aes256-gcm@openssh.com -L ${fwdPortLocal}:localhost:${fwdPortRemote} -p ${remoteSshPort} \"${remoteSshUser}@${remoteSshAddr}\" -i ${sshprivkey}"
 
 function startSynergy () {
