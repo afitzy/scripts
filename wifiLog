@@ -36,7 +36,7 @@ function fixDatabase () {
 
 # NOTE: This requires GNU getopt.  On Mac OS X and FreeBSD, you have to install this
 # separately; see below.
-TEMP="$(getopt -o vdm: --long "verbose,enable,debug,disable,debugfile:" -n 'wifiLog' -- "$@")"
+TEMP="$(getopt -o vd --long "verbose,enable,debug,disable,debugfile:" -n 'wifiLog' -- "$@")"
 
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 
