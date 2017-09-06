@@ -9,11 +9,9 @@ source "${scriptDir}/config.sh"
 cmdSsh="ssh -f -N -4 -c aes256-gcm@openssh.com -L ${fwdPortLocal}:localhost:${fwdPortRemote} -p ${remoteSshPort} \"${remoteSshUser}@${remoteSshAddr}\" -i ${sshprivkey}"
 
 function startSynergy () {
-	log "$scriptName: remoteSshAddr=$remoteSshAddr; remoteSshPort=$remoteSshPort; remoteSshUser=$remoteSshUser; fwdPortLocal=$fwdPortLocal; fwdPortRemote=$fwdPortRemote"
-
 	if ! pgrep "$cmdSsh" > /dev/null ; then
-		log "$scriptName: SSH: Creating tunnel"
-		eval $cmdSsh
+		log "$scriptName: SSH: Creating tunnel using cmd: ${cmdSsh}"
+		sudo --user=$username --set-home $cmdSsh
 	else
 		log "$scriptName: SSH: Tunnel already exists."
 	fi
