@@ -6,7 +6,7 @@ scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "${scriptDir}/utils.sh"
 source "${scriptDir}/config.sh"
 
-cmdSsh="ssh -f -N -4 -c aes256-gcm@openssh.com -L ${fwdPortLocal}:localhost:${fwdPortRemote} -p ${remoteSshPort} \"${remoteSshUser}@${remoteSshAddr}\" -i ${sshprivkey}"
+cmdSsh="ssh -f -N -4 -c aes256-gcm@openssh.com -L ${fwdPortLocal}:localhost:${fwdPortRemote} -p ${remoteSshPort} ${remoteSshUser}@${remoteSshAddr} -i ${sshprivkey}"
 
 function startSynergy () {
 	if ! pgrep "$cmdSsh" > /dev/null ; then
