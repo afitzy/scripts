@@ -114,3 +114,6 @@ bytesToHuman() {
 	done
 	echo "$b$d ${S[$s]}"
 }
+
+function wifiGetName () { iwconfig 2>&1 | grep -oP '^[a-zA-Z0-9]+(?=[ ]+IEEE.*)'; }
+function wifiGetSsid () { iwconfig 2>&1 | grep -oP '(?<=ESSID:").*(?=")'; }
