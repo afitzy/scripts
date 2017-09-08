@@ -8,12 +8,26 @@ source utils.sh
 _VERBOSE=1
 
 
+# Add "Compress/Extract Here" context menu
+function createExtractHereDesktopFile () {
+	local serviceTypesDir="/usr/share/kde4/servicetypes"
+	local serviceMenuDir="/usr/share/kservices5/ServiceMenus"
+	local desktopFilename="konqpopupmenuplugin.desktop"
+	local desktopFile="${serviceMenuDir}/${desktopFilename}"
+	if [[ ! -e "$desktopFile" ]]; then
+		sudo ln -s ${serviceTypesDir}/${desktopFilename} ${serviceMenuDir}
+	else
+		log "Skipping creation of \"$desktopFile\", since it already exists."
+	fi
+}
+
+# Add "copy as path" context menu
 function createCopyAsPathDesktopFile () {
-	local serviceMenuDir="/usr/share/kservices5/ServiceMenus/"
+	local serviceMenuDir="/usr/share/kservices5/ServiceMenus"
 	local desktopFilename="copyaspath.desktop"
 	local desktopFile="${serviceMenuDir}/${desktopFilename}"
 
-	if [[ ! -f "$desktopFile" ]]; then
+	if [[ ! -e "$desktopFile" ]]; then
 		log "Creating \"$desktopFile\""
 
 sudo tee "$desktopFile" > /dev/null <<EOL
@@ -37,10 +51,7 @@ EOL
 
 
 if [[ "$(getOsVers)" == "16.04" ]]; then
-	# Add "Compress/Extract Here" context menu
-	sudo ln -s /usr/share/kde4/servicetypes/konqpopupmenuplugin.desktop /usr/share/kservices5/ServiceMenus/
-
-	# Add "copy as path" context menu
+	createExtractHereDesktopFile
 	createCopyAsPathDesktopFile
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
