@@ -44,6 +44,7 @@ function installKdeDolphinPlugin ()
 	# Warning: This tries to connect to the network frequently
 	# Ref: http://aeciosantos.com/2012/10/06/using-dolphinkde-to-manage-git-repositories-or-other-vcs/
 	getPackages "kdesdk-dolphin-plugins"
+	getPackages "dolphin-plugins"
 	echo "You have to manually configure dolphin to use the git plugin"
 }
 
