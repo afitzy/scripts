@@ -53,3 +53,5 @@ git issue -f "%I${d}%t${d}%l${d}%U${d}%Mt${d}%uI${d}%as%n" $@ >> "$gitIssueFile"
 
 # Use Python script to properly escape and delimit for CSV output
 python -c "$toCsv" "$gitIssueFile"
+
+echo "$gitIssueFile"
