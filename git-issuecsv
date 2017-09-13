@@ -13,5 +13,43 @@ eval "$(hub alias -s)"
 datestamp=$(date --iso-8601="seconds")
 gitIssueFile="gitIssues_${datestamp}.csv"
 
-echo "Num,Title,Tags,URL,Milestone,Timestamp,Assignees" > "$gitIssueFile"
-git issue -f '%I,"%t","%l",%U,"%Mt",%uI,"%as"%n' $@ >> "$gitIssueFile"
+toCsv='
+#!/bin/python
+
+import argparse
+p = argparse.ArgumentParser()
+p.add_argument("--escapeChar", default="\"")
+p.add_argument("--delimiterIn", default="\0")
+p.add_argument("--delimiterOut", default=",")
+p.add_argument("filename")
+args = p.parse_args()
+
+output = []
+with open(args.filename,"r") as f:
+	for line in f:
+		# Escape all quotation marks by using twice as many
+		# Ref: https://forum.openoffice.org/en/forum/viewtopic.php?f=9&t=56517
+		line = line.replace(args.escapeChar, args.escapeChar*2)
+
+		# Remove newlines
+		line = line.replace("\n","")
+
+		# Insert desired escape characters
+		line = ["{esc}{txt}{esc}".format(esc=args.escapeChar, txt=x) for x in line.split(args.delimiterIn)]
+		line = args.delimiterOut.join(line)
+
+		output.append(line)
+
+with open(args.filename,"wb") as f:
+	for row in output:
+		f.write(row + "\n")
+'
+
+# Print issue list using NULL as delimiter
+d='\000'
+echo -e "Num${d}Title${d}Tags${d}URL${d}Milestone${d}Timestamp${d}Assignees" > "$gitIssueFile"
+d='%x00'
+git issue -f "%I${d}%t${d}%l${d}%U${d}%Mt${d}%uI${d}%as%n" $@ >> "$gitIssueFile"
+
+# Use Python script to properly escape and delimit for CSV output
+python -c "$toCsv" "$gitIssueFile"
