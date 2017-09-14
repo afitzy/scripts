@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
 """
-Writes git issues to a file with a header
+Writes git issues to a file with a header.
+Requires GitHub-hub to be installed.
 """
 import argparse
 import datetime as dt
