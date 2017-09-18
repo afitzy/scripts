@@ -42,7 +42,7 @@ function greppdf () {
 	local declare gargs="--no-messages --with-filename --line-number --color=always"
 	local declare exts=(pdf)
 	local declare files=()
-	local declare ignores=()
+	local declare ignores=(.git .svn .settings)
 	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
 	eval $fcmd | parallel --keep-order --max-procs 150% --max-args 1 -m "pdftotext -q {} - | grep $gargs --label={} $@ -"
 }
@@ -53,7 +53,7 @@ function grepdoc () {
 	local declare gargs="--no-messages --with-filename --line-number --color=always"
 	local declare exts=(doc)
 	local declare files=()
-	local declare ignores=()
+	local declare ignores=(.git .svn .settings)
 	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
 	eval $fcmd | parallel --keep-order --max-procs 150% --max-args 1 -m "antiword {} | grep $gargs --label={} $@ -"
 }
@@ -64,9 +64,20 @@ function grepdocx () {
 	local declare gargs="--no-messages --with-filename --line-number --color=always"
 	local declare exts=(docx)
 	local declare files=()
-	local declare ignores=()
+	local declare ignores=(.git .svn .settings)
 	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
 	eval $fcmd | parallel --keep-order --max-procs 150% --max-args 1 -m "cat_open_xml.pl {} | grep $gargs --label={} $@ -"
+}
+
+function grepmd () {
+	local declare path="$1"; shift;
+	local declare fargs="-type f"
+	local declare gargs="--no-messages --with-filename --line-number --color=always"
+	local declare exts=(md markdown)
+	local declare files=()
+	local declare ignores=(.git .svn .settings)
+	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
+	eval $fcmd | parallel --keep-order --max-procs 150% --max-args 1000 -m grep $gargs $@ {}
 }
 
 function grepods () {
@@ -75,7 +86,7 @@ function grepods () {
 	local declare gargs="--no-messages --with-filename --color=always"
 	local declare exts=(ods)
 	local declare files=()
-	local declare ignores=()
+	local declare ignores=(.git .svn .settings)
 	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
 	eval $fcmd | parallel --keep-order --max-procs 150% --max-args 1 -m "ods2csvstdout {} | grep $gargs --label={} $@ -"
 }
@@ -86,7 +97,7 @@ function greppy () {
 	local declare gargs="--no-messages --with-filename --line-number --color=always"
 	local declare exts=(py)
 	local declare files=()
-	local declare ignores=()
+	local declare ignores=(.git .svn .settings)
 	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
 	eval $fcmd | parallel --keep-order --max-procs 150% --max-args 1000 -m grep $gargs $@ {}
 }
@@ -97,7 +108,7 @@ function grepfpga () {
 	local declare gargs="--no-messages --with-filename --line-number --color=always"
 	local declare exts=(v vhdl vhd)
 	local declare files=()
-	local declare ignores=()
+	local declare ignores=(.git .svn .settings)
 	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
 	eval $fcmd | parallel --keep-order --max-procs 150% --max-args 1000 -m grep $gargs $@ {}
 }
