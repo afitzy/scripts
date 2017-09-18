@@ -25,6 +25,26 @@ limitMatch = join(" -and ", [ignore, match])
 print join(" ", ["find", args.path, args.args, limitMatch])
 '
 
+function catspreadsheet () {
+	handler_ods=ods2csvstdout
+	handler_xls=py_xls2txt
+	handler_xlsx=xlsx2csv
+
+	filename="$1"
+	filenameLower="${filename,,}"
+	if [[ $filenameLower == *.ods ]]; then
+		$handler_ods "$@"
+	elif [[ $filenameLower == *.xlsx ]]; then
+		$handler_xlsx "$@" 2>/dev/null
+	elif [[ $filenameLower == *.xls ]]; then
+		$handler_xls "$@" 2>/dev/null
+	else
+		echo "No handler defined for $filename" >&2
+	fi
+}
+export -f catspreadsheet
+
+
 function grepsrc () {
 	local declare path="$1"; shift;
 	local declare fargs="-type f"
@@ -89,6 +109,18 @@ function grepods () {
 	local declare ignores=(.git .svn .settings)
 	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
 	eval $fcmd | parallel --keep-order --max-procs 150% --max-args 1 -m "ods2csvstdout {} | grep $gargs --label={} $@ -"
+}
+
+# Find and grep a spreadsheet
+function grepss () {
+	local declare path="$1"; shift;
+	local declare fargs="-type f"
+	local declare gargs="--no-messages --with-filename --color=always"
+	local declare exts=(ods xls xlsx)
+	local declare files=()
+	local declare ignores=(.git .svn .settings)
+	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
+	eval $fcmd | parallel --keep-order --max-procs 150% --max-args 1 -m "catspreadsheet "{}" | grep $gargs --label={} $@ -"
 }
 
 function greppy () {
