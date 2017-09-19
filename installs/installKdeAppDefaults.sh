@@ -10,8 +10,10 @@ _VERBOSE=1
 
 
 if [[ "$(getOsVers)" == "16.04" ]]; then
-	appDefaults="${HOME}/.local/share/applications/mimeapps.list"
-	perl -pi -e "s/(?<=text\/html=).*/firefox.desktop/" "$appDefaults"
+	userAppDefault="${HOME}/.local/share/applications/mimeapps.list"
+	systemAppDefault="${HOME}/.config/mimeapps.list"
+	perl -pi -e "s/(?<=text\/html=).*/firefox.desktop/" "$userAppDefault"
+	perl -pi -e "s/(?<=text\/html=).*/firefox.desktop/" "$systemAppDefault"
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
