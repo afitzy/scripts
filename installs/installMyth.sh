@@ -11,7 +11,10 @@ source ../utils.sh
 function installMythtv () {
 	sudo add-apt-repository --yes ppa:mythbuntu/0.29
 	sudo apt-get update
-	getPackages "mythtv" "mythplugins"
+	getPackages "mythtv"
+
+	# Ditching mythplugins, since I never used mythweb
+	# getPackages "mythplugins"
 
 	# Database Configuration
 	cp /etc/mythtv/mysql.txt "$HOME/.mythtv/"
