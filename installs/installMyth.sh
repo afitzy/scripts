@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source utils.sh
+source ../utils.sh
 
 # Install MythTv using Mythbuntu PPA
 # Installs:

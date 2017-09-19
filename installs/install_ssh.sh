@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source utils.sh
+source ../utils.sh
 
 function sshConfig () {
 	# SSH starts at boot time, not user login

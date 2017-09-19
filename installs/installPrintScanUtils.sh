@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source utils.sh
+source ../utils.sh
 
 _VERBOSE=1
 
@@ -15,7 +15,7 @@ function installHpTools ()
 if [[ "$(getOsVers)" == "16.04" ]]; then
 	installHpTools
 	getPackages "xsane" "ksaneplugin"
-	
+
 	# GUI tools
 	getPackages "skanlite"
 else
