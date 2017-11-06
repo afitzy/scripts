@@ -1,0 +1,124 @@
+#!/bin/bash
+
+source utils.sh
+
+function installPackages () {
+	sudo apt-get install texlive texlive-latex-extra
+}
+
+# NOTE: This requires GNU getopt.  On Mac OS X and FreeBSD, you have to install this
+# separately; see below.
+TEMP="$(getopt -o vdim: --long "verbose,debug,install,text:" -n "${0##*/}" -- "$@")"
+
+if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
+
+# Note the quotes around `$TEMP': they are essential!
+eval set -- "$TEMP"
+
+_VERBOSE=0
+_DEBUG=0
+_INSTALL=0
+newWaterText=
+while true; do
+	case "$1" in
+		-v | --verbose ) _VERBOSE=1; shift ;;
+		-d | --debug ) _DEBUG=1; shift ;;
+		-i | --install ) _INSTALL=1; shift ;;
+		--text ) newWaterText="$2"; shift 2 ;;
+		-- ) shift; break ;;
+		* ) break ;;
+	esac
+done
+
+# Positional arguments
+srcPdf="${@:$OPTIND:1}"; shift ;
+
+# Verify installed packages
+if [[ $_INSTALL -eq 1 ]]; then
+	installPackages
+fi
+
+dateStr=$(date --iso-8601="seconds")
+destPdf="${srcPdf%.pdf}_${dateStr}.pdf"
+
+log "Source PDF = \"$srcPdf\""
+log "Destination PDF = \"$destPdf\""
+
+watermarkText="CONFIDENTIAL. SHARED ON ${dateStr}."
+if [[ -n $newWaterText ]]; then
+	watermarkText="$newWaterText"
+fi
+
+log "Using watermark text: \"$watermarkText\""
+
+pdfSize="$(pdfinfo "${srcPdf}" | grep -ioP '(?<=Page size:)[ ]+[0-9.]+ x [0-9.]+' | tr --delete ' ')"
+pdfW="${pdfSize%x*}"
+pdfH="${pdfSize#*x}"
+pdfSizeUnit="pt"
+log "Input PDF dimensions: height=${pdfH}${pdfSizeUnit}; width=${pdfW}${pdfSizeUnit}"
+
+# Ref: http://unix.stackexchange.com/a/277957/154794
+doc='
+\documentclass{article}
+\usepackage[paperheight='${pdfH}${pdfSizeUnit}',paperwidth='${pdfW}${pdfSizeUnit}',margin=1mm]{geometry}
+\usepackage{xcolor}
+
+\newenvironment{bottompar}{\par\vspace*{\fill}}{\clearpage}
+
+% Patch center environment to remove padding
+% Ref: http://tex.stackexchange.com/a/24197/77000
+\newenvironment{tightcenter}{%
+	\setlength\topsep{0pt}
+	\setlength\parskip{0pt}
+	\begin{center}
+}{%
+	\end{center}
+}
+
+% Strech small text to fit width of page
+% Ref: https://blogs.gnome.org/muelli/2013/04/scale-text-to-the-maximum-of-a-page-with-latex
+\usepackage{graphicx}
+\setkeys{Gin}{keepaspectratio}
+\usepackage{varwidth}
+\pagenumbering{gobble}
+
+\begin{document}
+\noindent\resizebox*\textwidth\textheight{\begin{varwidth}{\textwidth}%
+\center{\colorbox{red!20}{\tiny{\textbf{'"$watermarkText"'}}}}
+\end{varwidth}}
+
+\begin{bottompar}
+\noindent\resizebox*\textwidth\textheight{\begin{varwidth}{\textwidth}%
+\center{\colorbox{red!20}{\tiny{\textbf{'"$watermarkText"'}}}}
+\end{varwidth}}
+\end{bottompar}
+\end{document}
+'
+
+tempdir="$(mktemp -d)"
+
+tempsrc="${tempdir}/watermark.tex"
+echo "$doc" > "$tempsrc"
+
+pdflatex -interaction batchmode -output-directory "$tempdir" "$tempsrc"
+tempdest="${tempdir}/watermark.pdf"
+
+if [[ $_DEBUG -eq 1 ]]; then
+	cp "$tempsrc" .
+	cp "$tempdest" .
+fi
+
+log "Temp directory: $tempdir"
+log "Temp tex source: $tempsrc"
+log "Temp tex dest: $tempdest"
+
+pdftk "$srcPdf" multistamp "${tempdest}" output "${destPdf}"  2>&1 | log
+
+# Cleanup
+cleanup () {
+	log "Deleting temporary files"
+	rm -rf "$tempsrc"
+	rm -rf "$tempdest"
+	rm -rf "$tempdir"
+}
+trap cleanup EXIT
