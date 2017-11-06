@@ -23,14 +23,14 @@ if __name__ == '__main__':
 	datestamp = dt.datetime.today().strftime("%Y%m%d-%H%M%S")
 
 	p = argparse.ArgumentParser()
-	p.add_argument("--escapeChar", default='\"')
-	p.add_argument("--delimiterIn", default='\xFF')
-	p.add_argument("--delimiterOut", default=',')
-	p.add_argument("--output", default='gitIssues_{}.csv'.format(datestamp))
+	p.add_argument('--escapeChar', default='\"')
+	p.add_argument('--delimiterIn', default='\xFF')
+	p.add_argument('--delimiterOut', default=',')
+	p.add_argument('--output', default='gitIssues_{}.csv'.format(datestamp))
 	args, argsUnknown = p.parse_known_args()
 
-	issueHdr = 'Num{d}Title{d}Tags{d}URL{d}Milestone{d}Timestamp{d}Assignees'.format(d=args.delimiterOut)
-	issueFrmt = '%I{d}%t{d}%l{d}%U{d}%Mt{d}%uI{d}%as%n'.format(d=args.delimiterIn)
+	issueHdr = 'Num{d}Title{d}State{d}Tags{d}URL{d}Milestone{d}Timestamp{d}Assignees'.format(d=args.delimiterOut)
+	issueFrmt = '%I{d}%t{d}%S{d}%l{d}%U{d}%Mt{d}%uI{d}%as%n'.format(d=args.delimiterIn)
 
 	issueCmd = ['hub', 'issue', '-f', issueFrmt]
 	issueCmd.extend(argsUnknown)
