@@ -6,9 +6,6 @@ _VERBOSE=1
 
 function installMork ()
 {
-	local binDir="/usr/local/bin"
-	local srcDir="/usr/local/src"
-
 	local repoAddr="https://github.com/KevinGoodsell/mork-converter"
 	local repoName="${repoAddr##*/}"
 	local repoName="${repoName%%.*}"
@@ -16,16 +13,25 @@ function installMork ()
 
 	sudo apt-get install python-ply
 
-	cloneGitRepo "$srcDir" "$repoAddr"
-	sudo ln -fs "${srcDir}/${repoName}/src/mork" "${binDir}/mork"
+	cloneGitRepo "$_DIR_SRC" "$repoAddr"
+	sudo ln -fs "${_DIR_SRC}/${repoName}/src/mork" "${_DIR_BIN}/mork"
 	popd
 	popd
 }
 
 function installHub ()
 {
-	local instPrefix="/usr/local/"
+	local instPrefix=_DIR_PREFIX
 	local repoAddr="https://github.com/github/hub.git"
+
+	if [[ "$(getOsVers)" == "16.04" ]]; then
+		# Hub needs Go v1.8 or higher
+		sudo add-apt-repository -y ppa:longsleep/golang-backports
+		sudo apt-get update
+
+		# To-do: Only remove GO if version is too old
+		sudo apt-get remove golang-go -y
+	fi
 
 	# Install prereqs
 	getPackages "golang-go" "ruby" "ruby-dev"
@@ -33,9 +39,9 @@ function installHub ()
 	# Install ruby gems
 	sudo gem install bundler
 
-	cloneGitRepo "$srcDir" "$repoAddr"
+	cloneGitRepo "$_DIR_SRC" "$repoAddr"
 	git checkout 2d345171cddbf61422f19bb8123d57841b6156f6
-	make install prefix="$instPrefix"
+	sudo make install prefix="$instPrefix"
 	popd
 	popd
 }
@@ -52,7 +58,8 @@ function installKdeDolphinPlugin ()
 
 if [[ "$(getOsVers)" == "16.04" ]]; then
 	# For office diffs
-	getPackages "docx2txt" "catdoc" "odt2txt" "pdf2txt" "python-excelerator" "xlsx2csv" "antiword"
+	getPackages "docx2txt" "catdoc" "odt2txt" "python-excelerator" "xlsx2csv" "antiword"
+	getPackages "python-pdfminer" # pdf2txt
 
 	# For Thunderbird diffs
 	installMork

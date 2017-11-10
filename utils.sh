@@ -1,5 +1,9 @@
 #!/bin/bash
 
+_DIR_PREFIX="/usr/local"
+_DIR_BIN="${_DIR_PREFIX}/bin"
+_DIR_SRC="${_DIR_PREFIX}/src"
+
 # Function to conditionally print to terminal
 function log () {
 	if [[ $_VERBOSE -eq 1 ]]; then
