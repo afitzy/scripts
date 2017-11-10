@@ -34,6 +34,7 @@ function installHub ()
 	sudo gem install bundler
 
 	cloneGitRepo "$srcDir" "$repoAddr"
+	git checkout 2d345171cddbf61422f19bb8123d57841b6156f6
 	make install prefix="$instPrefix"
 	popd
 	popd
