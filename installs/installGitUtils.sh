@@ -21,7 +21,7 @@ function installMork ()
 
 function installHub ()
 {
-	local instPrefix=_DIR_PREFIX
+	local instPrefix="$_DIR_PREFIX"
 	local repoAddr="https://github.com/github/hub.git"
 
 	if [[ "$(getOsVers)" == "16.04" ]]; then
