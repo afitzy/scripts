@@ -1,5 +1,8 @@
 #!/bin/bash
 
+scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "${scriptDir}/utils.sh"
+
 scriptName="$(basename "$0")"
 dateStamp=$(date --iso-8601="seconds")
 
@@ -11,6 +14,7 @@ if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 # Note the quotes around `$PARSED': they are essential!
 eval set -- "$PARSED"
 
+_INTERACTIVE=1
 _VERBOSE=0
 _DEBUG=0
 outputDir=resized
@@ -28,10 +32,9 @@ done
 # Positional arguments
 pattern="${@:$OPTIND:1}"; shift;
 
-
-if [ -f "$outputDir" ]; then
+if [ -d "$outputDir" ]; then
 	echo "WARNING: Output directory \"${outputDir}\" already exists."
-	exit 1
+	verifyContinue
 fi
 mkdir "$outputDir"
 
@@ -50,8 +53,8 @@ for f in $(find ${path} -maxdepth 1 -name "$pattern"); do
 		#-resize 50%
 		#-quality 50 \
 
-	srcSize="$(du --human-readable "$f" | cut -f 1)"
-	dstSize="$(du --human-readable "$outFull" | cut -f 1)"
-	echo "Resized $f (${srcSize}) to $outFull (${dstSize})"
+	srcInfo="$(identify "$f" | cut  --delimiter=" " --fields=3,7)"
+	dstInfo="$(identify "$outFull" | cut  --delimiter=" " --fields=3,7)"
+	echo "Resized \"$outFile\" (${srcInfo}) to \"$outFull\" (${dstInfo})"
 done
 unset IFS
