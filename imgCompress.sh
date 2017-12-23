@@ -6,6 +6,16 @@ source "${scriptDir}/utils.sh"
 scriptName="$(basename "$0")"
 dateStamp=$(date --iso-8601="seconds")
 
+function verifyContinue () {
+	if [[ $_INTERACTIVE -eq 1 ]]; then
+		read -p "Do you want to continue? [y/n] " -n 1 -r
+		echo
+		if [[ ! $REPLY =~ ^[Yy]$ ]] ; then
+			[[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1 # handle exits from shell or function but don't exit interactive shell
+		fi
+	fi
+}
+
 # NOTE: This requires GNU getopt.  On Mac OS X and FreeBSD, you have to install this separately
 PARSED="$(getopt --options vdm: --long "verbose,debug,debugfile:,ext:,output:" -n ${scriptName} -- "$@")"
 
@@ -30,13 +40,28 @@ while true; do
 done
 
 # Positional arguments
+resolutionStr="${@:$OPTIND:1}"; shift;
 pattern="${@:$OPTIND:1}"; shift;
+
+if [ -z "$pattern" ]; then
+	echo "ERROR: Missing required argument 1: file name pattern"
+	exit -1
+fi
+
+if [ -z "$resolutionStr" ]; then
+	echo "ERROR: Missing required argument 2: image resolution string"
+	exit -1
+fi
 
 if [ -d "$outputDir" ]; then
 	echo "WARNING: Output directory \"${outputDir}\" already exists."
 	verifyContinue
 fi
-mkdir "$outputDir"
+mkdir "$outputDir" 2>&1 > /dev/null
+
+echo "Output directory = $outputDir"
+echo "File name pattern = $pattern"
+echo "Resize resolution = $resolutionStr"
 
 path=.
 numFiles=0
@@ -48,13 +73,15 @@ for f in $(find ${path} -maxdepth 1 -name "$pattern"); do
 
 	# http://www.imagemagick.org/Usage/resize/
 	convert "$f" \
-		-resize 1600x1200\> \
+		-resize "${resolutionStr}" \
 		"$outFull"
 		#-resize 50%
 		#-quality 50 \
 
-	srcInfo="$(identify "$f" | cut  --delimiter=" " --fields=3,7)"
-	dstInfo="$(identify "$outFull" | cut  --delimiter=" " --fields=3,7)"
+	# identify format string options:
+	# https://www.imagemagick.org/script/escape.php
+	srcInfo="$(identify -format '%[width]x%[height] %[size]' "$f")"
+	dstInfo="$(identify -format '%[width]x%[height] %[size]' "$outFull")"
 	echo "Resized \"$outFile\" (${srcInfo}) to \"$outFull\" (${dstInfo})"
 done
 unset IFS
