@@ -15,7 +15,7 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 		--no-create-home \
 		--disabled-password \
 		--disabled-login \
-		--shell /bin/false \
+		--shell /usr/sbin/nologin \
 		--groups "${sambaGroup}" \
 		"$username"
 
@@ -23,7 +23,7 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 	sudo smbpasswd -a "$username"
 
 	# Restart the samba server
-	sudo service smbd force-reload
+	sudo service smbd restart
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
