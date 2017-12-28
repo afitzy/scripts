@@ -44,6 +44,9 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 	# fortunes
 	getPackages "fortune-mod" "fortunes" "fortunes-min" "fortunes-off" "fortunes-spam" "cookietool"
 
+	# Colored-df
+	getPackages "dfc"
+
 	installDropboxCli
 
 	# test processing
