@@ -16,6 +16,9 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 	installAtom
 	getPackages "cscope"
 
+  # Visual diff
+  getPackages "meld"
+
 	# Static code analysis
 	getPackages "cppcheck"
 else
