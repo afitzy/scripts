@@ -7,6 +7,8 @@ function installTranslateRepo ()
 	local repoAddr="https://github.com/soimort/translate-shell.git"
 	local instPrefix="$_DIR_PREFIX"
 
+	sudo apt-get install -y gawk
+
 	cloneGitRepo "$_DIR_SRC" "$repoAddr"
 	sudo make install PREFIX="$instPrefix"
 	popd
