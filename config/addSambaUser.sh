@@ -4,7 +4,7 @@ scriptName="$(basename "$0")"
 scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 dateStamp=$(date --iso-8601="seconds")
 
-source ../utils.sh
+source "${scriptDir}/../utils.sh"
 
 sambaGroup="sambashare"
 username="$1"
@@ -16,6 +16,10 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 		--disabled-password \
 		--disabled-login \
 		--shell /usr/sbin/nologin \
+		"$username"
+
+	sudo usermod \
+		--append \
 		--groups "${sambaGroup}" \
 		"$username"
 
