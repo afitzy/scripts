@@ -55,6 +55,9 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 
 	# test processing
 	getPackages "wdiff"
+
+	# Prints a directory tree
+	getPackages "tree"
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
