@@ -8,23 +8,15 @@ source "${scriptDir}/../utils.sh"
 
 _VERBOSE=1
 
-function installAtom ()
+function installThunderbird ()
 {
-    sudo add-apt-repository --yes "ppa:webupd8team/atom"
-    sudo apt-get update
-    getPackages atom
+	sudo add-apt-repository -y ppa:ubuntu-mozilla-security/ppa
+	sudo apt-get update
+	sudo apt-get install thunderbird
 }
 
-
 if [[ "$(getOsVers)" == "16.04" ]]; then
-	installAtom
-	getPackages "cscope"
-
-  # Visual diff
-  getPackages "meld"
-
-	# Static code analysis
-	getPackages "cppcheck"
+	installThunderbird
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi

@@ -4,7 +4,7 @@ scriptName="$(basename "$0")"
 scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 dateStamp=$(date --iso-8601="seconds")
 
-source ../utils.sh
+source "${scriptDir}/../utils.sh"
 _VERBOSE=1
 
 

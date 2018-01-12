@@ -1,6 +1,10 @@
 #!/bin/bash
 
-source ../utils.sh
+scriptName="$(basename "$0")"
+scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+dateStamp=$(date --iso-8601="seconds")
+
+source "${scriptDir}/../utils.sh"
 
 # Install MythTv using Mythbuntu PPA
 # Installs:

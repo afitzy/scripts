@@ -1,6 +1,10 @@
 #!/bin/bash
 
-source ../utils.sh
+scriptName="$(basename "$0")"
+scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+dateStamp=$(date --iso-8601="seconds")
+
+source "${scriptDir}/../utils.sh"
 
 # Function to cleanup
 function cleanup () {
@@ -44,10 +48,16 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 	# fortunes
 	getPackages "fortune-mod" "fortunes" "fortunes-min" "fortunes-off" "fortunes-spam" "cookietool"
 
+	# Colored-df
+	getPackages "dfc"
+
 	installDropboxCli
 
 	# test processing
 	getPackages "wdiff"
+
+	# Prints a directory tree
+	getPackages "tree"
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi

@@ -1,11 +1,17 @@
 #!/bin/bash
 
-source ../utils.sh
+scriptName="$(basename "$0")"
+scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+dateStamp=$(date --iso-8601="seconds")
+
+source "${scriptDir}/../utils.sh"
 
 function installTranslateRepo ()
 {
 	local repoAddr="https://github.com/soimort/translate-shell.git"
 	local instPrefix="$_DIR_PREFIX"
+
+	sudo apt-get install -y gawk
 
 	cloneGitRepo "$_DIR_SRC" "$repoAddr"
 	sudo make install PREFIX="$instPrefix"
