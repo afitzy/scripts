@@ -121,3 +121,12 @@ bytesToHuman() {
 
 function wifiGetName () { iwconfig 2>&1 | grep -oP '^[a-zA-Z0-9]+(?=[ ]+IEEE.*)'; }
 function wifiGetSsid () { iwconfig 2>&1 | grep -oP '(?<=ESSID:").*(?=")'; }
+
+# Tests if first argument is contained in the latter arguments
+# Ref: https://stackoverflow.com/a/8574392/4146779
+elementIn () {
+	local e match="$1"
+	shift
+	for e; do [[ "$e" == "$match" ]] && return 0; done
+	return 1
+}
