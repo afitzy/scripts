@@ -53,9 +53,8 @@ while true; do
   esac
 done
 
-targetSsid=$ssidAiTorontoPeter
 wifiSsid="$(wifiGetSsid)"
-if [ "$wifiSsid" == "$targetSsid" ] && [ "$_ENABLE" -eq 1 ]; then
+if $(elementIn "$wifiSsid" "${ssidsAiTorontoPeter[@]}") && [ "$_ENABLE" -eq 1 ]; then
 	log "$scriptName: Starting. Wireless network SSID is \"${wifiSsid}\""
 	startSynergy
 else
