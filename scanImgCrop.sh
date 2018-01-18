@@ -85,6 +85,10 @@ if [ $numFiles -gt 0 ]; then
 	exitIfFileExists "${pdfCompressed}"
 	pdfCompressAvg="gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=${pdfCompressed}"
 	${pdfCompressAvg} "$pdfHq" 2>&1 | log
+
+	srcSize="$(du -h "$pdfHq" | cut -f1)"
+	dstSize="$(du -h "$pdfCompressed" | cut -f1)"
+	log "Compressed \"${pdfHq}\" (${srcSize}) to \"${pdfCompressed}\" (${dstSize})"
 else
 	log "No files to convert. PDF not created."
 fi
