@@ -12,6 +12,9 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 	# Disks
 	getPackages "gnome-disk-utility"
 
+	# Startup disk creator
+	sudo apt-get install usb-creator-kde
+
 	# Facilitates backing up package lists
 	sudo add-apt-repository -y ppa:teejee2008/ppa
 	sudo apt-get update
