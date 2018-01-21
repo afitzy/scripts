@@ -22,6 +22,10 @@ function installMythtv () {
 
 	# Database Configuration
 	cp /etc/mythtv/mysql.txt "$HOME/.mythtv/"
+	ln -s /etc/mythtv/config.xml "$HOME/.mythtv/"
+	
+	# Post install notes
+	# * Make sure frontend pin match backend pin, else frontend will never connect
 }
 
 
