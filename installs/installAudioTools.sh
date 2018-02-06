@@ -13,7 +13,7 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 	getPackages "audacity"
 
 	# CLI tools
-	getPackages "silan"
+	getPackages "silan" "mp3val"
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
