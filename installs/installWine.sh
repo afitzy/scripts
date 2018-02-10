@@ -31,10 +31,6 @@ function installWine ()
 
 _VERBOSE=1
 if [[ "$(getOsVers)" == "16.04" ]]; then
-	# Virtual machine
-	getPackages "virtualbox" "virtualbox-ext-pack" "virtualbox-guest-*" "virtualbox-qt"
-
-	# Wine
 	installWine
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
