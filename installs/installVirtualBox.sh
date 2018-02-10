@@ -6,36 +6,33 @@ dateStamp=$(date --iso-8601="seconds")
 
 source "${scriptDir}/../utils.sh"
 
-function installWine ()
+# The binaries in this repository are all released under the VirtualBox Personal
+# Use and Evaluation License (PUEL). By downloading, you agree to the terms and
+# conditions of that license.
+# Ref: https://www.ubuntuupdates.org/ppa/virtualbox.org_contrib
+function installVirtualBoxFromOracle ()
 {
 	# Remove existing
-	sudo apt-get remove --purge wine*
+	sudo apt-get remove --purge virtualbox*
 	sudo apt-get clean
 	sudo apt-get autoremove
 
-	wget https://repos.wine-staging.com/wine/Release.key
-	sudo apt-key add Release.key
-	sudo apt-add-repository 'https://dl.winehq.org/wine-builds/ubuntu/'
+	# Add Oracle key
+	local url='http://download.virtualbox.org/virtualbox/debian/oracle_vbox_2016.asc'
+	wget --quiet --output-document=- ${url} | sudo apt-key add -
 
-	# Enable 32-bit architecture
-	sudo dpkg --add-architecture i386
+	# Set up repository
+	ubuntuRelease=$(lsb_release -cs)
+	sudo sh -c "echo 'deb http://download.virtualbox.org/virtualbox/debian ${ubuntuRelease} non-free contrib' > /etc/apt/sources.list.d/virtualbox.org.list"
 
 	sudo apt-get update
-	sudo apt-get install --install-recommends --yes winehq-staging
-
-	# Use either...
-	# /opt/wine-staging/bin/wine
-	# /opt/wine-staging/bin/winecfg
+	sudo apt-get install --yes virtualbox-5.2 virtualbox-ext-pack virtualbox-guest-* virtualbox-qt
 }
 
 
 _VERBOSE=1
 if [[ "$(getOsVers)" == "16.04" ]]; then
-	# Virtual machine
-	getPackages "virtualbox" "virtualbox-ext-pack" "virtualbox-guest-*" "virtualbox-qt"
-
-	# Wine
-	installWine
+	installVirtualBoxFromOracle
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
