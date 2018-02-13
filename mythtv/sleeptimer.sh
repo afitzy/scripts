@@ -1,19 +1,19 @@
 #!/bin/bash
 
 # Ref: https://www.mythtv.org/wiki/Sleep_timer
+# Ref: https://utcc.utoronto.ca/~cks/space/blog/linux/SystemdVersionOfShutdown
 
-# maximum allowed sleeptime in minutes
-# if a keypress would make the sleeptimer exceed this value
-# the shutdown gets cancelled
-MAXSLEEPTIME=140
+# Maximum allowed sleeptime in minutes
+# if a keypress would make the sleeptimer exceed this value the shutdown gets cancelled
+MAXSLEEPTIME=160
 
-# the increment of the sleep timer in minutes
-# when the sleep timer key is pressed
+# Increment of the sleep timer in minutes when the sleep timer key is pressed
 SLEEPINCREMENT=30
 
+# Filename of sleep warning script
 sleepWarningScript=sleepWarning.sh
 
-# determine script's path
+# determine this script's path
 SCRIPTPATH=$(dirname $(which $0))
 
 # Get scheduled shutdown time
