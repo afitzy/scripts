@@ -16,13 +16,22 @@ sleepWarningScript=sleepWarning.sh
 # determine script's path
 SCRIPTPATH=$(dirname $(which $0))
 
-# look for a former invocation of shutdown and save old value
-OLDSLEEPTIME=$(ps auxw | grep shutdown | grep -v grep | head -n 1 | cut -f2 -d'+')
+# Get scheduled shutdown time
+oldSleepTimeMicrosec=$(cat /run/systemd/shutdown/scheduled | grep -oP '(?<=USEC=).*')
+oldSleepTimeSec=${oldSleepTimeMicrosec::-6}
+oldSleepTimeStr="$(date -d "@${oldSleepTimeSec}" +"%Y%m%dT%H:%M:%S")"
+
+currentTimeSec=$(date +%s)
+timeDiffFromNowSec=$((($oldSleepTimeSec - $currentTimeSec)))
+timeDiffFromNowMin=$((($timeDiffFromNowSec / 60)))
+
+OLDSLEEPTIME=$timeDiffFromNowMin
+
 [ -z "${OLDSLEEPTIME}" ] && OLDSLEEPTIME=0
 NEWSLEEPTIME=$(($OLDSLEEPTIME + $SLEEPINCREMENT))
 
 # kill former instances of shutdown and sleepwarning
-sudo /usr/bin/pkill -f shutdown >/dev/null 2>&1
+/sbin/shutdown -c >/dev/null 2>&1
 /usr/bin/pkill -f ${sleepWarningScript} >/dev/null 2>&1
 
 # set new sleepvalue or cancel sleep timer if it exceeds MAXSLEEPTIME
@@ -32,7 +41,7 @@ if [ $NEWSLEEPTIME -gt $MAXSLEEPTIME ]; then
 fi
 
 # start shutdown
-sudo /sbin/shutdown -h +${NEWSLEEPTIME} >/dev/null 2>&1 &
+sudo /sbin/shutdown --poweroff +${NEWSLEEPTIME} >/dev/null 2>&1 &
 
 # show message to user, that sleeptime was initiated
 /usr/bin/mythutil --message --message_text="$(hostname) will go to sleep in $NEWSLEEPTIME minutes." --timeout=3 --bcastaddr 127.0.0.1 &
