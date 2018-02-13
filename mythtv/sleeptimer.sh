@@ -17,15 +17,27 @@ sleepWarningScript=sleepWarning.sh
 SCRIPTPATH=$(dirname $(which $0))
 
 # Get scheduled shutdown time
-oldSleepTimeMicrosec=$(cat /run/systemd/shutdown/scheduled | grep -oP '(?<=USEC=).*')
+
+# Method 1: Read from file
+# oldSleepTimeMicrosec=$(cat /run/systemd/shutdown/scheduled | grep -oP '(?<=USEC=).*')
+
+# Method 2: Read from dbus
+loginQuery="$(qdbus --literal --system org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.DBus.Properties.Get org.freedesktop.login1.Manager ScheduledShutdown)"
+scheduleActive=$(echo $loginQuery | grep -oP '(?<=").*(?=")')
+
+oldSleepTimeMicrosec=$(echo $loginQuery | grep -oP '(?<=", ).*(?=]])')
 oldSleepTimeSec=${oldSleepTimeMicrosec::-6}
-oldSleepTimeStr="$(date -d "@${oldSleepTimeSec}" +"%Y%m%dT%H:%M:%S")"
+oldSleepTimeStr=$(date -d "@${oldSleepTimeSec}" +"%Y%m%dT%H:%M:%S")
 
 currentTimeSec=$(date +%s)
 timeDiffFromNowSec=$((($oldSleepTimeSec - $currentTimeSec)))
 timeDiffFromNowMin=$((($timeDiffFromNowSec / 60)))
 
-OLDSLEEPTIME=$timeDiffFromNowMin
+if [ -z "$scheduleActive" ]; then
+	OLDSLEEPTIME=
+else
+	OLDSLEEPTIME=$timeDiffFromNowMin
+fi
 
 [ -z "${OLDSLEEPTIME}" ] && OLDSLEEPTIME=0
 NEWSLEEPTIME=$(($OLDSLEEPTIME + $SLEEPINCREMENT))
