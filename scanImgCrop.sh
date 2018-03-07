@@ -65,8 +65,8 @@ for f in $(find ${path} -name "*.${ext}"); do
 
         xoff="$(convert xc: -format "%[fx:$width*0/100]" info:)"
         yoff="$(convert xc: -format "%[fx:$height*0/100]" info:)"
-        ww="$(convert xc: -format "%[fx:$width*93/100]" info:)"
-        hh="$(convert xc: -format "%[fx:$height*75/100]" info:)"
+        ww="$(convert xc: -format "%[fx:$width*100/100]" info:)"
+        hh="$(convert xc: -format "%[fx:$height*72.5/100]" info:)"
 
         log "Cropping $f to $outFull \"${ww}x${hh}+${xoff}+${yoff}\""
         convert "$f" -crop ${ww}x${hh}+${xoff}+${yoff} "$outFull" | log
