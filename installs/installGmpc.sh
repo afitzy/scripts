@@ -25,7 +25,7 @@ function installGmpcFromMultiverse ()
 {
 	removeGmpc
 	sudo apt-get update
-	sudo apt-get install --yes gmpc gmpc-plugins
+	sudo apt-get install --yes gmpc gmpc-plugins mpd
 }
 
 _VERBOSE=1

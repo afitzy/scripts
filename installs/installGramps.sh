@@ -22,6 +22,9 @@ function installGramps () {
 	# Uninstall existing version
 	sudo apt-get remove --yes gramps 2>&1 | log
 
+	# Pre-reqs
+	sudo apt-get install --yes python3-icu | log
+
 	local url='https://github.com/gramps-project/gramps/releases/download/v4.2.6/python3-gramps_4.2.6_all.deb'
 	local urlFilename="${url##*/}"
 	urlFilename="${urlFilename%%\?*}"
