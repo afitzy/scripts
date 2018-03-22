@@ -31,8 +31,11 @@ while true; do
 		* ) break ;;
 	esac
 done
-src="$1"; shift;
-dst="$1"; shift;
+src="${@:$OPTIND:1}"; shift ;
+
+srcNoExt="${src%.*}"
+srcExt="${src##*.}"
+dst="${srcNoExt}_${dateStamp}.m4v"
 
 tempdir=$(mktemp -d)
 trap cleanup EXIT
@@ -60,14 +63,14 @@ log "Destination file: ${dst}"
 command HandBrakeCLI \
 	-i "$src" -o "$dst" \
 	--encoder mpeg4 \
-	--gain 12 \
+	--gain 24 \
 	--ab 64 \
 	--maxWidth 640 \
 	--maxHeight 480 \
 	--format av_mp4 \
 	--quality 4 \
 	--mixdown mono \
-	--rotate=3 \
+	--rotate=4 \
 	--pfr 29;
 	# --start-at duration:54 \
 	# --stop-at duration:34 ;
