@@ -37,7 +37,7 @@ function installVirtualBoxFromOracle ()
 	sudo sh -c "echo 'deb http://download.virtualbox.org/virtualbox/debian ${ubuntuRelease} non-free contrib' > /etc/apt/sources.list.d/virtualbox.org.list"
 
 	sudo apt-get update
-	sudo apt-get install --yes virtualbox-5.2
+	sudo apt-get install --yes virtualbox-5.2 virtualbox-ext-pack
 	# virtualbox-ext-pack virtualbox-guest-* virtualbox-qt
 }
 
