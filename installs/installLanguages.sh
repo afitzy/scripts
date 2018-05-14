@@ -16,9 +16,9 @@ trap cleanup EXIT
 _VERBOSE=1
 
 if [[ "$(getOsVers)" == "16.04" ]]; then
-	sudo apt-get install language-pack-en language-pack-ca
-	sudo apt-get install myspell-en-us myspell-ca
-	sudo apt-get install hunspell-en-ca hunspell-ca
+	sudo apt-get install --yes language-pack-en language-pack-ca
+	sudo apt-get install --yes myspell-en-us myspell-ca
+	sudo apt-get install --yes hunspell-en-ca hunspell-ca
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
