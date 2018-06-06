@@ -14,7 +14,7 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 	getPythonPackages "money" "Babel" "bs4" "lxml" "requests" "enum34" "beautifulsoup4" "pyexcel_ods" "pyexcel_xlsx" "zodbbrowser"
 
 	# python3
-	getPackages "python3-pip" "ipython3" "python3-dateutil"
+	getPackages "python3-pip" "ipython3" "python3-dateutil" "python3-colorlog"
 	pip3 install "pyoctopart" "money" # "dateutil"
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
