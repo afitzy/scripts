@@ -51,9 +51,12 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 	# Colored-df
 	getPackages "dfc"
 
+	# Colored diff
+	getPackages "colordiff"
+
 	installDropboxCli
 
-	# test processing
+	# text processing
 	getPackages "wdiff"
 
 	# Prints a directory tree
