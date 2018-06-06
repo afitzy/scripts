@@ -65,6 +65,9 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 	getPackages "docx2txt" "catdoc" "odt2txt" "python-excelerator" "xlsx2csv" "antiword"
 	getPackages "python-pdfminer" # pdf2txt
 
+	# For image diffs
+	getPackages "exif"
+
 	# For Thunderbird diffs
 	installMork
 
