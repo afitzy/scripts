@@ -51,7 +51,10 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 	# Colored-df
 	getPackages "dfc"
 
-	# test processing
+	# Colored diff
+	getPackages "colordiff"
+
+	# text processing
 	getPackages "wdiff"
 
 	# Prints a directory tree
