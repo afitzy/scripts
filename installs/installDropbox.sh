@@ -36,29 +36,7 @@ function installDropboxCli ()
 _VERBOSE=1
 
 if [[ "$(getOsVers)" == "16.04" ]]; then
-	# pv: Monitor the progress of data through a pipe
-	getPackages "pv"
-
-	# Network monitoring
-	getPackages "nethogs"
-
-	# File compression
-	getPackages "unrar"
-
-	# fortunes
-	getPackages "fortune-mod" "fortunes" "fortunes-min" "fortunes-off" "fortunes-spam" "cookietool"
-
-	# Colored-df
-	getPackages "dfc"
-
-	# Colored diff
-	getPackages "colordiff"
-
-	# text processing
-	getPackages "wdiff"
-
-	# Prints a directory tree
-	getPackages "tree"
+	installDropboxCli
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
