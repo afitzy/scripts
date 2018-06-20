@@ -3,6 +3,7 @@
 scriptName="$(basename "$0")"
 scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 dateStamp=$(date --iso-8601="seconds")
+tempdir=$(mktemp -d)
 
 source "${scriptDir}/../utils.sh"
 
@@ -13,12 +14,27 @@ function cleanup () {
 }
 trap cleanup EXIT
 
-_VERBOSE=1
+function getPdfsandwich () {
+	local friendlyName="pdfsandwich"
+
+	echo "${friendlyName}: removing previous installation"
+	sudo apt-get remove --yes pdfsandwich
+
+	echo "${friendlyName}: downloading $urlFilename"
+	local url="http://sourceforge.net/projects/pdfsandwich/files/pdfsandwich_0.1.6_amd64.deb/download"
+	local urlFilename=$(echo "$url" | rev | cut --delimiter='/' --fields=2 | rev)
+	local filenameAbs="${tempdir}/${urlFilename}"
+	wget --output-document="$filenameAbs" "$url" 2>&1 | while read -r line; do log ; done
+
+	echo "${friendlyName}: installing"
+	sudo dpkg --install "$filenameAbs" 2>&1 | log
+	echo "${friendlyName}: done"
+}
 
 if [[ "$(getOsVers)" == "16.04" ]]; then
 	# pdfsandwich generates "sandwich" OCR pdf files
 	# http://www.tobias-elze.de/pdfsandwich/
-	sudo apt-get install --yes pdfsandwich
+	getPdfsandwich
 
 	# OCR tool and language packs
 	sudo apt-get install --yes tesseract-ocr tesseract-ocr-eng tesseract-ocr-chi-sim tesseract-ocr-chi-tra
