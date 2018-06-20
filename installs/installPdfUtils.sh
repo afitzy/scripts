@@ -20,16 +20,18 @@ function getPdfsandwich () {
 	echo "${friendlyName}: removing previous installation"
 	sudo apt-get remove --yes pdfsandwich
 
-	echo "${friendlyName}: downloading $urlFilename"
 	local url="http://sourceforge.net/projects/pdfsandwich/files/pdfsandwich_0.1.6_amd64.deb/download"
 	local urlFilename=$(echo "$url" | rev | cut --delimiter='/' --fields=2 | rev)
 	local filenameAbs="${tempdir}/${urlFilename}"
+	echo "${friendlyName}: downloading $urlFilename"
 	wget --output-document="$filenameAbs" "$url" 2>&1 | while read -r line; do log ; done
 
 	echo "${friendlyName}: installing"
 	sudo dpkg --install "$filenameAbs" 2>&1 | log
 	echo "${friendlyName}: done"
 }
+
+_VERBOSE=1
 
 if [[ "$(getOsVers)" == "16.04" ]]; then
 	# pdfsandwich generates "sandwich" OCR pdf files
