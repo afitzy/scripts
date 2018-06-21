@@ -23,7 +23,7 @@ def getPreviousWeekday(date=date.today()):
 
 def getExchgRate(currencyIn="USD", currencyOut=["CAD"], date=date.today()):
 	"""
-	Returns an exchange rate using https://github.com/hakanensari/fixer-io
+	Returns exchange rates relative to currencyIn
 	"""
 	logger = logging.getLogger("root")
 
@@ -35,7 +35,7 @@ def getExchgRate(currencyIn="USD", currencyOut=["CAD"], date=date.today()):
 	currencyOutStr = ','.join(currencyOut)
 	logger.info("Querying {}:[{}] on {}".format(currencyIn, currencyOutStr, dateStr))
 
-	reqStr = "http://api.fixer.io/latest"
+	reqStr = 'https://exchangeratesapi.io/api/latest'
 	params = dict(
 		base = currencyIn,
 		symbols = currencyOutStr,
@@ -58,7 +58,15 @@ def setCurrency(currencyBase="USD", currencyExchg=["USD", "CAD", "EUR", "SGD", "
 		logger.warn("Could not remove target currency from currency list")
 
 	exchgRates = getExchgRate(currencyIn=currencyBase, currencyOut=currencyExchg, date=date)
-	for c,r in exchgRates['rates'].items():
+
+	try:
+		rates = exchgRates['rates'].items()
+	except:
+		logger.fatal('Failed to get exchange rate')
+		logger.fatal('Info from server: {}'.format(exchgRates))
+		raise
+
+	for c,r in rates:
 		xrates.setrate(c, Decimal(r))
 
 
