@@ -11,7 +11,7 @@ import UtilCurrency
 
 
 def kibibyteToGigabyte(val):
-	""" Convert GB to KiB """
+	""" Convert KiB to GB """
 	return val * (2**10 / 1e9)
 
 
