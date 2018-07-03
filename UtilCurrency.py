@@ -11,27 +11,27 @@ from decimal import Decimal
 from money import Money, xrates
 
 
-def getPreviousWeekday(date=date.today()):
+def getPreviousWeekday(d=date.today()):
 	"""
 	Returns the ISO format date of the previous weekday.
 	If date is a weekend, use the Friday before it.
 	"""
-	datePrev = date + relativedelta(days=-1)
+	datePrev = d + relativedelta(days=-1)
 	dateOffset = 0 if datePrev.weekday() < 5 else 4 - datePrev.weekday()
 	newDate = datePrev + relativedelta(days=dateOffset)
 	return newDate.isoformat()
 
-def getExchgRate(currencyIn="USD", currencyOut=["CAD"], date=date.today()):
+def getExchgRate(currencyIn="USD", currencyOut=["CAD"], exchgDate=date.today()):
 	"""
 	Returns exchange rates relative to currencyIn
 	"""
 	logger = logging.getLogger("root")
 
-	if date > date.today():
-		date = date.today()
-		logger.error("Requested date is in the future! Using today instead.")
+	if exchgDate > date.today():
+		exchgDate = date.today()
+		logger.error("Requested exchgDate is in the future! Using today instead.")
 
-	dateStr = getPreviousWeekday() if date == date.today() else date
+	dateStr = getPreviousWeekday() if exchgDate == date.today() else exchgDate
 	currencyOutStr = ','.join(currencyOut)
 	logger.info("Querying {}:[{}] on {}".format(currencyIn, currencyOutStr, dateStr))
 
@@ -39,14 +39,14 @@ def getExchgRate(currencyIn="USD", currencyOut=["CAD"], date=date.today()):
 	params = dict(
 		base = currencyIn,
 		symbols = currencyOutStr,
-		date = dateStr,
+		exchgDate = dateStr,
 	)
 
 	resp = requests.get(url=reqStr, params=params, timeout=3)
 	data = json.loads(resp.text)
 	return data
 
-def setCurrency(currencyBase="USD", currencyExchg=["USD", "CAD", "EUR", "SGD", "JPY", "CNY", "GBP"], date=date.today()):
+def setCurrency(currencyBase="USD", currencyExchg=["USD", "CAD", "EUR", "SGD", "JPY", "CNY", "GBP"], exchgDate=date.today()):
 	logger = logging.getLogger("root")
 
 	xrates.install('money.exchange.SimpleBackend')
@@ -57,7 +57,7 @@ def setCurrency(currencyBase="USD", currencyExchg=["USD", "CAD", "EUR", "SGD", "
 	except:
 		logger.warn("Could not remove target currency from currency list")
 
-	exchgRates = getExchgRate(currencyIn=currencyBase, currencyOut=currencyExchg, date=date)
+	exchgRates = getExchgRate(currencyIn=currencyBase, currencyOut=currencyExchg, exchgDate=exchgDate)
 
 	try:
 		rates = exchgRates['rates'].items()
