@@ -49,7 +49,7 @@ if __name__ == '__main__':
 
 	for k,bill in bills.iteritems():
 		exchgRateDate = bill['end'] + relativedelta(days=1)
-		UtilCurrency.setCurrency(currencyBase="CAD", currencyExchg=["USD", "CAD"], date=exchgRateDate)
+		UtilCurrency.setCurrency(currencyBase="CAD", currencyExchg=["USD", "CAD"], exchgDate=exchgRateDate)
 
 		mnyFrmt = u"#,####0.0000"
 		print "{} thru {}; {:0.03f} GB; ${:0.02f} USD; {} USD:CAD exchg rate ${}; ${}".format(
