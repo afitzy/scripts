@@ -39,7 +39,17 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 	getPdfsandwich
 
 	# OCR tool and language packs
-	sudo apt-get install --yes tesseract-ocr tesseract-ocr-eng tesseract-ocr-chi-sim tesseract-ocr-chi-tra
+	sudo apt-get install --yes tesseract-ocr \
+		tesseract-ocr-chi-sim `Chinese` \
+		tesseract-ocr-chi-tra `Chinese - Traditional` \
+		tesseract-ocr-eng `english` \
+		tesseract-ocr-grc `Greek, Ancient (to 1453)` \
+		tesseract-ocr-lat `Latin` \
+		tesseract-ocr-heb `Hebrew` \
+		tesseract-ocr-equ `Math / equation detection module` \
+		tesseract-ocr-ara `Arabic` \
+		tesseract-ocr-deu `German` \
+		tesseract-ocr-fra `French`
 
 	# unpaper is a post-processing tool for scanned sheets of paper.
 	# Purpose is to make scanned book pages better readable on screen after conversion to PDF
