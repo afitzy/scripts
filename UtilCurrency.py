@@ -35,11 +35,11 @@ def getExchgRate(currencyIn="USD", currencyOut=["CAD"], exchgDate=getPreviousWee
 	currencyOutStr = ','.join(currencyOut)
 	logger.info("Querying {}:[{}] on {}".format(currencyIn, currencyOutStr, dateStr))
 
-	reqStr = 'https://exchangeratesapi.io/api/latest'
+	reqStr = 'https://exchangeratesapi.io/api/{}'.format(dateStr)
 	params = dict(
 		base = currencyIn,
 		symbols = currencyOutStr,
-		date = dateStr,
+		# date = dateStr,
 	)
 
 	resp = requests.get(url=reqStr, params=params, timeout=3)
