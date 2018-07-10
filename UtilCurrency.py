@@ -3,7 +3,7 @@
 from __future__ import print_function
 
 import logging
-from datetime import date
+from datetime import date,datetime
 from dateutil.relativedelta import relativedelta
 import requests
 import json
@@ -26,6 +26,15 @@ def getExchgRate(currencyIn="USD", currencyOut=["CAD"], exchgDate=getPreviousWee
 	Returns exchange rates relative to currencyIn
 	"""
 	logger = logging.getLogger("root")
+
+	if isinstance(exchgDate, datetime):
+		exchgDate = exchgDate.date()
+	elif isinstance(exchgDate, date):
+		exchgDate =  dateutil.parser.parse(exchgDate)
+	elif isinstance(exchgDate, str):
+		pass
+	else:
+		raise ValueError('Unrecognized exchgDate type: {}', type(exchgDate))
 
 	if exchgDate > date.today():
 		exchgDate = date.today()
