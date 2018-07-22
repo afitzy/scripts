@@ -34,15 +34,17 @@ _DEBUG=0
 _DEBUGFILE=
 path=.
 ext=jpeg
+compress=1
 output="$(date +%FT%T)%s.pdf"
 while true; do
-  case "$1" in
-    -v | --verbose ) _VERBOSE=1; shift ;;
+	case "$1" in
+		-v | --verbose ) _VERBOSE=1; shift ;;
     -d | --debug ) _DEBUG=1; shift ;;
-	 --debugfile ) _DEBUGFILE="$2"; shift 2 ;;
-	 --path ) path="$2"; shift 2 ;;
-	 -e | --ext ) ext="$2"; shift 2 ;;
-	 --output ) output="$2"; shift 2 ;; # Use %s
+		--nocompress ) compress=0; shift ;;
+		--debugfile ) _DEBUGFILE="$2"; shift 2 ;;
+		--path ) path="$2"; shift 2 ;;
+		-e | --ext ) ext="$2"; shift 2 ;;
+		--output ) output="$2"; shift 2 ;; # Use %s
     -- ) shift; break ;;
     * ) break ;;
   esac
@@ -61,15 +63,15 @@ for f in $(find ${path} -name "*.${ext}"); do
 	outFull="$tempdir/$outFile"
 
 	width="$(convert "$f" -format "%w" info:)"
-        height="$(convert "$f" -format "%h" info:)"
+	height="$(convert "$f" -format "%h" info:)"
 
-        xoff="$(convert xc: -format "%[fx:$width*0/100]" info:)"
-        yoff="$(convert xc: -format "%[fx:$height*0/100]" info:)"
-        ww="$(convert xc: -format "%[fx:$width*100/100]" info:)"
-        hh="$(convert xc: -format "%[fx:$height*72.5/100]" info:)"
+	xoff="$(convert xc: -format "%[fx:$width*0/100]" info:)"
+	yoff="$(convert xc: -format "%[fx:$height*0/100]" info:)"
+	ww="$(convert xc: -format "%[fx:$width*100/100]" info:)"
+	hh="$(convert xc: -format "%[fx:$height*72.5/100]" info:)"
 
-        log "Cropping $f to $outFull \"${ww}x${hh}+${xoff}+${yoff}\""
-        convert "$f" -crop ${ww}x${hh}+${xoff}+${yoff} "$outFull" | log
+	log "Cropping $f to $outFull \"${ww}x${hh}+${xoff}+${yoff}\""
+	convert "$f" -crop ${ww}x${hh}+${xoff}+${yoff} "$outFull" | log
 done
 unset IFS
 
@@ -81,14 +83,16 @@ if [ $numFiles -gt 0 ]; then
 	exitIfFileExists "${pdfHq}"
 	convert "${tempdir}/*.${ext}" "$pdfHq" 2>&1 | log
 
-	log "Compressing PDF to ${pdfCompressed}"
-	exitIfFileExists "${pdfCompressed}"
-	pdfCompressAvg="gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=${pdfCompressed}"
-	${pdfCompressAvg} "$pdfHq" 2>&1 | log
+	if [ $compress -eq 1 ]; then
+		log "Compressing PDF to ${pdfCompressed}"
+		exitIfFileExists "${pdfCompressed}"
+		pdfCompressAvg="gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=${pdfCompressed}"
+		${pdfCompressAvg} "$pdfHq" 2>&1 | log
 
-	srcSize="$(du -h "$pdfHq" | cut -f1)"
-	dstSize="$(du -h "$pdfCompressed" | cut -f1)"
-	log "Compressed \"${pdfHq}\" (${srcSize}) to \"${pdfCompressed}\" (${dstSize})"
+		srcSize="$(du -h "$pdfHq" | cut -f1)"
+		dstSize="$(du -h "$pdfCompressed" | cut -f1)"
+		log "Compressed \"${pdfHq}\" (${srcSize}) to \"${pdfCompressed}\" (${dstSize})"
+	fi
 else
 	log "No files to convert. PDF not created."
 fi
