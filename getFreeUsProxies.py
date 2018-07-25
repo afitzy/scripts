@@ -11,8 +11,9 @@ from enum import Enum
 Anonymity = Enum('Anonymity', 'elite anonymous transparent')
 
 def scrape():
+	user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.143 Safari/537.36'
 	try:
-		page = requests.get("https://www.us-proxy.org")
+		page = requests.get("https://www.us-proxy.org", headers={'User-Agent': user_agent})
 		content = page.content
 	except:
 		print("Fail!")
