@@ -45,9 +45,7 @@ def parseTypes(listOfDicts):
 	return listOfDicts
 
 def flatten(listOfDicts):
-	flattened = []
-	for row in listOfDicts:
-		flattened.append("http://{}:{}".format(row["IP Address"], row['Port']))
+	flattened = ["http://{}:{}".format(row["IP Address"], row['Port']) for row in listOfDicts]
 	return " ".join(flattened)
 
 def checkCounting(value):
