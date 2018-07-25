@@ -54,6 +54,9 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 	# unpaper is a post-processing tool for scanned sheets of paper.
 	# Purpose is to make scanned book pages better readable on screen after conversion to PDF
 	sudo apt-get install --yes unpaper
+
+	# pstoedit - a tool converting PostScript and PDF files into various vector graphic formats
+	sudo apt-get install --yes pstoedit
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
