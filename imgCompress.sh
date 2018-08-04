@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# NIX Advance Digital Frame 8 Inch: 1024 x 768 pixels
+# Nixplay Seed 8 inch: 1024 x 768 HD
+# Nixplay Seed 10 inch: 1024 x 768 HD
+
 scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "${scriptDir}/utils.sh"
 
@@ -73,6 +77,7 @@ for f in $(find ${path} -maxdepth 1 -name "$pattern"); do
 
 	# http://www.imagemagick.org/Usage/resize/
 	convert "$f" \
+		-auto-orient \
 		-resize "${resolutionStr}" \
 		"$outFull"
 		#-resize 50%
