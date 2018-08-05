@@ -74,12 +74,12 @@ IFS=$'\n'
 for f in ${fileList}; do
 	numFiles=$((numFiles+1))
 	outFile="${f##*/}"
-	outFull="$outputDir/$outFile"
+	outFull="${outputDir}/${outFile}"
 
 	# http://www.imagemagick.org/Usage/resize/
 	convert "$f" \
 		-auto-orient \
-		-resize "${resolutionStr}" \
+		-resize "$resolutionStr" \
 		"$outFull"
 		#-resize 50%
 		#-quality 50 \
