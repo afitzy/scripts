@@ -48,8 +48,8 @@ resolutionStr="${@:$OPTIND:1}"; shift;
 pattern="${@:$OPTIND:1}"; shift;
 
 if [ -z "$pattern" ]; then
-	echo "ERROR: Missing required argument 1: file name pattern"
-	exit -1
+	pattern='*'
+	echo "ERROR: Missing required argument 1: file name pattern. Using default pattern: ${pattern}"
 fi
 
 if [ -z "$resolutionStr" ]; then
@@ -68,9 +68,10 @@ echo "File name pattern = $pattern"
 echo "Resize resolution = $resolutionStr"
 
 path=.
+fileList=$(find "$path" -maxdepth 1 -name "$pattern" -exec file {} \; | grep -o -P '^.+(?=: \w+ image)')
 numFiles=0
 IFS=$'\n'
-for f in $(find ${path} -maxdepth 1 -name "$pattern"); do
+for f in ${fileList}; do
 	numFiles=$((numFiles+1))
 	outFile="${f##*/}"
 	outFull="$outputDir/$outFile"
