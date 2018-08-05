@@ -13,7 +13,7 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 	sudo apt-get install --yes gimp
 
 	# CLI tools
-	sudo apt-get install --yes pdftk imagemagick exiftool
+	sudo apt-get install --yes pdftk imagemagick exiftool mediainfo
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
