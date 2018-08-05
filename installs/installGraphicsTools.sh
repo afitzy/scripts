@@ -10,10 +10,10 @@ _VERBOSE=1
 
 if [[ "$(getOsVers)" == "16.04" ]]; then
 	# GUI tools
-	getPackages "gimp"
+	sudo apt-get install --yes gimp
 
 	# CLI tools
-        getPackages "pdftk" "imagemagick"
+	sudo apt-get install --yes pdftk imagemagick exiftool
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
