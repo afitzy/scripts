@@ -20,12 +20,12 @@ function verifyContinue () {
 	fi
 }
 
-# NOTE: This requires GNU getopt.  On Mac OS X and FreeBSD, you have to install this separately
-PARSED="$(getopt --options vdm: --long "verbose,debug,debugfile:,ext:,output:" -n ${scriptName} -- "$@")"
-
-if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
-
-# Note the quotes around `$PARSED': they are essential!
+PARSED="$(getopt --options vdo: --long "verbose,debug,output:" -n "$scriptName" -- "$@")"
+if [ $? != 0 ] ; then
+	log "getopt has complained about wrong arguments to stdout"
+	echo "Terminating..." >&2
+	exit 1
+fi
 eval set -- "$PARSED"
 
 _INTERACTIVE=1
@@ -36,8 +36,7 @@ while true; do
 	case "$1" in
 		-v | --verbose ) _VERBOSE=1; shift ;;
 		-d | --debug ) _DEBUG=1; shift ;;
-		-e | --ext ) ext="$2"; shift 2 ;;
-		--output ) outputDir="$2"; shift 2 ;; # Use %s
+		-o | --output ) outputDir="$2"; shift 2 ;; # Use %s
 		-- ) shift; break ;;
 		* ) break ;;
 	esac
@@ -47,14 +46,14 @@ done
 resolutionStr="${@:$OPTIND:1}"; shift;
 pattern="${@:$OPTIND:1}"; shift;
 
-if [ -z "$pattern" ]; then
-	pattern='*'
-	echo "ERROR: Missing required argument 1: file name pattern. Using default pattern: ${pattern}"
+if [ -z "$resolutionStr" ]; then
+	echo "ERROR: Missing required argument 1: image resolution string"
+	exit -1
 fi
 
-if [ -z "$resolutionStr" ]; then
-	echo "ERROR: Missing required argument 2: image resolution string"
-	exit -1
+if [ -z "$pattern" ]; then
+	pattern='*'
+	echo "ERROR: Missing required argument 2: file name pattern. Using default pattern: ${pattern}"
 fi
 
 if [ -d "$outputDir" ]; then
@@ -68,13 +67,14 @@ echo "File name pattern = $pattern"
 echo "Resize resolution = $resolutionStr"
 
 path=.
-fileList=$(find "$path" -maxdepth 1 -name "$pattern" -exec file {} \; | grep -o -P '^.+(?=: \w+ image)')
+fileList=$(find "$path" -maxdepth 1 -name "$pattern" -exec file {} \; | grep -oP '^.+(?=: \w+ image)')
 numFiles=0
 IFS=$'\n'
 for f in ${fileList}; do
 	numFiles=$((numFiles+1))
 	outFile="${f##*/}"
 	outFull="${outputDir}/${outFile}"
+	printf "Resizing #%s: \"%s\" to \"%s\"\n" "$numFiles" "$outFile" "$outFull"
 
 	# http://www.imagemagick.org/Usage/resize/
 	convert "$f" \
@@ -88,6 +88,6 @@ for f in ${fileList}; do
 	# https://www.imagemagick.org/script/escape.php
 	srcInfo="$(identify -format '%[width]x%[height] %[size]' "$f")"
 	dstInfo="$(identify -format '%[width]x%[height] %[size]' "$outFull")"
-	echo "Resized \"$outFile\" (${srcInfo}) to \"$outFull\" (${dstInfo})"
+	printf "Resized #%s: \"%s\" (%s) to \"%s\" (%s)\n" "$numFiles" "$outFile" "$srcInfo" "$outFull" "$dstInfo"
 done
 unset IFS
