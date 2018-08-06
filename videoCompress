@@ -32,7 +32,9 @@ while true; do
 	case "$1" in
 		-v | --verbose ) _VERBOSE=1; shift ;;
 		-d | --debug ) _DEBUG=1; shift ;;
-		-o | --output ) outputDir="$2"; shift 2 ;; # Use %s
+		-o | --output ) outputDir="$2"; shift 2 ;;
+		--start ) timeStartSec="$2"; shift 2 ;;
+		--stop ) timeStopSec="$2"; shift 2 ;;
 		-- ) shift; break ;;
 		* ) break ;;
 	esac
@@ -100,8 +102,13 @@ for f in "${fileList[@]}"; do
 	fi
 	# echo "Orientation is ${orientation}. Passing ${rotate} to HandBrakeCLI."
 
-	# start-at starting point from start of video in seconds
-	# stop-at stopping point from start-at in seconds
+	if [ -n "$timeStartSec" ]; then
+		handbrakeTimeStartSec="--start-at duration:${timeStartSec}"
+	fi
+	if [ -n "$timeStopSec" ]; then
+		handbrakeTimeStopSec="--stop-at duration:${timeStopSec}"
+	fi
+
 	# quality: Lower number is higher quality
 	# pfr (Peak Frame Rate): Will not increase frame rate. Prevents frame rate from exceeding this value.
 	command HandBrakeCLI \
@@ -116,12 +123,10 @@ for f in "${fileList[@]}"; do
 		--quality 4 \
 		--mixdown mono \
 		--rotate=${rotate} \
-		--pfr 29 1>/dev/null 2>/dev/null
-		#--rotate=angle=${orientation} \   # Doesn't appear to work
-		# --start-at duration:54 \
-		# --stop-at duration:34 ;
-		# --two-pass;
-		#--preset="Normal" \
+		$handbrakeTimeStartSec \
+		$handbrakeTimeStopSec \
+		--pfr 29 \
+		1>/dev/null 2>/dev/null
 
 	srcInfo="$(du --human-readable "$f" | cut -f 1 2>/dev/null)"
 	dstInfo="$(du --human-readable "$outFull" | cut -f 1 2>/dev/null)"
