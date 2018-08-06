@@ -66,52 +66,65 @@ maxWidth=$(echo $resolutionStr | cut -d 'x' -f 1)
 maxHeight=$(echo $resolutionStr | cut -d 'x' -f 2)
 
 path=.
-fileList=$(find "$path" -maxdepth 1 -name "$pattern" -exec mediainfo {} \; | perl -ne 's |^Rotation\s+:\s+([0-9]+)$|\1|g and print')
+allFiles=$(find "$path" -maxdepth 1 -name "$pattern" -type f)
+declare -a fileList=()
+IFS=$'\n'
+for f in ${allFiles}; do
+	isVideo=$(mediainfo "$f" | grep -oP '^Video$')
+	if [ -n "$isVideo" ]; then
+		fileList+=($f)
+	fi
+done
+unset IFS
+
 numFiles=0
 IFS=$'\n'
-for f in ${fileList}; do
+for f in "${fileList[@]}"; do
 	numFiles=$((numFiles+1))
 	outFile="${f##*/}"
 	outFull="${outputDir}/${outFile}"
 	orientation=$(exiftool -Rotation "$f" | perl -ne 's |^Rotation\s+:\s+([0-9]+)$|\1| and print')
-	printf "Resizing #%s: \"%s\" (%d) to \"%s\"\n" "$numFiles" "$orientation" "$outFile" "$outFull"
+	printf "Resizing #%d: \"%s\" (%d deg) to \"%s\"\n" "$numFiles" "$outFile" "$orientation" "$outFull"
 
-	# Rotate options
-	# 1=vertical flip
-	# 2=horizontal flip
-	# 3=default (vert + horiz flip)
-	# 4=clockwise 90 degrees
-	# 7=counterclockwise 90 degrees
-
-	# Quality options
-	# quality: Lower number is higher quality
+	if [ "$orientation" -eq "0" ]; then
+		rotate=0
+	elif [ "$orientation" -eq "90" ]; then
+		rotate=4
+	elif [ "$orientation" -eq "180" ]; then
+		rotate=3
+	elif [ "$orientation" -eq "270" ]; then
+		rotate=7
+	else
+		echo "Error: Unexpected orientation: ${orientation}"
+		rotate=0
+	fi
+	# echo "Orientation is ${orientation}. Passing ${rotate} to HandBrakeCLI."
 
 	# start-at starting point from start of video in seconds
 	# stop-at stopping point from start-at in seconds
+	# quality: Lower number is higher quality
+	# pfr (Peak Frame Rate): Will not increase frame rate. Prevents frame rate from exceeding this value.
+	command HandBrakeCLI \
+		-i "$f" \
+		-o "$outFull" \
+		--encoder mpeg4 \
+		--gain 24 \
+		--ab 64 \
+		--maxWidth "$maxWidth" \
+		--maxHeight "$maxHeight" \
+		--format av_mp4 \
+		--quality 4 \
+		--mixdown mono \
+		--rotate=${rotate} \
+		--pfr 29 1>/dev/null 2>/dev/null
+		#--rotate=angle=${orientation} \   # Doesn't appear to work
+		# --start-at duration:54 \
+		# --stop-at duration:34 ;
+		# --two-pass;
+		#--preset="Normal" \
 
-	# pfr (Peak Frame Rate)
-	# Will not increase frame rate. Prevents frame rate from exceeding this value.
-
-	# command HandBrakeCLI \
-	# 	-i "$f" \
-	# 	-o "$outFull" \
-	# 	--encoder mpeg4 \
-	# 	--gain 24 \
-	# 	--ab 64 \
-	# 	--maxWidth "$maxWidth" \
-	# 	--maxHeight "$maxHeight" \
-	# 	--format av_mp4 \
-	# 	--quality 4 \
-	# 	--mixdown mono \
-	# 	--rotate=angle=${orientation} \
-	# 	--pfr 29;
-	# 	# --start-at duration:54 \
-	# 	# --stop-at duration:34 ;
-	# 	# --two-pass;
-	# 	#--preset="Normal" \
-
-	srcInfo="$(du --human-readable "$src" | cut -f 1)"
-	dstInfo="$(du --human-readable "$dst" | cut -f 1)"
+	srcInfo="$(du --human-readable "$f" | cut -f 1 2>/dev/null)"
+	dstInfo="$(du --human-readable "$outFull" | cut -f 1 2>/dev/null)"
 	printf "Resized #%s: \"%s\" (%s) to \"%s\" (%s)\n" "$numFiles" "$outFile" "$srcInfo" "$outFull" "$dstInfo"
 done
 unset IFS
