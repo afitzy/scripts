@@ -57,6 +57,9 @@ if [[ "$(getOsVers)" == "16.04" ]]; then
 
 	# pstoedit - a tool converting PostScript and PDF files into various vector graphic formats
 	sudo apt-get install --yes pstoedit
+
+	# Converts XPS (remember Microsoft XPS writer?) to PDF
+	sudo apt-get install --yes libgxps-utils
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
