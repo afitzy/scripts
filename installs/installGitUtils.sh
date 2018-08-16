@@ -62,14 +62,17 @@ function installKdeDolphinPlugin ()
 
 if [[ "$(getOsVers)" == "16.04" ]]; then
 	# For office diffs
-	getPackages "docx2txt" "catdoc" "odt2txt" "python-excelerator" "xlsx2csv" "antiword"
-	getPackages "python-pdfminer" # pdf2txt
+	sudo apt-get install --yes docx2txt catdoc odt2txt python-excelerator xlsx2csv antiword
+	sudo apt-get install --yes python-pdfminer # pdf2txt
 
 	# For image diffs
-	getPackages "exif"
+	sudo apt-get install --yes exif
 
 	# For Thunderbird diffs
 	installMork
+
+	# For spreadsheet (ods) diffs
+	sudo apt-get install --yes gnumeric
 
 	# Hub tools (works best when aliased to git in bash profile)
 	installHub
