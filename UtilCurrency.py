@@ -29,9 +29,9 @@ def getExchgRate(currencyIn="USD", currencyOut=["CAD"], exchgDate=getPreviousWee
 
 	if isinstance(exchgDate, datetime):
 		exchgDate = exchgDate.date()
-	elif isinstance(exchgDate, date):
-		exchgDate =  dateutil.parser.parse(exchgDate)
 	elif isinstance(exchgDate, str):
+		exchgDate =  dateutil.parser.parse(exchgDate)
+	elif isinstance(exchgDate, date):
 		pass
 	else:
 		raise ValueError('Unrecognized exchgDate type: {}', type(exchgDate))
@@ -42,7 +42,7 @@ def getExchgRate(currencyIn="USD", currencyOut=["CAD"], exchgDate=getPreviousWee
 
 	dateStr = getPreviousWeekday().isoformat() if exchgDate == date.today() else exchgDate
 	currencyOutStr = ','.join(currencyOut)
-	logger.info("Querying {}:[{}] on {}".format(currencyIn, currencyOutStr, dateStr))
+	logger.info("Querying {}:[{}] for {}".format(currencyIn, currencyOutStr, dateStr))
 
 	reqStr = 'https://exchangeratesapi.io/api/{}'.format(dateStr)
 	params = dict(
@@ -64,12 +64,13 @@ def setCurrency(currencyBase="USD", currencyExchg=["USD", "CAD", "EUR", "SGD", "
 	try:
 		currencies.remove(currencyBase)
 	except:
-		logger.warn("Could not remove target currency from currency list")
+		logger.warn('Could not remove target currency from currency list')
 
 	exchgRates = getExchgRate(currencyIn=currencyBase, currencyOut=currencyExchg, exchgDate=exchgDate)
 
 	try:
 		rates = exchgRates['rates'].items()
+		logger.info('Received exchange rates: {}'.format(rates))
 	except:
 		logger.fatal('Failed to get exchange rate')
 		logger.fatal('Info from server: {}'.format(exchgRates))
