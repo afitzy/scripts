@@ -39,20 +39,31 @@ output="$(date +%FT%T)%s.pdf"
 while true; do
 	case "$1" in
 		-v | --verbose ) _VERBOSE=1; shift ;;
-    -d | --debug ) _DEBUG=1; shift ;;
+		-d | --debug ) _DEBUG=1; shift ;;
 		--nocompress ) compress=0; shift ;;
 		--debugfile ) _DEBUGFILE="$2"; shift 2 ;;
 		--path ) path="$2"; shift 2 ;;
 		-e | --ext ) ext="$2"; shift 2 ;;
 		--output ) output="$2"; shift 2 ;; # Use %s
-    -- ) shift; break ;;
-    * ) break ;;
-  esac
+		-- ) shift; break ;;
+		* ) break ;;
+	esac
 done
+
+# Positional arguments
+resolutionStr="${@:$OPTIND:1}"; shift;
+
+if [ -z "$resolutionStr" ]; then
+	echo "ERROR: Missing required argument 1: image resolution string"
+	exit -1
+fi
 
 tempdir=$(mktemp -d)
 trap cleanup EXIT
 log "Temp directory: $tempdir"
+
+maxWidth=$(echo $resolutionStr | cut -d 'x' -f 1)
+maxHeight=$(echo $resolutionStr | cut -d 'x' -f 2)
 
 numFiles=0
 IFS=$'\n'
@@ -67,8 +78,8 @@ for f in $(find ${path} -name "*.${ext}"); do
 
 	xoff="$(convert xc: -format "%[fx:$width*0/100]" info:)"
 	yoff="$(convert xc: -format "%[fx:$height*0/100]" info:)"
-	ww="$(convert xc: -format "%[fx:$width*100/100]" info:)"
-	hh="$(convert xc: -format "%[fx:$height*72.5/100]" info:)"
+	ww="$(convert xc: -format "%[fx:$width*${maxWidth}/100]" info:)"
+	hh="$(convert xc: -format "%[fx:$height*${maxHeight}/100]" info:)"
 
 	log "Cropping $f to $outFull \"${ww}x${hh}+${xoff}+${yoff}\""
 	convert "$f" -crop ${ww}x${hh}+${xoff}+${yoff} "$outFull" | log
