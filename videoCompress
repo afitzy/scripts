@@ -117,12 +117,12 @@ for f in "${fileList[@]}"; do
 		--encoder mpeg4 \
 		--gain 24 \
 		--ab 64 \
+		--rotate=${rotate} \
 		--maxWidth "$maxWidth" \
 		--maxHeight "$maxHeight" \
 		--format av_mp4 \
 		--quality 4 \
 		--mixdown mono \
-		--rotate=${rotate} \
 		$handbrakeTimeStartSec \
 		$handbrakeTimeStopSec \
 		--pfr 29 \
