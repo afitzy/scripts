@@ -22,7 +22,7 @@ function cleanup () {
 }
 
 # NOTE: This requires GNU getopt.  On Mac OS X and FreeBSD, you have to install this separately
-TEMP="$(getopt -o vdm: --long "verbose,debug,debugfile:,path:,ext:,output:" -n 'scanImgCrop' -- "$@")"
+TEMP="$(getopt -o vd --long "verbose,debug,debugfile:,path:,output:" -n 'scanImgCrop' -- "$@")"
 
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 
@@ -33,7 +33,6 @@ _VERBOSE=0
 _DEBUG=0
 _DEBUGFILE=
 path=.
-ext=jpeg
 compress=1
 output="$(date +%FT%T)%s.pdf"
 while true; do
@@ -43,7 +42,6 @@ while true; do
 		--nocompress ) compress=0; shift ;;
 		--debugfile ) _DEBUGFILE="$2"; shift 2 ;;
 		--path ) path="$2"; shift 2 ;;
-		-e | --ext ) ext="$2"; shift 2 ;;
 		--output ) output="$2"; shift 2 ;; # Use %s
 		-- ) shift; break ;;
 		* ) break ;;
@@ -52,22 +50,33 @@ done
 
 # Positional arguments
 resolutionStr="${@:$OPTIND:1}"; shift;
+pattern="${@:$OPTIND:1}"; shift;
 
 if [ -z "$resolutionStr" ]; then
 	echo "ERROR: Missing required argument 1: image resolution string"
 	exit -1
 fi
 
+if [ -z "$pattern" ]; then
+	pattern='*'
+	echo "ERROR: Missing required argument 2: file name pattern. Using default pattern: ${pattern}"
+fi
+
 tempdir=$(mktemp -d)
 trap cleanup EXIT
 log "Temp directory: $tempdir"
 
+echo "Output = $output"
+echo "File name pattern = $pattern"
+echo "Resize resolution = $resolutionStr"
+
 maxWidth=$(echo $resolutionStr | cut -d 'x' -f 1)
 maxHeight=$(echo $resolutionStr | cut -d 'x' -f 2)
 
+allFiles=$(find "$path" -maxdepth 1 -name "$pattern" -type f)
 numFiles=0
 IFS=$'\n'
-for f in $(find ${path} -name "*.${ext}"); do
+for f in ${allFiles}; do
 	numFiles=$((numFiles+1))
 
 	outFile="${f##*/}"
@@ -92,7 +101,7 @@ if [ $numFiles -gt 0 ]; then
 
 	log "Converting ${numFiles} scans to a single PDF as ${pdfHq}"
 	exitIfFileExists "${pdfHq}"
-	convert "${tempdir}/*.${ext}" "$pdfHq" 2>&1 | log
+	convert "${tempdir}/*" "$pdfHq" 2>&1 | log
 
 	if [ $compress -eq 1 ]; then
 		log "Compressing PDF to ${pdfCompressed}"
@@ -100,8 +109,8 @@ if [ $numFiles -gt 0 ]; then
 		pdfCompressAvg="gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=${pdfCompressed}"
 		${pdfCompressAvg} "$pdfHq" 2>&1 | log
 
-		srcSize="$(du -h "$pdfHq" | cut -f1)"
-		dstSize="$(du -h "$pdfCompressed" | cut -f1)"
+		srcSize="$(du --human-readable "$pdfHq" 2>/dev/null | cut -f1)"
+		dstSize="$(du --human-readable "$pdfCompressed" 2>/dev/null | cut -f1)"
 		log "Compressed \"${pdfHq}\" (${srcSize}) to \"${pdfCompressed}\" (${dstSize})"
 	fi
 else
