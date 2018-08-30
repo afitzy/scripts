@@ -11,7 +11,7 @@ source "${scriptDir}/../utils.sh"
 _VERBOSE=1
 
 if [[ "$(getOsVers)" == "16.04" ]]; then
-	sudo apt-get install --yes sudo apt-get install librecad
+	sudo apt-get install --yes librecad
 else
 	echo "Unrecognized OS version. Exiting."
 fi
