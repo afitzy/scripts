@@ -1,0 +1,28 @@
+#!/bin/bash
+
+start="$1"
+end="$2"
+in="$3"
+out="$4"
+
+if [ -z "$start" ]; then
+	echo "ERROR: Missing required argument 1: start time"
+	exit -1
+fi
+
+if [ -z "$end" ]; then
+	echo "ERROR: Missing required argument 2: end time"
+	exit -1
+fi
+
+if [ -z "$in" ]; then
+	echo "ERROR: Missing required argument 3: input file"
+	exit -1
+fi
+
+if [ -z "$out" ]; then
+	echo "ERROR: Missing required argument 4: output file"
+	exit -1
+fi
+
+ffmpeg -ss "$start" -t "$end" -i "$in" -vcodec copy -acodec copy "$out"
