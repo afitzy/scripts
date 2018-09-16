@@ -8,7 +8,7 @@ source "${scriptDir}/../utils.sh"
 
 # Relevant install steps copied from:
 # https://zoneminder.readthedocs.io/en/stable/installationguide/debian.html#easy-way-debian-jessie
-function installZoneMinder() {
+function installZoneMinderDebian() {
   # Step 3: Install Apache and MySQL
   # These are not dependencies for the package as they could be installed elsewhere.
   apt-get install --yes apache2 mysql-server
@@ -54,7 +54,7 @@ function installZoneMinder() {
 
 _VERBOSE=1
 
-if [[ "$(getOsVers)" == "16.04" ]]; then
+if [[ "$(getOsDistro)" == "Debian" ]] && [[ "$(getOsVers)" == "9.5" ]]; then
   installZoneMinder
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
