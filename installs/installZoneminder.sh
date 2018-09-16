@@ -8,6 +8,9 @@ source "${scriptDir}/../utils.sh"
 
 # Relevant install steps copied from:
 # https://zoneminder.readthedocs.io/en/stable/installationguide/debian.html#easy-way-debian-jessie
+#
+# Possibly helpful:
+# https://wiki.zoneminder.com/Debian_9_64-bit_with_Zoneminder_1.30.4_the_Easy_Way
 function installZoneMinderDebian() {
   echo "Step 3: Install Apache and MySQL"
   # These are not dependencies for the package as they could be installed elsewhere.
@@ -23,7 +26,7 @@ function installZoneMinderDebian() {
   gunzip "${readme}.gz"
   echo "REMINDER: You should read the doc at \"${readme}\""
 
-    echo "Step 7: Setup Database"
+  echo "Step 7: Setup Database"
   # Install the zm database and setup the user account. Refer to Hints in Ubuntu install should you choose to change default database user and password.
   cat /usr/share/zoneminder/db/zm_create.sql | sudo mysql --defaults-file=/etc/mysql/debian.cnf
   echo 'grant lock tables,alter,create,select,insert,update,delete,index on zm.* to 'zmuser'@localhost identified by "zmpass";'    | sudo mysql --defaults-file=/etc/mysql/debian.cnf mysql
