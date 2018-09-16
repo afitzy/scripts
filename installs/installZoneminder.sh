@@ -11,10 +11,10 @@ source "${scriptDir}/../utils.sh"
 function installZoneMinderDebian() {
   echo "Step 3: Install Apache and MySQL"
   # These are not dependencies for the package as they could be installed elsewhere.
-  apt-get install --yes apache2 mysql-server
+  sudo apt-get install --yes apache2 mysql-server
 
   echo "Step 5: Install ZoneMinder"
-  apt-get update
+  sudo apt-get update
   sudo apt-get install --yes zoneminder
 
   echo "Step 6: Read the Readme"
@@ -30,18 +30,18 @@ function installZoneMinderDebian() {
 
   echo "Step 8: zm.conf Permissions"
   # Adjust permissions to the zm.conf file to allow web account to access it.
-  chmod 740 /etc/zm/zm.conf
-  chown root:www-data /etc/zm/zm.conf
-  chown -R www-data:www-data /usr/share/zoneminder/
+  sudo chmod 740 /etc/zm/zm.conf
+  sudo chown root:www-data /etc/zm/zm.conf
+  sudo chown -R www-data:www-data /usr/share/zoneminder/
 
   echo "Step 9: Setup ZoneMinder service"
-  systemctl enable zoneminder.service
+  sudo systemctl enable zoneminder.service
 
   echo "Step 10: Configure Apache"
   # The following commands will setup the default /zm virtual directory and configure required apache modules.
-  a2enconf zoneminder
-  a2enmod cgi
-  a2enmod rewrite
+  sudo a2enconf zoneminder
+  sudo a2enmod cgi
+  sudo a2enmod rewrite
 
   echo "Step 11: Edit Timezone in PHP"
   # Search for [Date] (Ctrl + w then type Date and press Enter) and change date.timezone for your time zone. Don’t forget to remove the ; from in front of date.timezone
@@ -51,13 +51,13 @@ function installZoneMinderDebian() {
 
   echo "Step 12: Start ZoneMinder"
   # Reload Apache to enable your changes and then start ZoneMinder.
-  systemctl reload apache2
-  service apache2 restart
-  # systemctl start zoneminder
-  systemctl start zoneminder.service
+  sudo systemctl reload apache2
+  sudo service apache2 restart
+  # sudo systemctl start zoneminder
+  sudo systemctl start zoneminder.service
 
   echo "Confirming that Zoneminder is running"
-  systemctl status zoneminder.service
+  sudo systemctl status zoneminder.service
 
 }
 
