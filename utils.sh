@@ -40,9 +40,14 @@ function getPackages () {
 	done
 }
 
+function getDistro () {
+	distro=$(lsb_release --id --short 2>/dev/null)
+	echo "$distro"
+}
+
 function getOsVers () {
-	#echo $(lsb_release -r | grep -oP "[0-9]+[.][0-9]+")
-	lsb_release -r | cut -f2
+	release=$(lsb_release --release --short 2>/dev/null)
+	echo "$release"
 }
 
 function getPythonPackage () {
