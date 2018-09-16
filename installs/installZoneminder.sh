@@ -19,7 +19,7 @@ function installZoneMinderDebian() {
 
   # Step 6: Read the Readme
   # The rest of the install process is covered in the README.Debian, so feel free to have a read.
-  readme='/usr/share/doc/zoneminder/README.Debian'
+  local -r readme='/usr/share/doc/zoneminder/README.Debian'
   gunzip "${readme}.gz"
   echo "REMINDER: You should read the doc at \"${readme}\""
 
@@ -55,7 +55,7 @@ function installZoneMinderDebian() {
 _VERBOSE=1
 
 if [[ "$(getOsDistro)" == "Debian" ]] && [[ "$(getOsVers)" == "9.5" ]]; then
-  installZoneMinder
+  installZoneMinderDebian
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
