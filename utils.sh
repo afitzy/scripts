@@ -40,7 +40,7 @@ function getPackages () {
 	done
 }
 
-function getDistro () {
+function getOsDistro () {
 	distro=$(lsb_release --id --short 2>/dev/null)
 	echo "$distro"
 }
