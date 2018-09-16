@@ -23,7 +23,7 @@ function installZoneMinderDebian() {
   gunzip "${readme}.gz"
   echo "REMINDER: You should read the doc at \"${readme}\""
 
-  echo "Step 7: Setup Database"
+    echo "Step 7: Setup Database"
   # Install the zm database and setup the user account. Refer to Hints in Ubuntu install should you choose to change default database user and password.
   cat /usr/share/zoneminder/db/zm_create.sql | sudo mysql --defaults-file=/etc/mysql/debian.cnf
   echo 'grant lock tables,alter,create,select,insert,update,delete,index on zm.* to 'zmuser'@localhost identified by "zmpass";'    | sudo mysql --defaults-file=/etc/mysql/debian.cnf mysql
@@ -47,11 +47,18 @@ function installZoneMinderDebian() {
   # Search for [Date] (Ctrl + w then type Date and press Enter) and change date.timezone for your time zone. Don’t forget to remove the ; from in front of date.timezone
   #nano /etc/php/7.0/cli/php.ini
   # Canada/Eastern
+  # sed -i "s/;date.timezone =/date.timezone = $(sed 's/\//\\\//' /etc/timezone)/g" /etc/php/7.0/apache2/php.ini
 
   echo "Step 12: Start ZoneMinder"
   # Reload Apache to enable your changes and then start ZoneMinder.
   systemctl reload apache2
-  systemctl start zoneminder
+  service apache2 restart
+  # systemctl start zoneminder
+  systemctl start zoneminder.service
+
+  echo "Confirming that Zoneminder is running"
+  systemctl status zoneminder.service
+
 }
 
 
