@@ -7,14 +7,15 @@ dateStamp=$(date --iso-8601="seconds")
 source "${scriptDir}/../utils.sh"
 
 # Relevant install steps copied from:
-# https://zoneminder.readthedocs.io/en/stable/installationguide/debian.html#easy-way-debian-jessie
-#
-# Possibly helpful:
-# https://wiki.zoneminder.com/Debian_9_64-bit_with_Zoneminder_1.30.4_the_Easy_Way
+# Not very relevant to Debian 9:
+#   https://zoneminder.readthedocs.io/en/stable/installationguide/debian.html#easy-way-debian-jessie
+# Helpful for Debian 9:
+#   https://www.tecmint.com/install-zoneminder-video-surveillance-software-on-debian-9/
+#   https://wiki.zoneminder.com/Debian_9_64-bit_with_Zoneminder_1.30.4_the_Easy_Way
 function installZoneMinderDebian() {
   echo "Step 3: Install Apache and MySQL"
   # These are not dependencies for the package as they could be installed elsewhere.
-  sudo apt-get install --yes apache2 mysql-server
+  sudo apt-get install --yes zoneminder apache2 mysql-server php php-mysql libapache2-mod-php7.0 php7.0-gd
 
   echo "Step 5: Install ZoneMinder"
   sudo apt-get update
@@ -49,6 +50,7 @@ function installZoneMinderDebian() {
   echo "Step 11: Edit Timezone in PHP"
   # Search for [Date] (Ctrl + w then type Date and press Enter) and change date.timezone for your time zone. Don’t forget to remove the ; from in front of date.timezone
   #nano /etc/php/7.0/cli/php.ini
+  # Might also be here: /etc/php/7.0/apache2/php.ini’
   # Canada/Eastern
   # sed -i "s/;date.timezone =/date.timezone = $(sed 's/\//\\\//' /etc/timezone)/g" /etc/php/7.0/apache2/php.ini
 
