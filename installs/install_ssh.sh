@@ -15,6 +15,9 @@ function sshConfig () {
 if [[ "$(getOsVers)" == "16.04" ]]; then
 	getPackages "ssh"
 	sshConfig
+
+	# Needed for X11 tunneling
+	sudo apt-get install xauth
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
