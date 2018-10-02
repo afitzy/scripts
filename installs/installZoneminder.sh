@@ -63,7 +63,70 @@ function installZoneMinderDebian() {
 
   echo "Confirming that Zoneminder is running"
   sudo systemctl status zoneminder.service
+}
 
+function installApacheModSecurity() {
+  local -c friendlyName="apacheModSecurity"
+  sudo apt-get install --yes libapache2-modsecurity modsecurity-crs
+
+  local -c isEnabled=$(sudo apachectl -M 2>/dev/null | grep security)
+  if [[ -n "$isEnabled" ]] ; then
+    echo "$friendlyName: successfully installed"
+  fi
+
+  # Enable mod_security rule engine
+  local -c modsecConf="/etc/modsecurity/modsecurity.conf"
+  sudo mv /etc/modsecurity/modsecurity.conf-recommended "$modsecConf"
+  local -c modsecRuleEngineSetting="on"
+  sudo perl -pi -e "s/(?<=SecRuleEngine ).*/$modsecRuleEngineSetting/" "$modsecConf"
+  sudo service apache2 restart
+
+  # mod_security comes with core rule set (security rules) at /usr/share/modsecurity-crs
+  # For uptodate CRS, download mod_security CRS from GitHub instead
+
+  # remove the default CRS & download latest version of mod_security CRS
+  sudo rm -rf /usr/share/modsecurity-crs
+  git clone https://github.com/SpiderLabs/owasp-modsecurity-crs.git /usr/share/modsecurity-crs
+
+  # Rename the example setup file
+  cd /usr/share/modsecurity-crs
+  mv crs-setup.conf.example crs-setup.conf
+
+  # Enable these rules so it will work with Apache
+  local -c modsecApacheSecConf="/etc/apache2/mods-enabled/security2.conf"
+
+  local -c modsecApacheSecConfCommentOut="IncludeOptional /usr/share/modsecurity-crs/owasp-crs.load"
+  # To-do fix this to comment out just this line
+  #sudo perl -pi -e "s/^(\s+$modsecApacheSecConfCommentOut)/#\$1/" "$modsecApacheSecConf"
+
+  local -c modsecApacheSecConfOptComment="# Added by ${scriptName}::${friendlyName} on ${dateStamp}"
+  local -c modsecApacheSecConfOpt1='IncludeOptional "/usr/share/modsecurity-crs/*.conf"'
+
+  # TODO Instead of adding all the rules, suggest that rules are added explicitly from the folder. Makes it easier to add/remove them individually.
+  local -c modsecApacheSecConfOpt2='IncludeOptional "/usr/share/modsecurity-crs/rules/*.conf"'
+  sudo perl -i.bak -pe "\$_ = qq[\n\$_] if \$_ eq qq[</IfModule>\n]" "$modsecApacheSecConf"
+  sudo perl -i.bak -pe "\$_ = qq[\t${modsecApacheSecConfOptComment}\n\$_] if \$_ eq qq[</IfModule>\n]" "$modsecApacheSecConf"
+  sudo perl -i.bak -pe "\$_ = qq[\t${modsecApacheSecConfOpt1}\n\$_] if \$_ eq qq[</IfModule>\n]" "$modsecApacheSecConf"
+  sudo perl -i.bak -pe "\$_ = qq[\t${modsecApacheSecConfOpt2}\n\$_] if \$_ eq qq[</IfModule>\n]" "$modsecApacheSecConf"
+  sudo service apache2 restart
+}
+
+# References:
+# https://blog.rapid7.com/2017/04/09/how-to-configure-modevasive-with-apache-on-ubuntu-linux/
+function installApacheModEvasive() {
+  local -c friendlyName="apacheModEvasive"
+  sudo apt-get install --yes libapache2-mod-evasive
+
+  local -c isEnabled=$(sudo apachectl -M 2>/dev/null | grep evasive)
+  if [[ -n "$isEnabled" ]] ; then
+    echo "$friendlyName: successfully installed"
+  fi
+
+  local -c modevLogDir="/var/log/mod_evasive"
+  sudo vim /etc/apache2/mods-enabled/evasive.conf
+  sudo mkdir --parents "$modevLogDir"
+  sudo chown -R www-data:www-data "$modevLogDir"
+  sudo service apache2 restart
 }
 
 
@@ -71,6 +134,8 @@ _VERBOSE=1
 
 if [[ "$(getOsDistro)" == "Debian" ]] && [[ "$(getOsVers)" == "9.5" ]]; then
   installZoneMinderDebian
+  installApacheModSecurity
+  installApacheModEvasive
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
