@@ -16,7 +16,7 @@ function verifyContinue () {
 	fi
 }
 
-PARSED="$(getopt --options vdo: --long "verbose,debug,output:" -n "$scriptName" -- "$@")"
+PARSED="$(getopt --options vdo: --long "verbose,debug,output:,removeAudio" -n "$scriptName" -- "$@")"
 if [ $? != 0 ] ; then
 	log "getopt has complained about wrong arguments to stdout"
 	echo "Terminating..." >&2
@@ -28,6 +28,7 @@ _INTERACTIVE=1
 _VERBOSE=0
 _DEBUG=0
 outputDir=resized
+removeAudio=0
 while true; do
 	case "$1" in
 		-v | --verbose ) _VERBOSE=1; shift ;;
@@ -35,6 +36,7 @@ while true; do
 		-o | --output ) outputDir="$2"; shift 2 ;;
 		--start ) timeStartSec="$2"; shift 2 ;;
 		--stop ) timeStopSec="$2"; shift 2 ;;
+		--removeAudio ) removeAudio=1; shift ;;
 		-- ) shift; break ;;
 		* ) break ;;
 	esac
@@ -109,13 +111,18 @@ for f in "${fileList[@]}"; do
 		handbrakeTimeStopSec="--stop-at duration:${timeStopSec}"
 	fi
 
+	if [ "$removeAudio" -eq 1 ]; then
+		handbrakeAudioEnable="--audio=none"
+	fi
+
 	# quality: Lower number is higher quality
 	# pfr (Peak Frame Rate): Will not increase frame rate. Prevents frame rate from exceeding this value.
 	command HandBrakeCLI \
 		-i "$f" \
 		-o "$outFull" \
 		--encoder mpeg4 \
-		--gain 24 \
+		$handbrakeAudioEnable \
+		--gain 6 \
 		--ab 64 \
 		--rotate=${rotate} \
 		--maxWidth "$maxWidth" \
