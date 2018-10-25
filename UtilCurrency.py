@@ -44,7 +44,7 @@ def getExchgRate(currencyIn="USD", currencyOut=["CAD"], exchgDate=getPreviousWee
 	currencyOutStr = ','.join(currencyOut)
 	logger.info("Querying {}:[{}] for {}".format(currencyIn, currencyOutStr, dateStr))
 
-	reqStr = 'https://exchangeratesapi.io/api/{}'.format(dateStr)
+	reqStr = 'https://api.exchangeratesapi.io/{}'.format(dateStr)
 	params = dict(
 		base = currencyIn,
 		symbols = currencyOutStr,
@@ -52,7 +52,15 @@ def getExchgRate(currencyIn="USD", currencyOut=["CAD"], exchgDate=getPreviousWee
 	)
 
 	resp = requests.get(url=reqStr, params=params, timeout=3)
-	data = json.loads(resp.text)
+
+	try:
+		data = json.loads(resp.text)
+	except ValueError:
+		data = None
+		log.fatal('Could not parse JSON from received data.')
+		log.debug('Request URL: {}; request parameters: {}; received data: {}'.format(reqStr, params, data))
+		raise
+
 	return data
 
 def setCurrency(currencyBase="USD", currencyExchg=["USD", "CAD", "EUR", "SGD", "JPY", "CNY", "GBP"], exchgDate=getPreviousWeekday()):
