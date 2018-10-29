@@ -1,7 +1,11 @@
-/bin/bash
+#!/bin/bash
 
 # References:
 # https://askubuntu.com/questions/648603/how-to-create-an-animated-gif-from-mp4-video-via-command-line
 # https://superuser.com/questions/268985/remove-audio-from-video-file-with-ffmpeg
 
-ffmpeg -i "$1" -ss 00:01:00 -to 00:02:00.5 -r 10 -f image2pipe -vcodec ppm -an - | convert -delay 5 -loop 0 -layers Optimize - output.gif
+fileIn="$1"
+timeStart="$2" # Format: 00:01:00
+timeStop="$3" # Format: 00:01:00
+
+ffmpeg -i "$fileIn" -ss "$timeStart" -to "$timeStop" -r 10 -f image2pipe -vcodec ppm -an - | convert -delay 5 -loop 0 -layers Optimize - out.gif
