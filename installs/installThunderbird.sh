@@ -13,6 +13,9 @@ function installThunderbird ()
 	sudo add-apt-repository -y ppa:ubuntu-mozilla-security/ppa
 	sudo apt-get update
 	sudo apt-get install thunderbird
+
+	# Install Lightning plugin
+	sudo apt-get install xul-ext-lightning
 }
 
 if [[ "$(getOsVers)" == "16.04" ]]; then
