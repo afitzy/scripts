@@ -13,52 +13,34 @@ function cleanup () {
 }
 trap cleanup EXIT
 
-function installDropboxCli ()
-{
-	# Ref: http://www.dropboxwiki.com/tips-and-tricks/install-dropbox-in-an-entirely-text-based-linux-environment#debianubuntu
-
-	cd ${HOME}
-
-	# Stable 64-bit
-	wget -O dropbox.tar.gz "http://www.dropbox.com/download/?plat=lnx.x86_64"
-
-	# Sanity check
-	tar -tzf dropbox.tar.gz
-
-	tar -xvzf dropbox.tar.gz
-
-	${HOME}/.dropbox-dist/dropboxd &
-
-	# TODO: Add hooks to run automatically at system boot-up
-}
 
 
 _VERBOSE=1
 
-if [[ "$(getOsVers)" == "16.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 	# pv: Monitor the progress of data through a pipe
-	getPackages "pv"
+	sudo apt-get install --yes pv
 
 	# Network monitoring
-	getPackages "nethogs"
+	sudo apt-get install --yes nethogs
 
 	# File compression
-	getPackages "unrar"
+	sudo apt-get install --yes unrar
 
 	# fortunes
-	getPackages "fortune-mod" "fortunes" "fortunes-min" "fortunes-off" "fortunes-spam" "cookietool"
+	sudo apt-get install --yes fortune-mod fortunes fortunes-min fortunes-off fortunes-spam cookietool
 
 	# Colored-df
-	getPackages "dfc"
+	sudo apt-get install --yes dfc
 
 	# Colored diff
-	getPackages "colordiff"
+	sudo apt-get install --yes colordiff
 
 	# text processing
-	getPackages "wdiff"
+	sudo apt-get install --yes wdiff
 
 	# Prints a directory tree
-	getPackages "tree"
+	sudo apt-get install --yes tree
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi

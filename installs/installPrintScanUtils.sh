@@ -10,18 +10,18 @@ _VERBOSE=1
 
 function installHpTools ()
 {
-    getPackages "hplip"
+    sudo apt-get install --yes hplip
 
     # Fix for https://bugs.launchpad.net/ubuntu/+source/hplip/+bug/1306344
     sudo ln -f -s /usr/share/hplip/sendfax.py /usr/bin/hp-sendfax
 }
 
-if [[ "$(getOsVers)" == "16.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 	installHpTools
-	getPackages "xsane" "ksaneplugin"
+	sudo apt-get install --yes xsane ksaneplugin
 
 	# GUI tools
-	getPackages "skanlite"
+	sudo apt-get install --yes skanlite
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi

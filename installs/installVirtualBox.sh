@@ -10,8 +10,8 @@ function removeVirtualBox ()
 {
 	# Remove existing
 	sudo apt-get remove --purge virtualbox*
-	sudo apt-get clean
-	sudo apt-get autoremove
+	sudo apt-get clean 
+	sudo apt-get autoremove --yes
 }
 
 function installVitualBoxFromMultiverse ()
@@ -45,7 +45,7 @@ function installVirtualBoxFromOracle ()
 
 
 _VERBOSE=1
-if [[ "$(getOsVers)" == "16.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 	installVirtualBoxFromOracle
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."

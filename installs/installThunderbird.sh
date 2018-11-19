@@ -10,15 +10,15 @@ _VERBOSE=1
 
 function installThunderbird ()
 {
-	sudo add-apt-repository -y ppa:ubuntu-mozilla-security/ppa
+	sudo add-apt-repository --yes ppa:ubuntu-mozilla-security/ppa
 	sudo apt-get update
-	sudo apt-get install thunderbird
+	sudo apt-get install --yes thunderbird
 
 	# Install Lightning plugin
-	sudo apt-get install xul-ext-lightning
+	sudo apt-get install --yes xul-ext-lightning
 }
 
-if [[ "$(getOsVers)" == "16.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 	installThunderbird
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."

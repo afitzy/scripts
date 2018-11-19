@@ -8,12 +8,12 @@ source "${scriptDir}/../utils.sh"
 
 _VERBOSE=1
 
-if [[ "$(getOsVers)" == "16.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 	# GUI tools
-	getPackages "audacity"
+	sudo apt-get install --yes "audacity"
 
 	# CLI tools
-	getPackages "silan" "mp3val"
+	sudo apt-get install --yes "silan" "mp3val"
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi

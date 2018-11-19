@@ -33,7 +33,7 @@ function getPdfsandwich () {
 
 _VERBOSE=1
 
-if [[ "$(getOsVers)" == "16.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 	# pdfsandwich generates "sandwich" OCR pdf files
 	# http://www.tobias-elze.de/pdfsandwich/
 	getPdfsandwich

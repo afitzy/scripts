@@ -11,7 +11,7 @@ function installTranslateRepo ()
 	local repoAddr="https://github.com/soimort/translate-shell.git"
 	local instPrefix="$_DIR_PREFIX"
 
-	sudo apt-get install -y gawk
+	sudo apt-get install --yes gawk
 
 	cloneGitRepo "$_DIR_SRC" "$repoAddr"
 	sudo make install PREFIX="$instPrefix"
@@ -20,7 +20,7 @@ function installTranslateRepo ()
 }
 
 
-if [[ "$(getOsVers)" == "16.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 	#getPackage translate-shell
 	installTranslateRepo
 else

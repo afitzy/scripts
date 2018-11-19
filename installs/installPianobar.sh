@@ -43,7 +43,7 @@ function installPianobar ()
 	popd
 }
 
-if [[ "$(getOsVers)" == "16.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 	installPianobar
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."

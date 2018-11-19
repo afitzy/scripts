@@ -9,9 +9,9 @@ source "${scriptDir}/../utils.sh"
 function installLibreofficePpa ()
 {
     # Remove existing
-    sudo apt-get remove --purge libreoffice*
-    sudo apt-get clean
-    sudo apt-get autoremove
+    sudo apt-get remove --purge --yes libreoffice*
+    sudo apt-get clean --yes 
+    sudo apt-get autoremove --yes 
 
     # Add PPA for "LibreOffice fresh", the latest release of the newest series (but no alpha/beta releases)
     sudo add-apt-repository --yes ppa:libreoffice/ppa
@@ -31,9 +31,9 @@ function installLibreofficePpa ()
 
 }
 
-if [[ "$(getOsVers)" == "16.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 	installLibreofficePpa
-	getPackages "zim"
+	sudo apt-get install --yes zim
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
