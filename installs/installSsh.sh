@@ -12,12 +12,12 @@ function sshConfig () {
 	sudo update-rc.d ssh defaults
 }
 
-if [[ "$(getOsVers)" == "16.04" ]]; then
-	getPackages "ssh"
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
+	sudo apt-get install --yes ssh
 	sshConfig
 
 	# Needed for X11 tunneling
-	sudo apt-get install xauth
+	sudo apt-get install --yes xauth
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
