@@ -34,7 +34,7 @@ function installGoogleEarth ()
 }
 
 _VERBOSE=1
-if [[ "$(getOsVers)" == "16.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 	installGoogleEarth
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
