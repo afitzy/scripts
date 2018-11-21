@@ -20,6 +20,11 @@ destSize="$(bytesToHuman ${destSize})"
 echo "Preparing to write ${src} (${srcSize}) to ${dest} (${destSize})"
 verifyContinue
 
+# if [src == '.xz']
+# 	unxz --keep "$src"
+# 	src=
+# fi
+
 # Ref: https://unix.stackexchange.com/a/144227/154794
 sudo sh -c "pv \"${src}\" > \"${dest}\""
 echo "Syncing cached writes"
