@@ -4,19 +4,21 @@
 
 source utils.sh
 
-getPackages "pv"
+if [ -x "$(command -v pv 2> /dev/null)" ] || [ -x "$(command -v unxz 2> /dev/null)" ]; then
+	sudo apt-get install --yes pv xz-utils
+fi
 
 if [ "$#" -ne 2 ]; then
-	echo "Illegal number of parameters"
+	printf "Illegal number of parameters\n"
 	exit -1
 fi
 
 src="$1"
 dest="$2"
 
-if [ ${src: -3} == ".xz" ]
+if [ ${src: -3} == ".xz" ]; then
 	srcImg="${src%.xz}"
-	printf "Decompressing image from %s to %s" "$src" "$srcImg"
+	printf "Decompressing image from \"%s\" to \"%s\"\n" "$src" "$srcImg"
 	unxz --keep "$src"
 else
 	srcImg="$src"
@@ -26,10 +28,10 @@ srcSize="$(du --human-readable "$srcImg" | cut -f 1)"
 destSize="$(sudo blockdev --getsize64 $dest)"
 destSize="$(bytesToHuman ${destSize})"
 
-echo "Preparing to write ${srcImg} (${srcSize}) to ${dest} (${destSize})"
+printf "Preparing to write \"%s\" (%s) to \"%s\" (%s)\n" "$srcImg" "$srcSize" "$dest" "$destSize"
 verifyContinue
 
 # Ref: https://unix.stackexchange.com/a/144227/154794
 sudo sh -c "pv \"${srcImg}\" > \"${dest}\""
-echo "Syncing cached writes"
+printf "Syncing cached writes\n"
 sync
