@@ -13,19 +13,23 @@ fi
 
 src="$1"
 dest="$2"
-srcSize="$(du --human-readable "$src" | cut -f 1)"
+
+if [ ${src: -3} == ".xz" ]
+	srcImg="${src%.xz}"
+	printf "Decompressing image from %s to %s" "$src" "$srcImg"
+	unxz --keep "$src"
+else
+	srcImg="$src"
+fi
+
+srcSize="$(du --human-readable "$srcImg" | cut -f 1)"
 destSize="$(sudo blockdev --getsize64 $dest)"
 destSize="$(bytesToHuman ${destSize})"
 
-echo "Preparing to write ${src} (${srcSize}) to ${dest} (${destSize})"
+echo "Preparing to write ${srcImg} (${srcSize}) to ${dest} (${destSize})"
 verifyContinue
 
-# if [src == '.xz']
-# 	unxz --keep "$src"
-# 	src=
-# fi
-
 # Ref: https://unix.stackexchange.com/a/144227/154794
-sudo sh -c "pv \"${src}\" > \"${dest}\""
+sudo sh -c "pv \"${srcImg}\" > \"${dest}\""
 echo "Syncing cached writes"
 sync
