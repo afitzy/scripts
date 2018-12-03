@@ -12,6 +12,9 @@ if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 	# Disks
 	sudo apt-get install --yes gnome-disk-utility
 
+	# show where your diskspace is being used
+	sudo apt-get install filelight
+
 	# Startup disk creator
 	sudo apt-get install --yes usb-creator-kde
 
