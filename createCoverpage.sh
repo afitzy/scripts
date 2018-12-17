@@ -74,4 +74,3 @@ echo "Temp tex source: $tempsrc"
 echo "Temp tex dest: $tempdest"
 
 cp "$tempdest" "$destPdf"
-okular "$destPdf" &
