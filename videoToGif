@@ -8,13 +8,14 @@ fileIn="$1"
 timeStart="$2" # Format: 00:01:00
 timeStop="$3" # Format: 00:01:00
 width="$4"
+framesPerSec=10
 
 ffmpeg \
 	-i "$fileIn" \
 	-filter:v scale=${width}:-1 \
 	-ss "$timeStart" \
 	-to "$timeStop" \
-	-r 10 \
+	-r $framesPerSec \
 	-f image2pipe \
 	-vcodec ppm \
 	-an \
