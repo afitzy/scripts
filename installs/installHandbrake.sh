@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source "${scriptDir}/../utils.sh"
+
 function getHandbrake () {
 	# Ref: https://launchpad.net/~stebbins/+archive/ubuntu/handbrake-releases
 	# Ref: https://websiteforstudents.com/install-handbrake-on-ubuntu-16-04-17-10-18-04/
