@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Use tesseract for a quick OCR to stdout
+f=$(mktemp --directory)
+zimFile="$1"
+mdFile="${f}/${1}.md"
+zim2markdown.py --out="$mdFile" "$zimFile" && md2pdf "$mdFile" "${zimFile}.pdf"
+rm -rf "$f"

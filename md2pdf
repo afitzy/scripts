@@ -1,0 +1,12 @@
+#!/bin/bash
+
+input="$1"
+output="$2"
+
+pandoc \
+	--latex-engine=xelatex \
+	-V 'geometry:margin=2.5cm' \
+	-V 'header-includes:\hypersetup{colorlinks=true, allbordercolors={0 0 0}}' \
+	--columns=6 \
+	-o "$output" \
+	"$input"
