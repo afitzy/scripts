@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Use tesseract for a quick OCR to stdout
+f=$(mktemp)
+tesseract -l eng+chi_sim+chi_tra "$1" "$f"
+f+=".txt"
+cat "$f"
+rm "$f"
