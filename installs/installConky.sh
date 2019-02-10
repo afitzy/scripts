@@ -13,12 +13,11 @@ source "${scriptDir}/../utils.sh"
 
 _VERBOSE=1
 
-if [[ "$(getOsVers)" == "16.04" ]]; then
-        getPackages "conky" "conky-all" "lua5.1" "hddtemp" "smartmontools" "thermald" "lm-sensors"
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
+	getPackages "conky" "conky-all" "lua5.1" "hddtemp" "smartmontools" "thermald" "lm-sensors"
+	conky -c ~/.conky/.conkyDateTime &
+	conky -c ~/.conky/.conkySysStats &
+	conky -c ~/.conky/.conkyFortune &
 else
         log "Unrecognized OS version. Not installed pre-requisites."
 fi
-
-conky -c ~/.conky/.conkyDateTime &
-conky -c ~/.conky/.conkySysStats &
-conky -c ~/.conky/.conkyFortune &
