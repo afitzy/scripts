@@ -1,6 +1,7 @@
 #!/bin/bash
 
-source utils.sh
+scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source "${scriptDir}/utils.sh"
 
 scriptName="$(basename "$0")"
 
