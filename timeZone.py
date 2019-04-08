@@ -55,7 +55,7 @@ if __name__ == '__main__':
 		print 'No time zone information provided! Assuming {} ({})'.format(tzStr, tz)
 
 	# Formatting ref: https://stackoverflow.com/a/9989441/4146779
-	timeZones = [(name, d0.astimezone(timezone(tz)).strftime(dtFrmtLng), d0.astimezone(timezone(tz)).strftime(dtFrmtShrt)) for name,tz in timezones]
+	timeZones = [(name, d0.astimezone(timezone(tz)).strftime(dtFrmtLng), '('+d0.astimezone(timezone(tz)).strftime(dtFrmtShrt)+')') for name,tz in timezones]
 
 	# Sort output by earliest to latest datetime
 	timeZones = sorted(timeZones, key=lambda x: x[1])
