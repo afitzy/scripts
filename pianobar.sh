@@ -57,7 +57,7 @@ if [[ $_INSTALL -eq 1 ]]; then
 	exit
 fi
 
-proxies=("$(getFreeUsProxies.py --max=20 --startIdx=${_START_IDX})")
+proxies=("$(getFreeUsProxies.py --max=50 --startIdx=${_START_IDX})")
 idx=$(($_START_IDX - 1))
 for proxy in ${proxies[@]}; do
 	idx=$((idx + 1))
