@@ -7,15 +7,21 @@
 fileIn="$1"
 timeStart="$2" # Format: 00:01:00
 timeStop="$3" # Format: 00:01:00
-width="$4"
+scaleWidth="$4"
+
 framesPerSec=10
+presentationRate=PTS
+
+cropTopLeftPointX=0
+cropTopLeftPointY=0
+cropOutWidth=in_w
+cropOutHeight=in_h
 
 ffmpeg \
 	-i "$fileIn" \
-	-filter:v scale=${width}:-1 \
 	-ss "$timeStart" \
 	-to "$timeStop" \
-	-r $framesPerSec \
+	-filter:v "deshake, crop=w=${cropOutWidth}:h=${cropOutHeight}:x=${cropTopLeftPointX}:y=${cropTopLeftPointY}, scale=${scaleWidth}:-2, setsar=1, setpts=${presentationRate}, fps=fps=${framesPerSec}" \
 	-f image2pipe \
 	-vcodec ppm \
 	-an \
