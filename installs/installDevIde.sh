@@ -25,6 +25,9 @@ if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 
 	# Static code analysis
 	getPackages "cppcheck"
+
+	# Code formatters
+	pip install jsbeautifier
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
