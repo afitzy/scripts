@@ -1,0 +1,3 @@
+#!/bin/bash
+
+grep --ignore-case "text:p" "$1"
