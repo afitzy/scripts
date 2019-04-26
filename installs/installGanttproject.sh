@@ -22,7 +22,7 @@ function getGanttProject () {
 	# Uninstall existing version
 	sudo apt-get remove --yes ganttproject
 
-	local url="http://www.ganttproject.biz/dl/2.8.5/lin"
+	local url="http://www.ganttproject.biz/dl/2.8.10/lin"
 	local filename="ganttproject.deb"
 	local filenameAbs="${tempdir}/${filename}"
 
