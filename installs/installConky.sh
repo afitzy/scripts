@@ -14,7 +14,7 @@ source "${scriptDir}/../utils.sh"
 _VERBOSE=1
 
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
-	getPackages "conky" "conky-all" "lua5.1" "hddtemp" "smartmontools" "thermald" "lm-sensors"
+	sudo apt-get install conky conky-all lua5.1 hddtemp smartmontools thermald lm-sensors
 	conky -c ~/.conky/.conkyDateTime &
 	conky -c ~/.conky/.conkySysStats &
 	conky -c ~/.conky/.conkyFortune &
