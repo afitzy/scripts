@@ -1,17 +1,46 @@
 #!/bin/bash
 
+scriptName="$(basename "$0")"
+dateStamp=$(date --iso-8601="seconds")
+
+PARSED="$(getopt --options vdo: --long "verbose,debug,start:,stop:,width:,framesRate:,outputRateScalar:" -n "$scriptName" -- "$@")"
+if [ $? != 0 ] ; then
+	log "getopt has complained about wrong arguments to stdout"
+	echo "Terminating..." >&2
+	exit 1
+fi
+eval set -- "$PARSED"
+
+_INTERACTIVE=1
+_VERBOSE=0
+_DEBUG=0
+outputDir=resized
+scaleWidth=250
+framesPerSec=10
+presentationRate=PTS
+
+while true; do
+	case "$1" in
+		-v | --verbose ) _VERBOSE=1; shift ;;
+		-d | --debug ) _DEBUG=1; shift ;;
+		--start ) timeStart="$2"; shift 2 ;; # Format: 00:01:00
+		--stop ) timeStop="$2"; shift 2 ;; # Format: 00:01:00
+		--width ) scaleWidth="$2"; shift 2 ;;
+		--framesRate ) framesPerSec="$2"; shift 2 ;;
+		--outputRateScalar ) presentationRate="(PTS-STARTPTS)*${2}"; shift 2;;
+		-- ) shift; break ;;
+		* ) break ;;
+	esac
+done
+
+# Positional arguments
+fileIn="${@:$OPTIND:1}"; shift;
+
+
+
 # References:
 # https://askubuntu.com/questions/648603/how-to-create-an-animated-gif-from-mp4-video-via-command-line
 # https://superuser.com/questions/268985/remove-audio-from-video-file-with-ffmpeg
-
-fileIn="$1"
-timeStart="$2" # Format: 00:01:00
-timeStop="$3" # Format: 00:01:00
-scaleWidth="$4"
-rateDivisor=1
-
-framesPerSec=5
-presentationRate="(PTS-STARTPTS)/${rateDivisor}"
 
 cropTopLeftPointX=0
 cropTopLeftPointY=0

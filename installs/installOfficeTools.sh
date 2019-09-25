@@ -10,8 +10,8 @@ function installLibreofficePpa ()
 {
     # Remove existing
     sudo apt-get remove --purge --yes libreoffice*
-    sudo apt-get clean --yes 
-    sudo apt-get autoremove --yes 
+    sudo apt-get clean --yes
+    sudo apt-get autoremove --yes
 
     # Add PPA for "LibreOffice fresh", the latest release of the newest series (but no alpha/beta releases)
     sudo add-apt-repository --yes ppa:libreoffice/ppa
@@ -28,6 +28,11 @@ function installLibreofficePpa ()
         libreoffice-style-* \
         libreoffice-templates \
         libreoffice-writer
+
+	# Workaround for transparent menu problem, per
+	# https://ask.libreoffice.org/en/question/201771/menus-are-transparent-after-recent-update/
+	sudo apt-get --yes install libreoffice-gtk*
+	sudo apt-get --yes install libreoffice-kde*
 
 }
 
