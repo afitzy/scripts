@@ -8,9 +8,10 @@ fileIn="$1"
 timeStart="$2" # Format: 00:01:00
 timeStop="$3" # Format: 00:01:00
 scaleWidth="$4"
+rateDivisor=1
 
-framesPerSec=10
-presentationRate=PTS
+framesPerSec=5
+presentationRate="(PTS-STARTPTS)/${rateDivisor}"
 
 cropTopLeftPointX=0
 cropTopLeftPointY=0
