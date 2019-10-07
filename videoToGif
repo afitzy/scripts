@@ -27,7 +27,7 @@ while true; do
 		--stop ) timeStop="$2"; shift 2 ;; # Format: 00:01:00
 		--width ) scaleWidth="$2"; shift 2 ;;
 		--framesRate ) framesPerSec="$2"; shift 2 ;;
-		--outputRateScalar ) presentationRate="PTS*${2}"; shift 2;;
+		--outputRateScalar ) presentationRate="(PTS-STARTPTS)*${2}"; shift 2;;
 		-- ) shift; break ;;
 		* ) break ;;
 	esac
