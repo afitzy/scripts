@@ -62,6 +62,12 @@ if [ -d "$outputDir" ]; then
 fi
 mkdir "$outputDir" 2>/dev/null
 
+if [ "$_VERBOSE" -eq 1 ]; then
+	exec 3>&1
+else
+	exec 3>&1 &>/dev/null
+fi
+
 echo "Output directory = $outputDir"
 echo "File name pattern = $pattern"
 echo "Resize resolution = $resolutionStr"
@@ -133,7 +139,7 @@ for f in "${fileList[@]}"; do
 		$handbrakeTimeStartSec \
 		$handbrakeTimeStopSec \
 		--pfr 29 \
-		1>/dev/null 2>/dev/null
+		>&3
 
 	srcInfo="$(du --human-readable "$f" | cut -f 1 2>/dev/null)"
 	dstInfo="$(du --human-readable "$outFull" | cut -f 1 2>/dev/null)"
