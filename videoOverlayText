@@ -28,7 +28,6 @@ _INTERACTIVE=1
 _VERBOSE=0
 _DEBUG=0
 outputDir=resized
-removeAudio=0
 while true; do
 	case "$1" in
 		-v | --verbose ) _VERBOSE=1; shift ;;
