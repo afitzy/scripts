@@ -1,0 +1,29 @@
+#!/bin/bash
+
+
+
+
+
+# Crop
+# https://video.stackexchange.com/a/4571/26369
+ffmpeg -i in.mp4 -filter:v "crop=out_w:out_h:x:y" out.mp4
+
+# Preview crop
+ffplay -i input -vf "crop=in_w:in_h-40"
+
+
+
+
+
+# Re-encode
+ffmpeg -i "originals/video.ogv" -vcodec libx264 -acodec libfaac "out.m4v"
+
+
+
+
+
+
+# Concatenate
+ffmpeg -i 1.mp4 -c copy -bsf:v h264_mp4toannexb -f mpegts intermediate1.ts
+ffmpeg -i 2.m4v -c copy -bsf:v h264_mp4toannexb -f mpegts intermediate2.ts
+ffmpeg -i "concat:intermediate1.ts|intermediate2.ts" -c copy -bsf:a aac_adtstoasc output.mp4
