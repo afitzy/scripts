@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Join to videos using concat demuxer
+# Ref: https://stackoverflow.com/a/11175851/4146779
+
+cleanup () {
+	# echo "Deleting temporary files"
+	rm -f "$temptxtfile"
+}
+trap cleanup EXIT
+
+temptxtfile=$(mktemp --suffix=txt --quiet)
+for filename in "$@"; do
+	echo "file '$(realpath "$filename")'" >> "$temptxtfile"
+done
+
+cat "$temptxtfile"
+ffmpeg -f concat -safe 0 -i "$temptxtfile" -c copy 'outputJoined.mp4'
