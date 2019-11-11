@@ -108,7 +108,7 @@ for f in "${fileList[@]}"; do
 		echo "Error: Unexpected orientation: ${orientation}"
 		rotate=0
 	fi
-	# echo "Orientation is ${orientation}. Passing ${rotate} to HandBrakeCLI."
+	echo "Orientation is ${orientation}. Passing ${rotate} to HandBrakeCLI." >&3
 
 	if [ -n "$timeStartSec" ]; then
 		handbrakeTimeStartSec="--start-at=duration:${timeStartSec}"
