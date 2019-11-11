@@ -9,7 +9,7 @@ cleanup () {
 }
 trap cleanup EXIT
 
-temptxtfile=$(mktemp --suffix=txt --quiet)
+temptxtfile=$(mktemp --suffix=.txt --quiet)
 for filename in "$@"; do
 	echo "file '$(realpath "$filename")'" >> "$temptxtfile"
 done
