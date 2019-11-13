@@ -23,8 +23,8 @@ while true; do
 	case "$1" in
 		-v | --verbose ) _VERBOSE=1; shift ;;
 		-d | --debug ) _DEBUG=1; shift ;;
-		--start ) timeStart="$2"; shift 2 ;; # Format: 00:01:00
-		--stop ) timeStop="$2"; shift 2 ;; # Format: 00:01:00
+		--start ) timeStartSec="$2"; shift 2 ;; # Format: 00:01:00
+		--stop ) timeStopSec="$2"; shift 2 ;; # Format: 00:01:00
 		--width ) scaleWidth="$2"; shift 2 ;;
 		--framesRate ) framesPerSec="$2"; shift 2 ;;
 		--outputRateScalar ) presentationRate="(PTS-STARTPTS)*${2}"; shift 2;;
@@ -36,7 +36,12 @@ done
 # Positional arguments
 fileIn="${@:$OPTIND:1}"; shift;
 
-
+if [ -n "$timeStartSec" ]; then
+	ffmpegTimeStartSec="-ss $timeStartSec"
+fi
+if [ -n "$timeStopSec" ]; then
+	ffmpegTimeStopSec="-to $timeStopSec"
+fi
 
 # References:
 # https://askubuntu.com/questions/648603/how-to-create-an-animated-gif-from-mp4-video-via-command-line
@@ -49,8 +54,8 @@ cropOutHeight=in_h
 
 ffmpeg \
 	-i "$fileIn" \
-	-ss "$timeStart" \
-	-to "$timeStop" \
+	$ffmpegTimeStartSec \
+	$ffmpegTimeStopSec \
 	-filter:v "deshake, crop=w=${cropOutWidth}:h=${cropOutHeight}:x=${cropTopLeftPointX}:y=${cropTopLeftPointY}, scale=${scaleWidth}:-2, setsar=1, setpts=${presentationRate}, fps=fps=${framesPerSec}" \
 	-f image2pipe \
 	-vcodec ppm \
