@@ -93,7 +93,7 @@ for f in "${fileList[@]}"; do
 	numFiles=$((numFiles+1))
 	outFile="${f##*/}"
 	outFull="${outputDir}/${outFile}"
-	orientation=$(exiftool -Rotation "$f" | perl -ne 's |^Rotation\s+:\s+([0-9]+)$|\1| and print')
+	orientation=$(exiftool -api largefilesupport=1 -Rotation "$f" | perl -ne 's |^Rotation\s+:\s+([0-9]+)$|\1| and print')
 	printf "Resizing #%d: \"%s\" (%d deg) to \"%s\"\n" "$numFiles" "$outFile" "$orientation" "$outFull"
 
 	if [ "$orientation" -eq "0" ]; then
