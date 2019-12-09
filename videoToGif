@@ -3,7 +3,7 @@
 scriptName="$(basename "$0")"
 dateStamp=$(date --iso-8601="seconds")
 
-PARSED="$(getopt --options vdo: --long "verbose,debug,start:,stop:,width:,framesRate:,outputRateScalar:" -n "$scriptName" -- "$@")"
+PARSED="$(getopt --options vdo: --long "verbose,debug,start:,stop:,width:,frameRate:,outputRateScalar:,nodeshake" -n "$scriptName" -- "$@")"
 if [ $? != 0 ] ; then
 	log "getopt has complained about wrong arguments to stdout"
 	echo "Terminating..." >&2
@@ -18,6 +18,7 @@ outputDir=resized
 scaleWidth=250
 framesPerSec=10
 presentationRate=PTS
+ffmpegDeshake="deshake,"
 
 while true; do
 	case "$1" in
@@ -26,8 +27,9 @@ while true; do
 		--start ) timeStartSec="$2"; shift 2 ;; # Format: 00:01:00
 		--stop ) timeStopSec="$2"; shift 2 ;; # Format: 00:01:00
 		--width ) scaleWidth="$2"; shift 2 ;;
-		--framesRate ) framesPerSec="$2"; shift 2 ;;
+		--frameRate ) framesPerSec="$2"; shift 2 ;;
 		--outputRateScalar ) presentationRate="(PTS-STARTPTS)*${2}"; shift 2;;
+		--nodeshake ) ffmpegDeshake=""; shift ;;
 		-- ) shift; break ;;
 		* ) break ;;
 	esac
@@ -56,7 +58,7 @@ ffmpeg \
 	-i "$fileIn" \
 	$ffmpegTimeStartSec \
 	$ffmpegTimeStopSec \
-	-filter:v "deshake, crop=w=${cropOutWidth}:h=${cropOutHeight}:x=${cropTopLeftPointX}:y=${cropTopLeftPointY}, scale=${scaleWidth}:-2, setsar=1, setpts=${presentationRate}, fps=fps=${framesPerSec}" \
+	-filter:v "${ffmpegDeshake} crop=w=${cropOutWidth}:h=${cropOutHeight}:x=${cropTopLeftPointX}:y=${cropTopLeftPointY}, scale=${scaleWidth}:-2, setsar=1, setpts=${presentationRate}, fps=fps=${framesPerSec}" \
 	-f image2pipe \
 	-vcodec ppm \
 	-an \
