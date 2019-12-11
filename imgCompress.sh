@@ -20,7 +20,7 @@ function verifyContinue () {
 	fi
 }
 
-PARSED="$(getopt --options vdo: --long "verbose,debug,output:" -n "$scriptName" -- "$@")"
+PARSED="$(getopt --options vdo:e: --long "verbose,debug,output:,ext:" -n "$scriptName" -- "$@")"
 if [ $? != 0 ] ; then
 	log "getopt has complained about wrong arguments to stdout"
 	echo "Terminating..." >&2
@@ -32,11 +32,13 @@ _INTERACTIVE=1
 _VERBOSE=0
 _DEBUG=0
 outputDir=resized
+newFileExtension=
 while true; do
 	case "$1" in
 		-v | --verbose ) _VERBOSE=1; shift ;;
 		-d | --debug ) _DEBUG=1; shift ;;
-		-o | --output ) outputDir="$2"; shift 2 ;; # Use %s
+		-o | --output ) outputDir="$2"; shift 2 ;;
+		-e | --ext ) newFileExtension="$2"; shift 2 ;;
 		-- ) shift; break ;;
 		* ) break ;;
 	esac
@@ -72,8 +74,16 @@ numFiles=0
 IFS=$'\n'
 for f in ${fileList}; do
 	numFiles=$((numFiles+1))
+
 	outFile="${f##*/}"
-	outFull="${outputDir}/${outFile}"
+	outFileBasename="${outFile%.*}"
+	outFileExt="${outFile##*.}"
+
+	if [ -z "$newFileExtension" ]; then
+		outFull="${outputDir}/${outFile}"
+	else
+		outFull="${outputDir}/${outFileBasename}.${newFileExtension}"
+	fi
 	printf "Resizing #%s: \"%s\" to \"%s\"\n" "$numFiles" "$outFile" "$outFull"
 
 	# http://www.imagemagick.org/Usage/resize/
