@@ -68,6 +68,8 @@ else
 	exec 3>&1 &>/dev/null
 fi
 
+handbrakeVersion=$(HandBrakeCLI --version 2>&1 | grep --only-matching --perl-regexp '(?<=HandBrake )[0-9]\.[0-9]\.[0-9]')
+
 echo "Output directory = $outputDir"
 echo "File name pattern = $pattern"
 echo "Resize resolution = $resolutionStr"
@@ -96,17 +98,23 @@ for f in "${fileList[@]}"; do
 	orientation=$(exiftool -api largefilesupport=1 -Rotation "$f" | perl -ne 's |^Rotation\s+:\s+([0-9]+)$|\1| and print')
 	printf "Resizing #%d: \"%s\" (%d deg) to \"%s\"\n" "$numFiles" "$outFile" "$orientation" "$outFull"
 
-	if [ "$orientation" -eq "0" ]; then
-		rotate=0
-	elif [ "$orientation" -eq "90" ]; then
-		rotate=4
-	elif [ "$orientation" -eq "180" ]; then
-		rotate=3
-	elif [ "$orientation" -eq "270" ]; then
-		rotate=7
+	HANDBRAKE_VER_MIN=1.1.2
+	HANDBRAKE_VER_IS_GTE_MIN = $(printf '%s\n%s' "$(HANDBRAKE_VER_MIN)" "$(handbrakeVersion)" | sort -CV && echo 1 || echo 0)
+	if [ HANDBRAKE_VER_IS_GTE_MIN -eq "0" ]; then
+		rotate="$orientation"
 	else
-		echo "Error: Unexpected orientation: ${orientation}"
-		rotate=0
+		if [ "$orientation" -eq "0" ]; then
+			rotate=0
+		elif [ "$orientation" -eq "90" ]; then
+			rotate=4
+		elif [ "$orientation" -eq "180" ]; then
+			rotate=3
+		elif [ "$orientation" -eq "270" ]; then
+			rotate=7
+		else
+			echo "Error: Unexpected orientation: ${orientation}"
+			rotate=0
+		fi
 	fi
 	echo "Orientation is ${orientation}. Passing ${rotate} to HandBrakeCLI." >&3
 
