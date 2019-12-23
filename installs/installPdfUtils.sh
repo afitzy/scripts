@@ -60,6 +60,9 @@ if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 
 	# Converts XPS (remember Microsoft XPS writer?) to PDF
 	sudo apt-get install --yes libgxps-utils
+
+	# HTML to PDF
+	sudo apt-get install --yes wkhtmltopdf
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
