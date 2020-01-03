@@ -32,7 +32,7 @@ if __name__ == '__main__':
 	issueHdr = 'Num{d}Title{d}State{d}Tags{d}URL{d}Milestone{d}Timestamp{d}Assignees'.format(d=args.delimiterOut)
 	issueFrmt = '%I{d}%t{d}%S{d}%l{d}%U{d}%Mt{d}%uI{d}%as%n'.format(d=args.delimiterIn)
 
-	issueCmd = ['hub', 'issue', '-f', issueFrmt]
+	issueCmd = ['hub', 'issue', '--state', 'all', '-f', issueFrmt]
 	issueCmd.extend(argsUnknown)
 	issues = subprocess.check_output(issueCmd, stdin=None, stderr=None, shell=False, universal_newlines=False)
 
