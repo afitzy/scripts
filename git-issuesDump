@@ -1,0 +1,37 @@
+#!/usr/bin/python
+
+"""
+Writes git issues to a series of markdown files
+Requires GitHub-hub to be installed.
+"""
+import argparse
+import subprocess
+
+
+
+
+if __name__ == '__main__':
+	p = argparse.ArgumentParser()
+	p.add_argument('numStart', type=int, default='1')
+	p.add_argument('numStop', type=int, default='1')
+	args, argsUnknown = p.parse_known_args()
+
+	issueCmd = ['hub', 'issue', '--state', 'all', '--sort-ascending', '--format', '%U%n']
+	issueUrls = subprocess.check_output(issueCmd, stdin=None, stderr=None, shell=False, universal_newlines=False)
+	issueUrls = issueUrls.splitlines()
+
+	for i in range(args.numStart, args.numStop):
+		issueCmd = ['hub', 'issue', 'show', str(i)]
+		issueCmd.extend(argsUnknown)
+		issueTxt = subprocess.check_output(issueCmd, stdin=None, stderr=None, shell=False, universal_newlines=False)
+
+		issueTitle = issueTxt.partition('\n')[0][2:]
+		issueUrl = issueUrls[i-1]
+		filename = 'Issue {}: {}.md'.format(i, issueTitle)
+		print('Writing \"{}\"'.format(filename))
+
+		with open(filename, 'wb') as f:
+			f.write('{url}\n\n{text}'.format(
+				url = issueUrl,
+				text = issueTxt)
+			)
