@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
 		issueTitle = issueTxt.partition('\n')[0][2:]
 		issueUrl = issueUrls[i-1]
-		filename = 'Issue {}: {}.md'.format(i, issueTitle)
+		filename = 'Issue {num:02d}: {title}.md'.format(num=i, title=issueTitle)
 		print('Writing \"{}\"'.format(filename))
 
 		with open(filename, 'wb') as f:
