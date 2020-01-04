@@ -25,7 +25,7 @@ function cleanup () {
 
 
 # NOTE: This requires GNU getopt.  On Mac OS X and FreeBSD, you have to install this separately
-PARSED="$(getopt --options vdi: --long "verbose,debug,install,startIdx:" -n "$scriptName" -- "$@")"
+PARSED="$(getopt --options vdi:p --long "verbose,debug,install,startIdx:,port:" -n "$scriptName" -- "$@")"
 if [ $? != 0 ] ; then
 	log "getopt has complained about wrong arguments to stdout"
 	echo "Terminating..." >&2
@@ -37,10 +37,12 @@ _VERBOSE=0
 _DEBUG=0
 _INSTALL=0
 _START_IDX=1
+_PROXY_PORT=
 while true; do
 	case "$1" in
 		-v | --verbose ) _VERBOSE=1; shift ;;
 		-d | --debug ) _DEBUG=1; shift ;;
+		-p | --port ) _PROXY_PORT="$2"; shift ;;
 		--install ) _INSTALL=1; shift ;;
 		-i | --startIdx ) _START_IDX="$2"; shift 2 ;;
 		-- ) shift; break ;;
@@ -57,7 +59,12 @@ if [[ $_INSTALL -eq 1 ]]; then
 	exit
 fi
 
-proxies=("$(getFreeUsProxies.py --max=50 --startIdx=${_START_IDX})")
+proxyPortArg=
+if [[ ! -z $_PROXY_PORT ]]; then
+    proxyPortArg="--port=$_PROXY_PORT"
+fi
+    
+proxies=("$(getFreeUsProxies.py $proxyPortArg --max=50 --startIdx=${_START_IDX})")
 idx=$(($_START_IDX - 1))
 for proxy in ${proxies[@]}; do
 	idx=$((idx + 1))
