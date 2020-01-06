@@ -37,7 +37,7 @@ _VERBOSE=0
 _DEBUG=0
 _INSTALL=0
 _START_IDX=1
-_PROXY_PORT=
+_PROXY_PORT=80
 while true; do
 	case "$1" in
 		-v | --verbose ) _VERBOSE=1; shift ;;
