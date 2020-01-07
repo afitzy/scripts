@@ -48,7 +48,7 @@ function greptxt () {
 	local declare path="$1"; shift;
 	local declare fargs="-type f"
 	local declare gargs="--no-messages --with-filename --line-number --color=always"
-	local declare exts=(md txt log)
+	local declare exts=(md txt log csv)
 	local declare files=( )
 	local declare ignores=(.git .svn .settings)
 	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
