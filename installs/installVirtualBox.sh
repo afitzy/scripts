@@ -51,7 +51,7 @@ function installVirtualBoxFromOracle ()
 	sudo apt-get install --yes virtualbox-${version}
 
 	# These conflict with virtualbox-5.2
-	# sudo apt-get install --yes virtualbox-ext-pack virtualbox-guest-* virtualbox-qt
+	# sudo apt-get install --yes virtualbox-guest-* virtualbox-qt
 }
 
 function installVirtualBoxFromOracle_v5.2 () {
@@ -64,6 +64,16 @@ function installVirtualBoxFromOracle_v6.0 () {
 	local -r removeOldVersion=1
 	local -r version=6.0
 	installVirtualBoxFromOracle "$removeOldVersion" "$version"
+}
+
+# Installs the correct version of the VirtualBox extension pack
+# DO NOT use the one from the multiverse, as that's only compatible with the obsolete VirtualBox from the multiverse.
+# Ref: https://askubuntu.com/a/759200/271027
+function installVirtualBoxExtensionPack () {
+	local -r VBOXVERSION=$(VBoxManage --version | sed -r 's/([0-9])\.([0-9])\.([0-9]{1,2}).*/\1.\2.\3/')
+	wget -q -N "http://download.virtualbox.org/virtualbox/${VBOXVERSION}/Oracle_VM_VirtualBox_Extension_Pack-${VBOXVERSION}.vbox-extpack"
+	sudo VBoxManage extpack install --replace Oracle*.vbox-extpack
+	rm Oracle*.vbox-extpack
 }
 
 _VERBOSE=1
