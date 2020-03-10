@@ -76,6 +76,38 @@ function installVirtualBoxExtensionPack () {
 	rm Oracle*.vbox-extpack
 }
 
+# Installs PHP VirtualBox.
+# Requires: virtual box extension pack
+# Ref: https://www.ostechnix.com/install-oracle-virtualbox-ubuntu-16-04-headless-server/
+function installPhpVirtualBox () {
+	sudo apt install apache2 php php-mysql libapache2-mod-php php-soap php-xml
+
+	# Download the matching version of phpvirtualbox
+	#wget https://github.com/phpvirtualbox/phpvirtualbox/archive/5.2-1.zip
+	# Grab the latest develop, since 6.X isn't officially supported yet
+	git clone https://github.com/phpvirtualbox/phpvirtualbox.git
+
+	sudo mv phpvirtualbox/ /var/www/html/phpvirtualbox
+	sudo chmod 777 /var/www/html/phpvirtualbox/
+	sudo cp /var/www/html/phpvirtualbox/config.php-example /var/www/html/phpvirtualbox/config.php
+
+	# Edit phpVirtualBox config.php file to configure the user, which is likely ${USER}
+	# According to https://sourceforge.net/p/phpvirtualbox/discussion/help/thread/0c491caa/#34c2
+	# the user must be the one that's actively logged in
+	sudo vim /var/www/html/phpvirtualbox/config.php
+
+	# Configure the user
+	echo "VBOXWEB_USER=${USER}" | sudo tee -a /etc/default/virtualbox
+
+	# Restart services
+	sudo systemctl restart vboxweb-service
+	sudo systemctl restart vboxdrv
+	sudo systemctl restart apache2
+
+	# Permit incoming HTTP and HTTPS traffic for this profile
+	sudo ufw allow in "Apache Full"
+}
+
 _VERBOSE=1
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 	installVirtualBoxFromOracle_v6.0
