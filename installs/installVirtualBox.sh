@@ -76,6 +76,11 @@ function installVirtualBoxExtensionPack () {
 	rm Oracle*.vbox-extpack
 }
 
+function getVirtualBoxGuestAdditionsIso () {
+	local -r VBOXVERSION=$(VBoxManage --version | sed -r 's/([0-9])\.([0-9])\.([0-9]{1,2}).*/\1.\2.\3/')
+	wget -q -N "http://download.virtualbox.org/virtualbox/${VBOXVERSION}/VBoxGuestAdditions_${VBOXVERSION}.iso"
+}
+
 # Installs PHP VirtualBox.
 # Requires: virtual box extension pack
 # Ref: https://www.ostechnix.com/install-oracle-virtualbox-ubuntu-16-04-headless-server/
