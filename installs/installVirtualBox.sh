@@ -52,6 +52,9 @@ function installVirtualBoxFromOracle ()
 
 	# These conflict with virtualbox-5.2
 	# sudo apt-get install --yes virtualbox-guest-* virtualbox-qt
+
+	sudo usermod -a -G vboxusers $USER
+	echo "Remember to reboot after running this (maybe log-in/-out works?)"
 }
 
 function installVirtualBoxFromOracle_v5.2 () {
@@ -111,6 +114,14 @@ function installPhpVirtualBox () {
 
 	# Permit incoming HTTP and HTTPS traffic for this profile
 	sudo ufw allow in "Apache Full"
+}
+
+# Note: likely
+function verifyUsbAccess () {
+	echo "User USB devices:"
+	VBoxManage list usbhost
+	echo "sudo USB devices:"
+	VBoxManage list usbhost
 }
 
 _VERBOSE=1
