@@ -63,7 +63,7 @@ function grepsrc () {
 	local declare files=(makefile make.rules)
 	local declare ignores=(.git .svn .settings)
 	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
-	eval $fcmd | parallel --keep-order --max-procs -1 --max-args 1000 -m grep $gargs $@ {} | perl -pe 's/^(.+:.+):(.*)/$1 :$2/'
+	eval $fcmd | parallel --keep-order --max-procs -1 --max-args 1000 -m grep $gargs $@ {} | perl -pe 's/^(.+?:.+?):(.*)/$1 $2/'
 }
 
 function greppdf () {
