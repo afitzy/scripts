@@ -59,7 +59,8 @@ function grepsrc () {
 	local declare path="$1"; shift;
 	local declare fargs="-type f"
 	local declare gargs="--no-messages --with-filename --line-number --color=always"
-	local declare exts=(h c hpp cpp mkdep makefile mak mk config asm inc cmd idl sh bash json)
+	# local declare gargs="--files-with-matches"
+	local declare exts=(h c hpp cpp mkdep makefile mak mk config asm inc cmd idl sh bash json xml)
 	local declare files=(makefile make.rules)
 	local declare ignores=(.git .svn .settings)
 	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
