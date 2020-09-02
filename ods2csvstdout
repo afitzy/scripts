@@ -69,7 +69,10 @@ for sheetName in $sheetNames; do
 done
 unset IFS
 printf "\n"
-ssconvert -S --export-type=Gnumeric_stf:stf_assistant "$filename" fd://1%d 2> >(log)
+
+ssconvert -S --export-type=Gnumeric_stf:stf_csv "$filename" fd://1%d 2> >(log)
+# Note: possible way to get more options for export: ssconvert -O 'separator=; format=raw' samples/excel/statfuns.xls statfuns.txt
+# Note: obsolete way to dump plaintext: ssconvert -S --export-type=Gnumeric_stf:stf_assistant "$filename" fd://1%d 2> >(log)
 
 # Cleanup
 #cleanup () {
