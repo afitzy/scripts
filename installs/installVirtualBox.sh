@@ -73,10 +73,20 @@ function installVirtualBoxFromOracle_v6.0 () {
 # DO NOT use the one from the multiverse, as that's only compatible with the obsolete VirtualBox from the multiverse.
 # Ref: https://askubuntu.com/a/759200/271027
 function installVirtualBoxExtensionPack () {
+	local vboxExtPackVer=$(VBoxManage list extpacks | perl -ne 'print if s/Version:\s+([0-9]+)/\1/')
+	printf "VirtualBox extension pack version is %s\n" "$vboxExtPackVer"
+
 	local -r VBOXVERSION=$(VBoxManage --version | sed -r 's/([0-9])\.([0-9])\.([0-9]{1,2}).*/\1.\2.\3/')
+	printf "VirtualBox version is %s\n" "$VBOXVERSION"
+
 	wget -q -N "http://download.virtualbox.org/virtualbox/${VBOXVERSION}/Oracle_VM_VirtualBox_Extension_Pack-${VBOXVERSION}.vbox-extpack"
 	sudo VBoxManage extpack install --replace Oracle*.vbox-extpack
 	rm Oracle*.vbox-extpack
+
+	local vboxExtPackVer=$(VBoxManage list extpacks | perl -ne 'print if s/Version:\s+([0-9]+)/\1/')
+	printf "VirtualBox extension pack version is %s\n" "$vboxExtPackVer"
+
+	printf "Reminder to restart VirtualBox (or the PC) to start using the new extension pack version\n"
 }
 
 function getVirtualBoxGuestAdditionsIso () {
