@@ -44,6 +44,10 @@ if [[ ! -b $src ]]; then
 	exit
 fi
 
+if [[ ! -d "$dest" ]]; then
+	mkdir --parents "$dest"
+if
+
 if [[ -f $outputFile ]]; then
 	echo "ERROR: Destination file exists: $outputFile"
 	exit
