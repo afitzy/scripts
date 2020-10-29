@@ -56,7 +56,7 @@ fi
 srcSize="$(sudo blockdev --getsize64 $src)"
 srcSize="$(bytesToHuman ${srcSize})"
 
-destFreespace="$(command df --human-readable "$outputFile" | head -n 2 | tail -n 1 | tr --squeeze-repeats ' ' | cut  --delimiter=" " -f 3)"
+destFreespace="$(command df --human-readable "$dest" | head -n 2 | tail -n 1 | tr --squeeze-repeats ' ' | cut  --delimiter=" " -f 3)"
 
 echo "Preparing to clone ${src} (${srcSize}) to ${outputFile} (Free space: ${destFreespace}) in ${blockSize} chunks"
 
