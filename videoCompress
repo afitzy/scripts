@@ -99,7 +99,7 @@ for f in "${fileList[@]}"; do
 	printf "Resizing #%d: \"%s\" (%d deg) to \"%s\"\n" "$numFiles" "$outFile" "$orientation" "$outFull"
 
 	HANDBRAKE_VER_MIN=1.1.2
-	HANDBRAKE_VER_IS_GTE_MIN = $(printf '%s\n%s' "$(HANDBRAKE_VER_MIN)" "$(handbrakeVersion)" | sort -CV && echo 1 || echo 0)
+	HANDBRAKE_VER_IS_GTE_MIN=$(printf '%s\n%s' "$HANDBRAKE_VER_MIN" "$handbrakeVersion" | sort -CV && echo 1 || echo 0)
 	if [ HANDBRAKE_VER_IS_GTE_MIN -eq "0" ]; then
 		rotate="$orientation"
 	else
@@ -116,7 +116,10 @@ for f in "${fileList[@]}"; do
 			rotate=0
 		fi
 	fi
-	echo "Orientation is ${orientation}. Passing ${rotate} to HandBrakeCLI." >&3
+	if [ "$orientation" -ne 0 ]; then
+		echo "Orientation is ${orientation}. Passing ${rotate} to HandBrakeCLI." >&3
+		rotateStr="--rotate=${rotate}"
+	fi
 
 	if [ -n "$timeStartSec" ]; then
 		handbrakeTimeStartSec="--start-at=duration:${timeStartSec}"
@@ -138,7 +141,7 @@ for f in "${fileList[@]}"; do
 		$handbrakeAudioEnable \
 		--gain 6 \
 		--ab 64 \
-		--rotate=${rotate} \
+		$rotateStr \
 		--maxWidth "$maxWidth" \
 		--maxHeight "$maxHeight" \
 		--format av_mp4 \
