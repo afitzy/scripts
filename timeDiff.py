@@ -19,3 +19,4 @@ if __name__ == '__main__':
 	minutes, seconds = divmod(remainder, 60)
 
 	print '{} days, {} hours, {} minutes, {} seconds'.format(days, hours, minutes, seconds)
+	print 'HH:MM:SS: {hours:02}:{minutes:02}:{seconds:02}'.format(hours=hours, minutes=minutes, seconds=seconds)
