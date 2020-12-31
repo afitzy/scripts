@@ -14,7 +14,7 @@ function installCifs () {
 	sudo apt install -y samba
 }
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	installCifs
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."

@@ -60,7 +60,7 @@ function installKdeDolphinPlugin ()
 }
 
 
-if [[ "$(getOsVers)" == "16.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	# For office diffs
 	sudo apt-get install --yes docx2txt catdoc odt2txt python-excelerator xlsx2csv antiword
 	sudo apt-get install --yes python-pdfminer # pdf2txt
