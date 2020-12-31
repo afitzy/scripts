@@ -26,10 +26,19 @@ function installKodiFromPpa ()
 {
 	removeKodi
 
+    # prerequisites
+    sudo apt-get remove python-cryptography
+    sudo apt-get install python-pip
+    pip install --user --upgrade cryptography
 	sudo apt-get install software-properties-common
+
+    # install Kodi
 	sudo add-apt-repository ppa:team-xbmc/ppa
 	sudo apt update
 	sudo apt install kodi
+
+    # start kodi at login
+    #cp /usr/share/applications/kodi.desktop ${USER}/.config/autostart
 }
 
 
