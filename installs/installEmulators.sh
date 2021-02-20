@@ -6,7 +6,50 @@ dateStamp=$(date --iso-8601="seconds")
 
 source "${scriptDir}/../utils.sh"
 
+# SNES (and others) emulator
+# High accuracy and high CPU demand
+function installHigan()
+{
+	srcDir="higan-emu"
+	gitDir="higan"
 
+	sudo apt-get install build-essential libgtk2.0-dev libpulse-dev \
+		mesa-common-dev libgtksourceview2.0-dev libcairo2-dev libsdl1.2-dev \
+		libxv-dev libao-dev libopenal-dev libudev-dev
+
+	pushd /usr/local/src
+	sudo mkdir "$srcDir"
+	sudo chown -R "$USER" "$srcDir"
+	sudo chmod 755 "$srcBin"
+
+	pushd "$srcDir"
+	git clone https://github.com/higan-emu/higan.git "$gitDir"
+	pushd "$gitDir"
+
+	# https://github.com/higan-emu/higan/releases
+	git checkout tags/v110
+	make -C higan
+	make -C icarus
+
+	make -C higan install
+	make -C icarus install
+	[ -d shaders ] && make -C shaders install
+
+	for run in {1..3}; do popd; done
+}
+
+function uninstallHigan()
+{
+	srcDir="higan-emu"
+	gitDir="higan"
+
+	pushd "/usr/local/src/${srcDir}/${gitDir}"
+	make -C higan uninstall
+	make -C icarus uninstall
+	popd
+}
+
+# Nintendo Wii emulator
 function installDolphin()
 {
 	srcDir="dolphin"
@@ -29,10 +72,13 @@ function installDolphin()
 	cmake ..
 	make -j$(nproc)
 	sudo make install
+
+	for run in {1..3}; do popd; done
 }
 
 if [[ "$(getOsVers)" == "20.04" || "$(getOsVers)" == "18.04" ]]; then
 	installDolphin
+	installHigan
 else
 	echo "Unrecognized OS version. Not installing."
 fi
