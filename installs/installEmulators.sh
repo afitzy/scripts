@@ -13,15 +13,15 @@ function installHigan()
 	srcDir="higan-emu"
 	gitDir="higan"
 
-	sudo apt-get install build-essential libgtk2.0-dev libpulse-dev \
+	sudo apt-get --yes install build-essential libgtk2.0-dev libpulse-dev \
 		mesa-common-dev libgtksourceview2.0-dev libcairo2-dev \
 		libxv-dev libao-dev libopenal-dev libudev-dev \
-		libsdl2-dev
+		libsdl2-dev # requirement of newer versions of higan
 
 	pushd /usr/local/src
 	sudo mkdir "$srcDir"
 	sudo chown -R "$USER" "$srcDir"
-	sudo chmod 755 "$srcBin"
+	sudo chmod 755 "$srcDir"
 
 	pushd "$srcDir"
 	git clone https://github.com/higan-emu/higan.git "$gitDir"
@@ -60,7 +60,7 @@ function installDolphin()
 	pushd /usr/local/src
 	sudo mkdir "$srcDir"
 	sudo chown -R "$USER" "$srcDir"
-	sudo chmod 755 "$srcBin"
+	sudo chmod 755 "$srcDir"
 
 	pushd "$srcDir"
 	git clone https://github.com/dolphin-emu/dolphin.git dolphin-emu
