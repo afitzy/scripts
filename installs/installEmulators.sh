@@ -6,6 +6,14 @@ dateStamp=$(date --iso-8601="seconds")
 
 source "${scriptDir}/../utils.sh"
 
+
+# SNES emulator snes9x
+# Not as accurate as Higan, but difference isn't super noticeable.
+function installSnes9x()
+{
+
+}
+
 # SNES (and others) emulator
 # High accuracy and high CPU demand
 function installHigan()
@@ -79,7 +87,7 @@ function installDolphin()
 
 if [[ "$(getOsVers)" == "20.04" || "$(getOsVers)" == "18.04" ]]; then
 	installDolphin
-	installHigan
+	# installHigan # Did not use this. Interface was poor, version I built did not work, and compiled binary I downloaded did not work.
 else
 	echo "Unrecognized OS version. Not installing."
 fi
