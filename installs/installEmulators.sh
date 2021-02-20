@@ -14,8 +14,9 @@ function installHigan()
 	gitDir="higan"
 
 	sudo apt-get install build-essential libgtk2.0-dev libpulse-dev \
-		mesa-common-dev libgtksourceview2.0-dev libcairo2-dev libsdl1.2-dev \
-		libxv-dev libao-dev libopenal-dev libudev-dev
+		mesa-common-dev libgtksourceview2.0-dev libcairo2-dev \
+		libxv-dev libao-dev libopenal-dev libudev-dev \
+		libsdl2-dev
 
 	pushd /usr/local/src
 	sudo mkdir "$srcDir"
