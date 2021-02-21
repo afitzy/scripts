@@ -14,6 +14,7 @@ function installSnes9x()
 	sudo apt-get install flatpak
 	flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 	flatpak install flathub com.snes9x.Snes9x
+	# Run it with `flatpak run com.snes9x.Snes9x`
 }
 
 # SNES (and others) emulator
