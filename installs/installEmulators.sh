@@ -89,7 +89,7 @@ function installDolphin()
 }
 
 if [[ "$(getOsVers)" == "20.04" || "$(getOsVers)" == "18.04" ]]; then
-	# installDolphin
+	installDolphin
 	# installHigan # Did not use this. Interface was poor, version I built did not work, and compiled binary I downloaded did not work.
 	installSnes9x
 else
