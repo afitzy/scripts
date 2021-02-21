@@ -11,7 +11,9 @@ source "${scriptDir}/../utils.sh"
 # Not as accurate as Higan, but difference isn't super noticeable.
 function installSnes9x()
 {
-
+	sudo apt-get install flatpak
+	flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+	flatpak install flathub com.snes9x.Snes9x
 }
 
 # SNES (and others) emulator
@@ -86,8 +88,9 @@ function installDolphin()
 }
 
 if [[ "$(getOsVers)" == "20.04" || "$(getOsVers)" == "18.04" ]]; then
-	installDolphin
+	# installDolphin
 	# installHigan # Did not use this. Interface was poor, version I built did not work, and compiled binary I downloaded did not work.
+	installSnes9x
 else
 	echo "Unrecognized OS version. Not installing."
 fi
