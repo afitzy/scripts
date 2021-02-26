@@ -70,7 +70,7 @@ fi
 sudo dcfldd conv=sync,noerror bs="${blockSize}" statusinterval=64 if="$src" | gzip -c > "$outputFile"
 
 # TODO: Put this "info" file into the gzip
-sudo fdisk -l "$src" > "${outputFile}.info"
+sudo fdisk -l "$src" > "${outputFile}.txt"
 
 echo "Syncing cached writes"
 sync
