@@ -10,21 +10,22 @@ _VERBOSE=1
 
 function installAtom ()
 {
-    sudo add-apt-repository --yes "ppa:webupd8team/atom"
+    wget -qO - https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
+    sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
     sudo apt-get update
-    getPackages atom
+    sudo apt-get install atom
 }
 
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	installAtom
-	getPackages "cscope"
+	sudo apt-get install cscope
 
 	# Visual diff
-	getPackages "meld"
+	sudo apt-get install meld
 
 	# Static code analysis
-	getPackages "cppcheck"
+	# sudo apt-get install cppcheck
 
 	# Code formatters
 	pip install jsbeautifier
