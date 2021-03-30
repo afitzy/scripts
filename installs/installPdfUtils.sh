@@ -33,11 +33,7 @@ function getPdfsandwich () {
 
 _VERBOSE=1
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
-	# pdfsandwich generates "sandwich" OCR pdf files
-	# http://www.tobias-elze.de/pdfsandwich/
-	getPdfsandwich
-
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	# OCR tool and language packs
 	sudo apt-get install --yes tesseract-ocr \
 		tesseract-ocr-chi-sim `Chinese` \
@@ -63,6 +59,11 @@ if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 
 	# HTML to PDF
 	sudo apt-get install --yes wkhtmltopdf
+
+	# pdfsandwich generates "sandwich" OCR pdf files
+	# Depends on tesseract, which is installed above
+	# http://www.tobias-elze.de/pdfsandwich/
+	getPdfsandwich
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi

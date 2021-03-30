@@ -34,7 +34,7 @@ function getGanttProject () {
 	sudo dpkg --install "$filenameAbs"  | log
 }
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	getGanttProject
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
