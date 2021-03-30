@@ -38,7 +38,7 @@ function installHub ()
 	fi
 
 	# Install prereqs
-	getPackages "golang-go" "ruby" "ruby-dev"
+	sudo apt-get install --yes golang-go ruby ruby-dev
 
 	# Install ruby gems
 	sudo gem install bundler
@@ -54,8 +54,8 @@ function installKdeDolphinPlugin ()
 {
 	# Warning: This tries to connect to the network frequently
 	# Ref: http://aeciosantos.com/2012/10/06/using-dolphinkde-to-manage-git-repositories-or-other-vcs/
-	getPackages "kdesdk-dolphin-plugins"
-	getPackages "dolphin-plugins"
+	sudo apt-get install --yes kdesdk-dolphin-plugins
+	sudo apt-get install --yes dolphin-plugins
 	echo "You have to manually configure dolphin to use the git plugin"
 }
 
