@@ -13,19 +13,19 @@ function installAtom ()
     wget -qO - https://packagecloud.io/AtomEditor/atom/gpgkey | sudo apt-key add -
     sudo sh -c 'echo "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main" > /etc/apt/sources.list.d/atom.list'
     sudo apt-get update
-    sudo apt-get install atom
+    sudo apt-get install --yes atom
 }
 
 
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	installAtom
-	sudo apt-get install cscope
+	sudo apt-get install --yes cscope
 
 	# Visual diff
-	sudo apt-get install meld
+	sudo apt-get install --yes meld
 
 	# Static code analysis
-	# sudo apt-get install cppcheck
+	# sudo apt-get install --yes cppcheck
 
 	# Code formatters
 	pip install jsbeautifier
