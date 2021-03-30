@@ -14,8 +14,7 @@ function installMork ()
 	local repoName="${repoAddr##*/}"
 	local repoName="${repoName%%.*}"
 
-
-	sudo apt-get install python-ply
+	sudo apt-get install --yes python-ply
 
 	cloneGitRepo "$_DIR_SRC" "$repoAddr"
 	sudo ln -fs "${_DIR_SRC}/${repoName}/src/mork" "${_DIR_BIN}/mork"
@@ -59,11 +58,16 @@ function installKdeDolphinPlugin ()
 	echo "You have to manually configure dolphin to use the git plugin"
 }
 
+# pdf2txt
+if [[ "$(getOsVers)" == "16.04" ]]; then
+	sudo apt-get install --yes python-pdfminer
+elif [[ "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
+	sudo apt-get install --yes python3-pdfminer
+fi
 
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	# For office diffs
 	sudo apt-get install --yes docx2txt catdoc odt2txt python-excelerator xlsx2csv antiword
-	sudo apt-get install --yes python-pdfminer # pdf2txt
 
 	# For image diffs
 	sudo apt-get install --yes exif
