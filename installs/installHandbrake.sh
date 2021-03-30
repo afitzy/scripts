@@ -19,7 +19,7 @@ function getHandbrake () {
 	sudo apt install --yes handbrake-gtk handbrake-cli
 }
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	getHandbrake
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
