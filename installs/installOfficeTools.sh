@@ -36,7 +36,7 @@ function installLibreofficePpa ()
 
 }
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	installLibreofficePpa
 	sudo apt-get install --yes zim
 else
