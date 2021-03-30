@@ -36,11 +36,11 @@ function installHpTools ()
 # Ref: https://developers.hp.com/hp-linux-imaging-and-printing/gethplip
 function installHpToolsFromHp ()
 {
-	wget https://download.sourceforge.net/project/hplip/hplip/3.20.11/hplip-3.20.11.run
-	sh hplip-3.20.11.run
+	wget https://download.sourceforge.net/project/hplip/hplip/3.21.2/hplip-3.21.2.run
+	sh hplip-3.21.2.run
 }
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	uninstallHpTools
 
 	sudo apt-get install --fix-missing --yes xsane ksaneplugin
