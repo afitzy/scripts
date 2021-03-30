@@ -8,7 +8,7 @@ source "${scriptDir}/../utils.sh"
 
 _VERBOSE=1
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	# Disks
 	sudo apt-get install --yes gnome-disk-utility
 

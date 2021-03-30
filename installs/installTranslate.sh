@@ -20,7 +20,7 @@ function installTranslateRepo ()
 }
 
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	#getPackage translate-shell
 	installTranslateRepo
 else
