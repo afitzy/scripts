@@ -10,7 +10,7 @@ function removeVirtualBox ()
 {
 	local -r friendlyName="VirtualBox"
 	echo "${friendlyName}: removing previous installation"
-	sudo apt-get remove --purge virtualbox*
+	sudo apt-get remove --yes --purge virtualbox*
 	sudo apt-get clean
 	sudo apt-get autoremove --yes
 }
@@ -42,7 +42,7 @@ function installVirtualBoxFromOracle ()
 
 	echo "${friendlyName}: setting up repository"
 	ubuntuRelease=$(lsb_release -cs)
-	sudo sh -c "echo 'deb http://download.virtualbox.org/virtualbox/debian ${ubuntuRelease} non-free contrib' > /etc/apt/sources.list.d/virtualbox.org.list"
+	sudo sh -c "echo 'deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian ${ubuntuRelease} non-free contrib' | sudo tee /etc/apt/sources.list.d/virtualbox.org.list"
 
 	echo "${friendlyName}: refreshing multiverse"
 	sudo apt-get update
@@ -63,9 +63,9 @@ function installVirtualBoxFromOracle_v5.2 () {
 	installVirtualBoxFromOracle "$removeOldVersion" "$version"
 }
 
-function installVirtualBoxFromOracle_v6.0 () {
+function installVirtualBoxFromOracle_v6 () {
 	local -r removeOldVersion=1
-	local -r version=6.0
+	local -r version=6.1
 	installVirtualBoxFromOracle "$removeOldVersion" "$version"
 }
 
@@ -136,7 +136,7 @@ function verifyUsbAccess () {
 
 _VERBOSE=1
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
-	installVirtualBoxFromOracle_v6.0
+	installVirtualBoxFromOracle_v6
 	installVirtualBoxExtensionPack
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
