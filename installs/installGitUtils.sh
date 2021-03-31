@@ -10,11 +10,11 @@ _VERBOSE=1
 
 function installMork ()
 {
-	local repoAddr="https://github.com/KevinGoodsell/mork-converter"
-	local repoName="${repoAddr##*/}"
-	local repoName="${repoName%%.*}"
+	local -r repoAddr="https://github.com/KevinGoodsell/mork-converter"
+	local -r repoName="${repoAddr##*/}"
+	local -r repoName="${repoName%%.*}"
 
-	sudo apt-get install --yes python-ply
+	sudo apt-get install python-ply
 
 	cloneGitRepo "$_DIR_SRC" "$repoAddr"
 	sudo ln -fs "${_DIR_SRC}/${repoName}/src/mork" "${_DIR_BIN}/mork"
@@ -49,11 +49,18 @@ function installHub ()
 	popd
 }
 
-function installKdeDolphinPlugin ()
+function installKdeDolphinPlugin16.04 ()
 {
 	# Warning: This tries to connect to the network frequently
 	# Ref: http://aeciosantos.com/2012/10/06/using-dolphinkde-to-manage-git-repositories-or-other-vcs/
-	sudo apt-get install --yes kdesdk-dolphin-plugins
+	sudo apt-get install --yes kdesdk-dolphin-plugins dolphin-plugins
+	echo "You have to manually configure dolphin to use the git plugin"
+}
+
+function installKdeDolphinPlugin20.04 ()
+{
+	# Warning: This tries to connect to the network frequently
+	# Ref: http://aeciosantos.com/2012/10/06/using-dolphinkde-to-manage-git-repositories-or-other-vcs/
 	sudo apt-get install --yes dolphin-plugins
 	echo "You have to manually configure dolphin to use the git plugin"
 }
