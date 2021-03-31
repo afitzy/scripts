@@ -53,6 +53,8 @@ while true; do
   esac
 done
 
+username=$USER
+
 wifiSsid="$(wifiGetSsid)"
 if $(elementIn "$wifiSsid" "${ssidsAiTorontoPeter[@]}") && [ "$_ENABLE" -eq 1 ]; then
 	log "$scriptName: Starting. Wireless network SSID is \"${wifiSsid}\""
