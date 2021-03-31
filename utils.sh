@@ -130,7 +130,8 @@ function wifiGetSsid () { iwconfig 2>&1 | grep -oP '(?<=ESSID:").*(?=")'; }
 # Tests if first argument is contained in the latter arguments
 # Ref: https://stackoverflow.com/a/8574392/4146779
 elementIn () {
-	local e match="$1"
+	local -r match="$1"
+	local e
 	shift
 	for e; do [[ "$e" == "$match" ]] && return 0; done
 	return 1
