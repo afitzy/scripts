@@ -12,7 +12,7 @@ function sshConfig () {
 	sudo update-rc.d ssh defaults
 }
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	sudo apt-get install --yes ssh
 	sshConfig
 

@@ -11,7 +11,7 @@ _VERBOSE=1
 # Ref: https://askubuntu.com/a/1056078
 function uninstallHpTools ()
 {
-	sudo apt-get purge \
+	sudo apt-get --yes purge \
 		hplip \
 		hplip-data \
 		hplip-doc \
