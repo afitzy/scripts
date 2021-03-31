@@ -1,6 +1,8 @@
 #!/bin/bash
 
 buildFindCmd='
+from __future__ import print_function
+
 def join(s, items):	return s.join([i for i in items if i!=""])
 
 import argparse
@@ -22,7 +24,7 @@ match = "\( " + match + " \)" if len(match) else ""
 
 limitMatch = join(" -and ", [ignore, match])
 
-print join(" ", ["find", args.path, args.args, limitMatch])
+print(join(" ", ["find", args.path, args.args, limitMatch]))
 '
 
 function catspreadsheet () {
