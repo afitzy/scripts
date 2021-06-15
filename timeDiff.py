@@ -11,7 +11,7 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 
 	d0 = dateutil.parser.parse(args.timeStart)
-	d1 = dateutil.parser.parse(args.timeEnd)
+	d1 = dateutil.parser.parse(args.timeEnd) if args.timeEnd != 'now' else datetime.now()
 
 	delta = d1 - d0
 	days = delta.days
