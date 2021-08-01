@@ -12,7 +12,7 @@ _VERBOSE=1
 # Recommended TeX distribution: TeX Live
 
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
-	sudo apt-get install --yes texmaker texlive biber latexmk
+	sudo apt-get install --yes texmaker texlive biber latexmk texlive-xetex
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
