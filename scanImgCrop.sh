@@ -73,7 +73,7 @@ echo "Resize resolution = $resolutionStr"
 maxWidth=$(echo $resolutionStr | cut -d 'x' -f 1)
 maxHeight=$(echo $resolutionStr | cut -d 'x' -f 2)
 
-allFiles=$(find "$path" -maxdepth 1 -name "$pattern" -type f)
+allFiles=$(find "$path" -maxdepth 1 -name "$pattern" -type f | sort)
 numFiles=0
 IFS=$'\n'
 for f in ${allFiles}; do
