@@ -73,3 +73,10 @@ ffmpeg -i "concat:intermediate1.mp4|intermediate2.mp4" -c copy -bsf:a aac_adtsto
 # Speed up video
 # Ref: https://video.stackexchange.com/a/18470/26369
 ffmpeg -i input.m4v -vf "setpts=(PTS-STARTPTS)/30" -crf 18 output.m4v
+
+
+
+######################################################################################################################
+# Remove audio 
+ffmpeg -i $input_file -c copy -an $output_file
+
