@@ -23,12 +23,15 @@ function installMinecraft () {
 	local -r filename="${tempdir}/${urlFilename}"
 
 	echo "${friendlyName}: downloading $urlFilename"
-	wget \
-		--output-document="$filename" \
-		"$url" 2>&1 | while read -r line; do echo ; done
+	wget --output-document="$filename" "$url"
 
 	sudo apt install --yes "$filename"
 }
+
+function uninstallMinecraft () {
+	sudo apt --purge remove --yes minecraft-launcher
+}
+
 
 
 
