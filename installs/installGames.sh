@@ -6,15 +6,6 @@ dateStamp=$(date --iso-8601="seconds")
 
 source "${scriptDir}/../utils.sh"
 
-# Function to cleanup
-function cleanup () {
-	log "Deleting temp directory: $tempdir"
-	rm -rf "$tempdir"
-}
-trap cleanup EXIT
-
-
-
 _VERBOSE=1
 
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
