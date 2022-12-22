@@ -25,10 +25,13 @@ function installMinecraft () {
 	echo "${friendlyName}: downloading $urlFilename"
 	wget --output-document="$filename" "$url"
 
+	echo "${friendlyName}: installing"
 	sudo apt install --yes "$filename"
 }
 
 function uninstallMinecraft () {
+	local -r friendlyName="minecraft"
+	echo "${friendlyName}: uninstalling"
 	sudo apt --purge remove --yes minecraft-launcher
 }
 
