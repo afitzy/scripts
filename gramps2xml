@@ -1,19 +1,52 @@
-#!/bin/sh
-#
-# A simple script to convert data.gramps to an XML file.
-# If data.gramps is compressed, uncompress it, otherwise copy.
-#
-# Written by Alex Roitman
+#!/bin/bash
+
+# Script to convert gramps archives to portable files.
+# If input is GPKG file extension, decompress it and its contained database.
+# If input is GRAMPS file extension, conditionally uncompress or copy the file to the destination.
 
 if [ -z "$1" ] ; then
-    echo "Usage: gramps2xml filename.gramps filename.xml"
+    echo "Usage: gramps2xml filename.gramps"
     exit 0
 fi
 
-if [ "`file $1 | grep gzip`" ] ; then
-    zcat $1 > $2
-else
-    cp $1 $2
+function decompressGrampsXml()
+{
+    local -r inputFilename="$1"
+    local -r outputFilename="$2"
+    echo "Decompressing gramps to ${outputFilename}"
+    zcat "$inputFilename" > "$outputFilename"
+}
+
+function decompressGrampsGpkg()
+{
+    local -r inputFilename="$1"
+    local -r outputDirectory="$2"
+    local -r database="data.gramps"
+    local -r databaseXml="data.xml"
+
+    echo "Decompressing gpkg to \"${outputDirectory}\""
+    mkdir "$inputFileBasename" &&
+        tar --extract --verbose --file "$inputFile" --directory "$outputDirectory" &&
+        pushd "$outputDirectory" &&
+        decompressGrampsXml "$database" "$databaseXml" &&
+        rm "$database" &&
+        popd
+}
+
+inputFile="$1"
+
+inputFilename=$(basename -- "$inputFile")
+inputFileExtension="${inputFilename##*.}"
+inputFileBasename="${inputFilename%.*}"
+
+if [[ "$inputFileExtension" == "gpkg" ]] && [ "`file $inputFile | grep gzip`" ] ; then
+    decompressGrampsGpkg "$inputFile" "$inputFileBasename"
+elif [[ "$inputFileExtension" == "gramps" ]] && [ "`file $inputFile | grep gzip`" ] ; then
+    decompressGrampsXml "$inputFile" "${inputFileBasename}.xml"
+elif [[ "$inputFileExtension" == "gramps" ]] && [ "`file $inputFile | grep XML`" ] ; then
+    outputFilename="${inputFileBasename}.xml"
+    echo "gramps file already uncompressed XML. Copying to ${outputFilename}"
+    cp "$inputFile" "${outputFilename}"
 fi
 
 exit 0
