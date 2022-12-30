@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# A simple script to convert data.gramps to an XML file.
+# If data.gramps is compressed, uncompress it, otherwise copy.
+#
+# Written by Alex Roitman
+
+if [ -z "$1" ] ; then
+    echo "Usage: gramps2xml filename.gramps filename.xml"
+    exit 0
+fi
+
+if [ "`file $1 | grep gzip`" ] ; then
+    zcat $1 > $2
+else
+    cp $1 $2
+fi
+
+exit 0
