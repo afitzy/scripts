@@ -25,6 +25,9 @@ function installMinecraft () {
 	echo "${friendlyName}: downloading $urlFilename"
 	wget --output-document="$filename" "$url"
 
+	sudo chown -Rv _apt:root "$filename"
+	sudo chmod -Rv 700 "$filename"
+
 	echo "${friendlyName}: installing"
 	sudo apt install --yes "$filename"
 }
