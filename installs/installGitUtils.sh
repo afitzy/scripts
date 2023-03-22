@@ -22,7 +22,7 @@ function installMork ()
 	popd
 }
 
-function installHub ()
+function installHubPpa ()
 {
 	local instPrefix="$_DIR_PREFIX"
 	local repoAddr="https://github.com/github/hub.git"
@@ -49,6 +49,15 @@ function installHub ()
 	popd
 }
 
+# Ref: https://snapcraft.io/install/hub/ubuntu
+function installHubSnap ()
+{
+	local -r friendlyName="github-hub"
+	echo "${friendlyName}: installing"
+	sudo snap install --color always hub --classic
+	echo "${friendlyName}: done"
+}
+
 function installKdeDolphinPlugin16.04 ()
 {
 	# Warning: This tries to connect to the network frequently
@@ -68,13 +77,19 @@ function installKdeDolphinPlugin20.04 ()
 # pdf2txt
 if [[ "$(getOsVers)" == "16.04" ]]; then
 	sudo apt-get install --yes python-pdfminer
-elif [[ "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
+elif [[ "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" ]]; then
 	sudo apt-get install --yes python3-pdfminer
 fi
 
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
+	python-excelerator
+elif [[ "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" ]]; then
+	echo "python-excelerator unsupported"
+fi
+
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" ]]; then
 	# For office diffs
-	sudo apt-get install --yes docx2txt catdoc odt2txt python-excelerator xlsx2csv antiword
+	sudo apt-get install --yes docx2txt catdoc odt2txt  xlsx2csv antiword
 
 	# For image diffs
 	sudo apt-get install --yes exif
@@ -86,7 +101,7 @@ if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" =
 	sudo apt-get install --yes gnumeric
 
 	# Hub tools (works best when aliased to git in bash profile)
-	installHub
+	installHubSnap
 
 	# KDE Dolphin plugins
 	#installKdeDolphinPlugin
