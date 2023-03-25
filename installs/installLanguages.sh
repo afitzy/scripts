@@ -16,9 +16,23 @@ trap cleanup EXIT
 _VERBOSE=1
 
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
-	sudo apt-get install --yes language-pack-en language-pack-ca
-	sudo apt-get install --yes myspell-en-us myspell-ca
-	sudo apt-get install --yes hunspell-en-ca hunspell-ca
+	sudo apt-get install --yes \
+		language-pack-en \
+		language-pack-ca \
+		\
+		myspell-en-us \
+		myspell-ca \
+		\
+		hunspell-en-ca \
+		hunspell-ca
+elif [[ "$(getOsVers)" == "22.04" ]]; then
+	sudo apt-get install --yes \
+		language-pack-en \
+		language-pack-ca \
+		\
+		hunspell-en-ca \
+		hunspell-en-us \
+		hunspell-ca
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi

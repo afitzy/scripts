@@ -33,19 +33,20 @@ function getPdfsandwich () {
 
 _VERBOSE=1
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" ]]; then
 	# OCR tool and language packs
-	sudo apt-get install --yes tesseract-ocr \
-		tesseract-ocr-chi-sim `Chinese` \
-		tesseract-ocr-chi-tra `Chinese - Traditional` \
-		tesseract-ocr-eng `english` \
-		tesseract-ocr-grc `Greek, Ancient (to 1453)` \
-		tesseract-ocr-lat `Latin` \
-		tesseract-ocr-heb `Hebrew` \
-		tesseract-ocr-equ `Math / equation detection module` \
-		tesseract-ocr-ara `Arabic` \
-		tesseract-ocr-deu `German` \
-		tesseract-ocr-fra `French`
+	sudo apt-get install --yes \
+		tesseract-ocr \
+		tesseract-ocr-chi-sim `#Chinese` \
+		tesseract-ocr-chi-tra `#Chinese - Traditional` \
+		tesseract-ocr-eng `#english` \
+		tesseract-ocr-grc `#Greek, Ancient (to 1453)` \
+		tesseract-ocr-lat `#Latin` \
+		tesseract-ocr-heb `#Hebrew` \
+		tesseract-ocr-equ `#Math / equation detection module` \
+		tesseract-ocr-ara `#Arabic` \
+		tesseract-ocr-deu `#German` \
+		tesseract-ocr-fra `#French`
 
 	# unpaper is a post-processing tool for scanned sheets of paper.
 	# Purpose is to make scanned book pages better readable on screen after conversion to PDF
