@@ -22,7 +22,7 @@ function uninstallHpTools ()
 		printer-driver-hpijs
 
 	sudo rm -rf /usr/share/hplip/
-	sudo apt-get autoremove
+	sudo apt-get autoremove --yes
 }
 
 function installHpTools ()
@@ -34,21 +34,33 @@ function installHpTools ()
 }
 
 # Ref: https://developers.hp.com/hp-linux-imaging-and-printing/gethplip
-function installHpToolsFromHp ()
+function installHpToolsFromHp3.21.2 ()
 {
 	wget https://download.sourceforge.net/project/hplip/hplip/3.21.2/hplip-3.21.2.run
 	sh hplip-3.21.2.run
 }
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
+# Ref: https://developers.hp.com/hp-linux-imaging-and-printing/gethplip
+function installHpToolsFromHp3.22.10 ()
+{
+	wget https://sourceforge.net/projects/hplip/files/hplip/3.22.10/hplip-3.22.10.run
+	sh hplip-3.22.10.run
+}
+
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" ]]; then
 	uninstallHpTools
-
 	sudo apt-get install --fix-missing --yes xsane ksaneplugin
+fi
 
-	# installHpTools
-	installHpToolsFromHp
+# installHpTools
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
+	installHpToolsFromHp3.21.2
+elif [[ "$(getOsVers)" == "22.04" ]]; then
+	installHpToolsFromHp3.22.10
+fi
 
-	# GUI tools
+# GUI tools
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" ]]; then
 	sudo apt-get install --yes skanlite
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."

@@ -20,9 +20,12 @@ function getPdfsandwich () {
 	echo "${friendlyName}: removing previous installation"
 	sudo apt-get remove --yes pdfsandwich
 
-	local url="http://sourceforge.net/projects/pdfsandwich/files/pdfsandwich_0.1.6_amd64.deb/download"
-	local urlFilename=$(echo "$url" | rev | cut --delimiter='/' --fields=2 | rev)
-	local filenameAbs="${tempdir}/${urlFilename}"
+	echo "${friendlyName}: installing prerequisites"
+	sudo apt-get install --yes exactimage
+
+	local -r url="https://sourceforge.net/projects/pdfsandwich/files/pdfsandwich%200.1.7/pdfsandwich_0.1.7_amd64.deb/download"
+	local -r urlFilename=$(echo "$url" | rev | cut --delimiter='/' --fields=2 | rev)
+	local -r filenameAbs="${tempdir}/${urlFilename}"
 	echo "${friendlyName}: downloading $urlFilename"
 	wget --output-document="$filenameAbs" "$url" 2>&1 | while read -r line; do log ; done
 
@@ -43,7 +46,6 @@ if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" =
 		tesseract-ocr-grc `#Greek, Ancient (to 1453)` \
 		tesseract-ocr-lat `#Latin` \
 		tesseract-ocr-heb `#Hebrew` \
-		tesseract-ocr-equ `#Math / equation detection module` \
 		tesseract-ocr-ara `#Arabic` \
 		tesseract-ocr-deu `#German` \
 		tesseract-ocr-fra `#French`

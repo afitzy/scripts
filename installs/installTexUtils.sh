@@ -28,6 +28,6 @@ fi
 
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 	sudo apt-get install --yes texlive-generic-extra
-elif [[ "$(getOsVers)" == "20.04" ]]; then
+elif [[ "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" ]]; then
 	sudo apt-get install --yes texlive-extra-utils
 fi

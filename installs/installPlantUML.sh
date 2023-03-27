@@ -56,7 +56,7 @@ EOL
 	sudo chmod 755 "$binBin"
 }
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" ]]; then
 	getPlantUml
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."

@@ -69,6 +69,12 @@ function installVirtualBoxFromOracle_v6 () {
 	installVirtualBoxFromOracle "$removeOldVersion" "$version"
 }
 
+function installVirtualBoxFromOracle_v7 () {
+	local -r removeOldVersion=1
+	local -r version=7.0
+	installVirtualBoxFromOracle "$removeOldVersion" "$version"
+}
+
 # Installs the correct version of the VirtualBox extension pack
 # DO NOT use the one from the multiverse, as that's only compatible with the obsolete VirtualBox from the multiverse.
 # Ref: https://askubuntu.com/a/759200/271027
@@ -137,6 +143,9 @@ function verifyUsbAccess () {
 _VERBOSE=1
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	installVirtualBoxFromOracle_v6
+	installVirtualBoxExtensionPack
+elif [[ "$(getOsVers)" == "22.04" ]]; then
+	installVirtualBoxFromOracle_v7
 	installVirtualBoxExtensionPack
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
