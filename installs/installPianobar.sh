@@ -10,11 +10,13 @@ _VERBOSE=1
 
 function installPianobar ()
 {
-	local instPrefix="/usr/local"
-	local binDir="${instPrefix}/bin"
-	local srcDir="${instPrefix}/src"
+	local -r gitHash=$1
 
-	local repoAddr="https://github.com/PromyLOPh/pianobar.git"
+	local -r instPrefix="/usr/local"
+	local -r binDir="${instPrefix}/bin"
+	local -r srcDir="${instPrefix}/src"
+
+	local -r repoAddr="https://github.com/PromyLOPh/pianobar.git"
 	local repoName="${repoAddr##*/}"
 	local repoName="${repoName%%.*}"
 
@@ -25,7 +27,7 @@ function installPianobar ()
 	cloneGitRepo "$srcDir" "$repoAddr"
 
 	# Temporary workaround for https://github.com/PromyLOPh/pianobar/issues/614
-	git checkout e945578ab22912049f1e547ce7b25b01089f7590
+	git checkout $gitHash
 
 	make clean && make
 	sudo make install
@@ -43,8 +45,10 @@ function installPianobar ()
 	popd
 }
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
-	installPianobar
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
+	installPianobar e945578ab22912049f1e547ce7b25b01089f7590
+elif [[ "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" ]]; then
+	installPianobar 218f3f84965e648793bcb2b0b9d97de636de01e7
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
