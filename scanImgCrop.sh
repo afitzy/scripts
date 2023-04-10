@@ -9,7 +9,7 @@ source "${scriptDir}/utils.sh"
 function echoerr() { echo "$@" 1>&2; }
 
 function exitIfFileExists () {
-	if [ -f $1 ]; then
+	if [[ $_FORCE -eq 0 && -f $1 ]]; then
 		echoerr "ERROR: File exists at \"$1\"! Exiting without writing PDF."
 		exit
 	fi
@@ -22,7 +22,7 @@ function cleanup () {
 }
 
 # NOTE: This requires GNU getopt.  On Mac OS X and FreeBSD, you have to install this separately
-TEMP="$(getopt -o vd --long "verbose,debug,debugfile:,path:,output:" -n 'scanImgCrop' -- "$@")"
+TEMP="$(getopt -o dfv --long "debug,debugfile:,force,verbose,,path:,output:" -n 'scanImgCrop' -- "$@")"
 
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 
@@ -32,6 +32,7 @@ eval set -- "$TEMP"
 _VERBOSE=0
 _DEBUG=0
 _DEBUGFILE=
+_FORCE=0
 path=.
 compress=1
 output="$(date +%FT%T)%s.pdf"
@@ -41,6 +42,7 @@ while true; do
 		-d | --debug ) _DEBUG=1; shift ;;
 		--nocompress ) compress=0; shift ;;
 		--debugfile ) _DEBUGFILE="$2"; shift 2 ;;
+		--force ) _FORCE=1; shift ;;
 		--path ) path="$2"; shift 2 ;;
 		--output ) output="$2"; shift 2 ;; # Use %s
 		-- ) shift; break ;;
@@ -53,7 +55,7 @@ resolutionStr="${@:$OPTIND:1}"; shift;
 pattern="${@:$OPTIND:1}"; shift;
 
 if [ -z "$resolutionStr" ]; then
-	echo "ERROR: Missing required argument 1: image resolution string"
+	echo "ERROR: Missing required argument 1: image resolution string (width X height)"
 	exit -1
 fi
 
@@ -85,23 +87,26 @@ for f in ${allFiles}; do
 	width="$(convert "$f" -format "%w" info:)"
 	height="$(convert "$f" -format "%h" info:)"
 
-	xoff="$(convert xc: -format "%[fx:$width*0/100]" info:)"
-	yoff="$(convert xc: -format "%[fx:$height*0/100]" info:)"
-	ww="$(convert xc: -format "%[fx:$width*${maxWidth}/100]" info:)"
-	hh="$(convert xc: -format "%[fx:$height*${maxHeight}/100]" info:)"
+	xoff="$(convert xc: -format "%[fx:${width}*0/100]" info:)"
+	yoff="$(convert xc: -format "%[fx:${height}*0/100]" info:)"
+	ww="$(convert xc: -format "%[fx:${width}*${maxWidth}/100]" info:)"
+	hh="$(convert xc: -format "%[fx:${height}*${maxHeight}/100]" info:)"
 
-	log "Cropping $f to $outFull \"${ww}x${hh}+${xoff}+${yoff}\""
+	log "Cropping $f \"${width}x${height}\" to $outFull \"${ww}x${hh}+${xoff}+${yoff}\""
 	convert "$f" -crop ${ww}x${hh}+${xoff}+${yoff} "$outFull" | log
 done
 unset IFS
 
 if [ $numFiles -gt 0 ]; then
-	pdfHq="$(printf $output "")"
-	pdfCompressed="$(printf $output "_compressed")"
+	pdfHq=$(printf $output "")
+	pdfCompressed=$(printf $output "_compressed")
 
 	log "Converting ${numFiles} scans to a single PDF as ${pdfHq}"
 	exitIfFileExists "${pdfHq}"
-	convert "${tempdir}/*" "$pdfHq" 2>&1 | log
+
+	# Convert to PDF, using repage to remove any X or Y offset
+	# Ref: http://www.imagemagick.org/discourse-server/viewtopic.php?p=134535&sid=0b4da03b7d8d50411e0667a99dd8bc4a#p134535
+	convert "${tempdir}/*" +repage "$pdfHq" 2>&1 | log
 
 	if [ $compress -eq 1 ]; then
 		log "Compressing PDF to ${pdfCompressed}"
