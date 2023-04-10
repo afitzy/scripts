@@ -53,7 +53,7 @@ function greptxt () {
 	local declare exts=(md txt log csv)
 	local declare files=( )
 	local declare ignores=(.git .svn .settings)
-	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
+	local fcmd="$(python3 -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
 	eval $fcmd | parallel --keep-order --max-procs -1 --max-args 1000 -m grep $gargs $@ {}
 }
 
@@ -65,7 +65,7 @@ function grepsrc () {
 	local declare exts=(h c hpp cpp mkdep makefile mak mk config asm inc cmd idl sh bash json xml)
 	local declare files=(makefile make.rules)
 	local declare ignores=(.git .svn .settings)
-	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
+	local fcmd="$(python3 -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
 	eval $fcmd | parallel --keep-order --max-procs -1 --max-args 1000 -m grep $gargs $@ {} | perl -pe 's/^(.+?:.+?):(.*)/$1 $2/'
 }
 
@@ -76,7 +76,7 @@ function greppdf () {
 	local declare exts=(pdf)
 	local declare files=()
 	local declare ignores=(.git .svn .settings)
-	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
+	local fcmd="$(python3 -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
 	eval $fcmd | parallel --keep-order --max-procs -1 --max-args 1 -m "pdftotext -q {} - | grep $gargs --label={} $@ -"
 }
 
@@ -87,7 +87,7 @@ function grepdoc () {
 	local declare exts=(doc)
 	local declare files=()
 	local declare ignores=(.git .svn .settings)
-	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
+	local fcmd="$(python3 -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
 	eval $fcmd | parallel --keep-order --max-procs -1 --max-args 1 -m "antiword {} | grep $gargs --label={} $@ -"
 }
 
@@ -98,7 +98,7 @@ function grepdocx () {
 	local declare exts=(docx)
 	local declare files=()
 	local declare ignores=(.git .svn .settings)
-	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
+	local fcmd="$(python3 -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
 	eval $fcmd | parallel --keep-order --max-procs -1 --max-args 1 -m "cat_open_xml.pl {} | grep $gargs --label={} $@ -"
 }
 
@@ -109,7 +109,7 @@ function grepmd () {
 	local declare exts=(md markdown)
 	local declare files=()
 	local declare ignores=(.git .svn .settings)
-	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
+	local fcmd="$(python3 -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
 	eval $fcmd | parallel --keep-order --max-procs -1 --max-args 1000 -m grep $gargs $@ {}
 }
 
@@ -120,7 +120,7 @@ function grepods () {
 	local declare exts=(ods)
 	local declare files=()
 	local declare ignores=(.git .svn .settings)
-	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
+	local fcmd="$(python3 -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
 	eval $fcmd | parallel --keep-order --max-procs -1 --max-args 1 -m "ods2csvstdout {} | grep $gargs --label={} $@ -"
 }
 
@@ -132,7 +132,7 @@ function grepss () {
 	local declare exts=(ods xls xlsx)
 	local declare files=()
 	local declare ignores=(.git .svn .settings)
-	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
+	local fcmd="$(python3 -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
 	eval $fcmd | parallel --keep-order --max-procs -1 --max-args 1 -m "catspreadsheet "{}" | grep $gargs --label={} $@ -"
 }
 
@@ -143,7 +143,7 @@ function greppy () {
 	local declare exts=(py)
 	local declare files=()
 	local declare ignores=(.git .svn .settings)
-	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
+	local fcmd="$(python3 -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
 	eval $fcmd | parallel --keep-order --max-procs -1 --max-args 1000 -m grep $gargs $@ {}
 }
 
@@ -154,6 +154,6 @@ function grepfpga () {
 	local declare exts=(v vhdl vhd)
 	local declare files=()
 	local declare ignores=(.git .svn .settings)
-	local fcmd="$(python -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
+	local fcmd="$(python3 -c "$buildFindCmd" --args "${fargs}" --path "${path}" --exts ${exts[@]} --files ${files[@]} --ignores ${ignores[@]} --quote=\')"
 	eval $fcmd | parallel --keep-order --max-procs -1 --max-args 1000 -m grep $gargs $@ {}
 }
