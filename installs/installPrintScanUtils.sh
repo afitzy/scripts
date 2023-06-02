@@ -57,9 +57,9 @@ if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" =
 fi
 
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
-	sudo apt-get install --fix-missing --yes xsane ksaneplugin
+	sudo apt-get install --fix-missing --yes sane xsane ksaneplugin
 elif [[ "$(getOsVers)" == "22.04" ]]; then
-	sudo apt-get install --fix-missing --yes xsane
+	sudo apt-get install --fix-missing --yes sane xsane
 fi
 
 # installHpTools
