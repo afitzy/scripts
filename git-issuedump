@@ -23,14 +23,14 @@ if __name__ == '__main__':
 	for i in range(args.numStart, args.numStop+1):
 		issueCmd = ['hub', 'issue', 'show', str(i)]
 		issueCmd.extend(argsUnknown)
-		issueTxt = subprocess.check_output(issueCmd, stdin=None, stderr=None, shell=False, universal_newlines=False)
+		issueTxt = subprocess.check_output(issueCmd, stdin=None, stderr=None, shell=False, universal_newlines=False).decode("utf-8")
 
-		issueTitle = issueTxt.partition('\n')[0][2:]
+		issueTitle = str(issueTxt).partition('\n')[0][2:]
 		issueUrl = issueUrls[i-1]
 		filename = 'Issue {num:02d}: {title}.md'.format(num=i, title=issueTitle)
 
 		print('Writing \"{}\"'.format(filename))
-		with open(filename, 'wb') as f:
+		with open(filename, 'w') as f:
 			f.write('{url}\n\n{text}'.format(
 				url = issueUrl,
 				text = issueTxt)

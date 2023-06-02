@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 """
 Writes git issues to a file with a header.
@@ -34,9 +34,9 @@ if __name__ == '__main__':
 
 	issueCmd = ['hub', 'issue', '--state', 'all', '-f', issueFrmt]
 	issueCmd.extend(argsUnknown)
-	issues = subprocess.check_output(issueCmd, stdin=None, stderr=None, shell=False, universal_newlines=False)
+	issues = subprocess.check_output(issueCmd, stdin=None, stderr=None, shell=False, universal_newlines=False).decode("utf-8")
 
-	with open(args.output,"wb") as f:
+	with open(args.output,"w") as f:
 		f.write(issueHdr + '\n')
 		for issue in issues.split('\n'):
 			parsed = parseIssue(issue, escapeChar=args.escapeChar, delimiterIn=args.delimiterIn, delimiterOut=args.delimiterOut)
