@@ -12,9 +12,9 @@ function sshConfig () {
 	sudo update-rc.d ssh defaults
 }
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
 	sudo apt-get install --yes ssh
-	sshConfig
+	#sshConfig
 
 	# Needed for X11 tunneling
 	sudo apt-get install --yes xauth

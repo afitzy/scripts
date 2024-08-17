@@ -144,7 +144,7 @@ _VERBOSE=1
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	installVirtualBoxFromOracle_v6
 	installVirtualBoxExtensionPack
-elif [[ "$(getOsVers)" == "22.04" ]]; then
+elif [[ "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
 	installVirtualBoxFromOracle_v7
 	installVirtualBoxExtensionPack
 else

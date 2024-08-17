@@ -52,7 +52,7 @@ function getGanttProject3.2 () {
 	sudo dpkg --install "$filenameAbs"  | log
 }
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
 	getGanttProject2.8.11
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."

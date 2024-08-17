@@ -43,7 +43,7 @@ else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
 	sudo apt-get install --yes zim
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."

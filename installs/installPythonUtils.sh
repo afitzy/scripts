@@ -26,7 +26,7 @@ installPython2 ()
 installPython3 ()
 {
 	local -r friendlyName=python3
-	if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" ]]; then
+	if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
 		sudo apt-get --yes --ignore-missing install python3-pip ipython3 python3-dateutil python3-colorlog python3-argcomplete
 		pip3 install "pyoctopart" "money" # "dateutil"
 	else

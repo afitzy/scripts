@@ -11,7 +11,7 @@ _VERBOSE=1
 # Recommended IDE: Texmaker
 # Recommended TeX distribution: TeX Live
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "24.04" ]]; then
 	sudo apt-get install --yes \
 		texmaker \
 		biber \
@@ -28,6 +28,6 @@ fi
 
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 	sudo apt-get install --yes texlive-generic-extra
-elif [[ "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" ]]; then
+elif [[ "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
 	sudo apt-get install --yes texlive-extra-utils
 fi

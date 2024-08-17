@@ -82,9 +82,11 @@ function installGramps5.1.5 () {
 
 _VERBOSE=1
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ||  ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	installGramps4.2.6
 elif [[ "$(getOsVers)" == "22.04" ]]; then
+	installGramps5.1.5
+elif [[ "$(getOsVers)" == "24.04" ]]; then
 	installGramps5.1.5
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."

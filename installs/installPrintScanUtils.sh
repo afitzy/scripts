@@ -52,13 +52,19 @@ function installHpToolsFromHp3.22.10 ()
 	sh hplip-3.22.10-plugin.run
 }
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" ]]; then
+# Ref: https://developers.hp.com/hp-linux-imaging-and-printing/gethplip
+function installHpToolsFromMultiverse ()
+{
+	 sudo apt install hplip hplip-gui
+}
+
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
 	uninstallHpTools
 fi
 
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	sudo apt-get install --fix-missing --yes sane xsane ksaneplugin
-elif [[ "$(getOsVers)" == "22.04" ]]; then
+elif [[ "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
 	sudo apt-get install --fix-missing --yes sane xsane
 fi
 
@@ -67,10 +73,13 @@ if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" =
 	installHpToolsFromHp3.21.2
 elif [[ "$(getOsVers)" == "22.04" ]]; then
 	installHpToolsFromHp3.22.10
+elif [[ "$(getOsVers)" == "24.04" ]]; then
+	# See https://answers.launchpad.net/hplip/+question/817511
+	installHpToolsFromMultiverse
 fi
 
 # GUI tools
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
 	sudo apt-get install --yes skanlite
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."

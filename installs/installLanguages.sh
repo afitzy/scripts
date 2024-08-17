@@ -25,7 +25,7 @@ if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" =
 		\
 		hunspell-en-ca \
 		hunspell-ca
-elif [[ "$(getOsVers)" == "22.04" ]]; then
+elif [[ "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
 	sudo apt-get install --yes \
 		language-pack-en \
 		language-pack-ca \

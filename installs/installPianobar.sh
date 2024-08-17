@@ -47,7 +47,7 @@ function installPianobar ()
 
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 	installPianobar e945578ab22912049f1e547ce7b25b01089f7590
-elif [[ "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" ]]; then
+elif [[ "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
 	installPianobar 218f3f84965e648793bcb2b0b9d97de636de01e7
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."

@@ -85,6 +85,8 @@ if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" =
 	getHandbrakeMultiverse
 elif [[ "$(getOsVers)" == "22.04" ]]; then
 	getHandbrakeFlatpak
+elif [[ "$(getOsVers)" == "24.04" ]]; then
+	getHandbrakeFlatpak
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi

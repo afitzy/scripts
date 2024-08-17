@@ -10,7 +10,7 @@ _VERBOSE=1
 
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	sudo apt-get install --yes smplayer smplayer-themes smtube
-elif [[ "$(getOsVers)" == "22.04" ]]; then
+elif [[ "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
 	sudo snap install smplayer
 	sudo snap connect smplayer:removable-media
 else
