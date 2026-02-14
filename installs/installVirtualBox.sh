@@ -37,14 +37,16 @@ function installVirtualBoxFromOracle ()
 	fi
 
 	echo "${friendlyName}: downloading Oracle key"
-	local url='http://download.virtualbox.org/virtualbox/debian/oracle_vbox_2016.asc'
-	wget --quiet --output-document=- ${url} | sudo apt-key add -
+	local keyFile="/usr/share/keyrings/oracle-virtualbox.gpg"
+	wget -qO- https://www.virtualbox.org/download/oracle_vbox_2016.asc | gpg --dearmor | sudo tee "${keyFile}" > /dev/null
+
 
 	echo "${friendlyName}: setting up repository"
 	ubuntuRelease=$(lsb_release -cs)
-	sudo sh -c "echo 'deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian ${ubuntuRelease} non-free contrib' | sudo tee /etc/apt/sources.list.d/virtualbox.org.list"
+	echo "deb [arch=amd64 signed-by=${keyFile}] http://download.virtualbox.org/virtualbox/debian ${ubuntuRelease} non-free contrib" | \
+        sudo tee /etc/apt/sources.list.d/virtualbox.org.list
 
-	echo "${friendlyName}: refreshing multiverse"
+	echo "${friendlyName}: refreshing package cache"
 	sudo apt-get update
 
 	echo "${friendlyName}: installing"
@@ -71,7 +73,7 @@ function installVirtualBoxFromOracle_v6 () {
 
 function installVirtualBoxFromOracle_v7 () {
 	local -r removeOldVersion=1
-	local -r version=7.0
+	local -r version=7.2
 	installVirtualBoxFromOracle "$removeOldVersion" "$version"
 }
 
