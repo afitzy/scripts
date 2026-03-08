@@ -24,6 +24,14 @@ else
 	srcImg="$src"
 fi
 
+if [ ${src: -3} == ".gz" ]; then
+	srcImg="${src%.gz}"
+	printf "NEED TO FIX THIS! Decompressing image from \"%s\" to \"%s\"\n" "$src" "$srcImg"
+	#unxz --keep "$src"
+else
+	srcImg="$src"
+fi
+
 srcSize="$(du --human-readable "$srcImg" | cut -f 1)"
 destSize="$(sudo blockdev --getsize64 $dest)"
 destSize="$(bytesToHuman ${destSize})"

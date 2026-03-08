@@ -22,26 +22,28 @@ function cleanup () {
 }
 
 # NOTE: This requires GNU getopt.  On Mac OS X and FreeBSD, you have to install this separately
-TEMP="$(getopt -o dfv --long "debug,debugfile:,force,verbose,,path:,output:" -n 'scanImgCrop' -- "$@")"
+TEMP="$(getopt -o dfv --long "debug,debugfile:,verbose,nocompress,compressMax,force,path:,output:" -n 'scanImgCrop' -- "$@")"
 
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 
 # Note the quotes around `$TEMP': they are essential!
 eval set -- "$TEMP"
 
-_VERBOSE=0
 _DEBUG=0
 _DEBUGFILE=
+_VERBOSE=0
 _FORCE=0
 path=.
 compress=1
+compressMax=0
 output="$(date +%FT%T)%s.pdf"
 while true; do
 	case "$1" in
-		-v | --verbose ) _VERBOSE=1; shift ;;
 		-d | --debug ) _DEBUG=1; shift ;;
-		--nocompress ) compress=0; shift ;;
 		--debugfile ) _DEBUGFILE="$2"; shift 2 ;;
+		-v | --verbose ) _VERBOSE=1; shift ;;
+		--nocompress ) compress=0; shift ;;
+		--compressMax ) compressMax=1; shift ;;
 		--force ) _FORCE=1; shift ;;
 		--path ) path="$2"; shift 2 ;;
 		--output ) output="$2"; shift 2 ;; # Use %s
@@ -111,8 +113,14 @@ if [ $numFiles -gt 0 ]; then
 	if [ $compress -eq 1 ]; then
 		log "Compressing PDF to ${pdfCompressed}"
 		exitIfFileExists "${pdfCompressed}"
-		pdfCompressAvg="gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=${pdfCompressed}"
-		${pdfCompressAvg} "$pdfHq" 2>&1 | log
+
+		if [ $compressMax -eq 1 ]; then
+			pdfCompressMax="gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/screen -dNOPAUSE -dQUIET -dBATCH -sOutputFile=${pdfCompressed}"
+			${pdfCompressMax} "$pdfHq" 2>&1 | log
+		else
+			pdfCompressAvg="gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=${pdfCompressed}"
+			${pdfCompressAvg} "$pdfHq" 2>&1 | log
+		fi
 
 		srcSize="$(du --human-readable "$pdfHq" 2>/dev/null | cut -f1)"
 		dstSize="$(du --human-readable "$pdfCompressed" 2>/dev/null | cut -f1)"

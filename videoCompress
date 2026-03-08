@@ -138,6 +138,7 @@ for f in "${fileList[@]}"; do
 
 	# quality: Lower number is higher quality
 	# pfr (Peak Frame Rate): Will not increase frame rate. Prevents frame rate from exceeding this value.
+	# $rotateStr \
 	command HandBrakeCLI \
 		-i "$f" \
 		-o "$outFull" \
@@ -145,7 +146,6 @@ for f in "${fileList[@]}"; do
 		$handbrakeAudioEnable \
 		--gain 6 \
 		--ab 64 \
-		$rotateStr \
 		--maxWidth "$maxWidth" \
 		--maxHeight "$maxHeight" \
 		--format av_mp4 \

@@ -49,6 +49,10 @@ fi
 doc="
 \documentclass{article}
 
+%a4paper
+%letterpaper
+\usepackage[a4paper]{geometry}
+
 \begin{document}
 \thispagestyle{empty}% empty header/footer
 

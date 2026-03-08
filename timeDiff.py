@@ -19,5 +19,5 @@ if __name__ == '__main__':
 	minutes, seconds = divmod(remainder, 60)
 	msec = 1e-3 * delta.microseconds
 
-	print '{} days, {} hours, {} minutes, {} seconds'.format(days, hours, minutes, seconds)
-	print 'HH:MM:SS.sss {hours:02}:{minutes:02}:{seconds:02}.{msec:03.0f}'.format(hours=hours, minutes=minutes, seconds=seconds, msec=msec)
+	print('{} days, {} hours, {} minutes, {} seconds'.format(days, hours, minutes, seconds))
+	print('HH:MM:SS.sss {hours:02}:{minutes:02}:{seconds:02}.{msec:03.0f}'.format(hours=hours, minutes=minutes, seconds=seconds, msec=msec))
