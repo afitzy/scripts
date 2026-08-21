@@ -40,7 +40,7 @@ function installGames2604 () {
 	#   * KDE/Qt applications are preferred where there is a strong equivalent,
 	#     making the collection a natural fit on Kubuntu as well as Ubuntu.
 	#
-	# The 50 entries below are logical games.  Engine/data/helper packages used
+	# The 100 entries below are logical games.  Engine/data/helper packages used
 	# by a few games are installed separately afterward and are not counted.
 	local -a gamePackages=(
 		# Strategy, tactics, building, and management
@@ -100,11 +100,67 @@ function installGames2604 () {
 		knetwalk            # Network-rotation logic puzzle
 		kblackbox           # Black Box deduction puzzle
 		tanglet             # Boggle-style word-finding game
+
+		# Additional board, card, tabletop, and two-player games
+		knavalbattle        # Battleship / naval strategy board game
+		kjumpingcube       # Cascading territory-control board game
+		ksirk              # Risk-style world conquest board game
+		pentobi            # Blokus-style polyomino strategy board game
+		mancala            # Traditional Mancala board game
+		gamazons           # Game of the Amazons abstract strategy
+		qcheckers          # Checkers / draughts board game
+		filler             # Two-player board-territory capture game
+		konquest           # Turn-based planetary conquest strategy
+		xchain             # Chain-reaction strategy game for two to four players
+		openpref           # Preferans / Preference trick-taking card game
+		lmemory            # Concentration / Memory matching card game
+		gnome-mastermind   # Mastermind code-breaking board game
+		kolf               # Miniature golf
+		tuxpuck            # Air-hockey game
+		tennix             # Tennis game
+		kspaceduel         # SpaceWar-style local two-player duel
+
+		# Additional puzzle, logic, and word games
+		kbounce            # JezzBall-style area-trapping puzzle
+		katomic            # Atomix molecule-building puzzle
+		kdiamond           # Match-three jewel puzzle
+		klickety           # SameGame-style group-removal puzzle
+		klines             # Color Lines placement puzzle
+		killbots           # Robots chase-and-avoidance logic game
+		kubrick            # Rubik's Cube puzzle
+		gnome-klotski      # Klotski sliding-block puzzle
+		gnome-taquin       # Fifteen-puzzle / sliding-tile game
+		gnome-tetravex     # Edge-matching tile puzzle
+		hitori             # Hitori number-elimination logic puzzle
+		lightsoff          # Lights Out toggle puzzle
+		gplanarity         # Untangle planar graphs puzzle
+		hex-a-hop          # Hexagonal-tile logic puzzle
+		hexalate           # Hexagonal color-matching logic puzzle
+		numptyphysics      # Draw-your-solution physics puzzle
+		enigma             # Marble, laser, and logic puzzle game
+		pathological       # Paths-and-marbles logic puzzle
+		peg-solitaire      # Classic peg-jumping board puzzle
+		phlipple           # 3D tile-flipping puzzle
+		glpeces            # Tangram puzzle game
+		wizznic            # Puzznic-style block puzzle
+		xye                # Kye-style maze and object puzzle
+		gnurobbo           # Robbo-style maze and logic puzzle
+		einstein           # Einstein / logic-grid deduction puzzle
+		kanagram           # Anagram / word-jumble puzzle
+		khangman           # Hangman word game
+		raincat            # Environmental routing puzzle
+		biniax2            # Logic puzzle with arcade and tactics modes
+
+		# Additional distinct genres
+		gnome-nibbles      # Snake game with local multiplayer
+		tuxmath            # Arithmetic arcade game
+		tuxtype            # Typing action game
+		flare-game         # Single-player 2D action RPG
 	)
 
 	# Supporting FOSS packages needed to make several of the games above fully
 	# useful offline.  These are engines, local servers, free assets, or tables,
-	# not additional games in the 50-game count.
+	# not additional games in the 100-game count.
 	local -a supportingPackages=(
 		stockfish           # Chess engine for Knights
 		gnugo               # Go engine for Kigo
