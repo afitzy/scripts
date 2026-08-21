@@ -19,7 +19,6 @@ function installPianobar ()
 	local -r repoAddr="https://github.com/PromyLOPh/pianobar.git"
 	local repoName="${repoAddr##*/}"
 	local repoName="${repoName%%.*}"
-
 	# Install prereqs
 	getPackages "make" "pkg-config"
 	getPackages "libao-dev" "libgcrypt20-dev" "libjson-c-dev" "libavcodec-dev" "libavfilter-dev" "libavformat-dev" "libcurl4-gnutls-dev"
@@ -35,7 +34,6 @@ function installPianobar ()
 	# Copy config script to home dir if it doesn't exist
 	local configScriptDir="${HOME}/.config/pianobar/"
 	mkdir --parents "$configScriptDir"
-
 	local configScript="$configScriptDir/config"
 	if [[ ! -d "$configScript" ]]; then
 		cp "contrib/config-example" "$configScript"
@@ -49,6 +47,9 @@ if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" ]]; then
 	installPianobar e945578ab22912049f1e547ce7b25b01089f7590
 elif [[ "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
 	installPianobar 218f3f84965e648793bcb2b0b9d97de636de01e7
+elif [[ "$(getOsVers)" == "26.04" ]]; then
+	# Ubuntu 26.04 carries a current pianobar package; avoid the old pinned source workaround.
+	sudo apt-get install --yes pianobar
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi

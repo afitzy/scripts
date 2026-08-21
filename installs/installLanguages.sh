@@ -5,7 +5,6 @@ scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 dateStamp=$(date --iso-8601="seconds")
 
 source "${scriptDir}/../utils.sh"
-
 # Function to cleanup
 function cleanup () {
 	log "Deleting temp directory: $tempdir"
@@ -14,7 +13,6 @@ function cleanup () {
 trap cleanup EXIT
 
 _VERBOSE=1
-
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	sudo apt-get install --yes \
 		language-pack-en \
@@ -25,7 +23,7 @@ if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" =
 		\
 		hunspell-en-ca \
 		hunspell-ca
-elif [[ "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
+elif [[ "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" || "$(getOsVers)" == "26.04" ]]; then
 	sudo apt-get install --yes \
 		language-pack-en \
 		language-pack-ca \

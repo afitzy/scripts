@@ -13,7 +13,6 @@ installPython2 ()
 	local -r friendlyName=python2
 	if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 		sudo apt-get --yes --ignore-missing install python-pip ipython python-dateutil python-argcomplete python-colorlog
-
 		# Ply is needed by mork (.mab file reader). I use it for Thunderbird.
 		sudo apt-get --yes --ignore-missing install python-ply
 
@@ -22,13 +21,17 @@ installPython2 ()
 		echo "Unrecognized OS version. Not installing ${friendlyName}"
 	fi
 }
-
 installPython3 ()
 {
 	local -r friendlyName=python3
 	if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
 		sudo apt-get --yes --ignore-missing install python3-pip ipython3 python3-dateutil python3-colorlog python3-argcomplete
 		pip3 install "pyoctopart" "money" # "dateutil"
+	elif [[ "$(getOsVers)" == "26.04" ]]; then
+		sudo apt-get --yes --ignore-missing install python3-pip python3-venv ipython3 python3-dateutil python3-colorlog python3-argcomplete
+		# Ubuntu 26.04 marks the distro Python environment as externally managed (PEP 668).
+		# Keep these legacy PyPI libraries in the user's site rather than writing to distro-owned locations.
+		python3 -m pip install --user --break-system-packages "pyoctopart" "money" # "dateutil"
 	else
 		echo "Unrecognized OS version. Not installing ${friendlyName}"
 	fi

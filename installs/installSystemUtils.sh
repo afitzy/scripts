@@ -7,8 +7,6 @@ dateStamp=$(date --iso-8601="seconds")
 source "${scriptDir}/../utils.sh"
 
 _VERBOSE=1
-
-
 # Facilitates backing up package lists
 function getAptik () {
 	if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
@@ -18,13 +16,14 @@ function getAptik () {
 		sudo add-apt-repository --yes ppa:teejee2008/ppa
 		sudo apt-get update
 		sudo apt-get install --yes aptik
+	elif [[ "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" || "$(getOsVers)" == "26.04" ]]; then
+		echo "aptik: skipped; no supported Ubuntu package is configured for this release."
 	else
 		echo "Unrecognized OS version. Not installed pre-requisites."
 	fi
 }
 
-
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" || "$(getOsVers)" == "26.04" ]]; then
 	# Disks
 	sudo apt-get install --yes gnome-disk-utility
 

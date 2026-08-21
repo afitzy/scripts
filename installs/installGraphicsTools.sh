@@ -14,9 +14,17 @@ if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" =
 
 	# GUI tools: viewers (primarily)
 	sudo apt-get install --yes nomacs
-
 	# CLI tools
 	sudo apt-get install --yes pdftk imagemagick exiftool mediainfo mediainfo-gui
+elif [[ "$(getOsVers)" == "26.04" ]]; then
+	# GUI tools: editors
+	sudo apt-get install --yes gimp
+
+	# GUI tools: viewers (primarily)
+	sudo apt-get install --yes nomacs
+	# CLI tools
+	# Ubuntu 26.04 provides pdftk via pdftk-java and ExifTool via libimage-exiftool-perl.
+	sudo apt-get install --yes pdftk-java imagemagick libimage-exiftool-perl mediainfo mediainfo-gui
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi

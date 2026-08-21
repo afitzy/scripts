@@ -14,13 +14,11 @@ function removeVirtualBox ()
 	sudo apt-get clean
 	sudo apt-get autoremove --yes
 }
-
 function installVitualBoxFromMultiverse ()
 {
 	removeVirtualBox
 	sudo apt-get install --yes virtualbox virtualbox-ext-pack virtualbox-guest-* virtualbox-qt
 }
-
 # The binaries in this repository are all released under the VirtualBox Personal
 # Use and Evaluation License (PUEL). By downloading, you agree to the terms and
 # conditions of that license.
@@ -35,6 +33,8 @@ function installVirtualBoxFromOracle ()
 	if [[ "$removeOldVersion" -eq 1 ]]; then
 		removeVirtualBox
 	fi
+	# Needed to configure Oracle's signed APT repository on current Ubuntu releases.
+	sudo apt-get install --yes ca-certificates gnupg wget
 
 	echo "${friendlyName}: downloading Oracle key"
 	local keyFile="/usr/share/keyrings/oracle-virtualbox.gpg"
@@ -43,9 +43,8 @@ function installVirtualBoxFromOracle ()
 
 	echo "${friendlyName}: setting up repository"
 	ubuntuRelease=$(lsb_release -cs)
-	echo "deb [arch=amd64 signed-by=${keyFile}] http://download.virtualbox.org/virtualbox/debian ${ubuntuRelease} non-free contrib" | \
+	echo "deb [arch=amd64 signed-by=${keyFile}] https://download.virtualbox.org/virtualbox/debian ${ubuntuRelease} non-free contrib" | \
         sudo tee /etc/apt/sources.list.d/virtualbox.org.list
-
 	echo "${friendlyName}: refreshing package cache"
 	sudo apt-get update
 
@@ -55,10 +54,9 @@ function installVirtualBoxFromOracle ()
 	# These conflict with virtualbox-5.2
 	# sudo apt-get install --yes virtualbox-guest-* virtualbox-qt
 
-	sudo usermod -a -G vboxusers $USER
+	sudo usermod -a -G vboxusers "$USER"
 	echo "Remember to reboot after running this (maybe log-in/-out works?)"
 }
-
 function installVirtualBoxFromOracle_v5.2 () {
 	local -r removeOldVersion=1
 	local -r version=5.2
@@ -76,38 +74,32 @@ function installVirtualBoxFromOracle_v7 () {
 	local -r version=7.2
 	installVirtualBoxFromOracle "$removeOldVersion" "$version"
 }
-
 # Installs the correct version of the VirtualBox extension pack
 # DO NOT use the one from the multiverse, as that's only compatible with the obsolete VirtualBox from the multiverse.
 # Ref: https://askubuntu.com/a/759200/271027
 function installVirtualBoxExtensionPack () {
 	local vboxExtPackVer=$(VBoxManage list extpacks | perl -ne 'print if s/Version:\s+([0-9]+)/\1/')
 	printf "VirtualBox extension pack version is %s\n" "$vboxExtPackVer"
-
 	local -r VBOXVERSION=$(VBoxManage --version | sed -r 's/([0-9])\.([0-9])\.([0-9]{1,2}).*/\1.\2.\3/')
 	printf "VirtualBox version is %s\n" "$VBOXVERSION"
 
-	wget -q -N "http://download.virtualbox.org/virtualbox/${VBOXVERSION}/Oracle_VM_VirtualBox_Extension_Pack-${VBOXVERSION}.vbox-extpack"
+	wget -q -N "https://download.virtualbox.org/virtualbox/${VBOXVERSION}/Oracle_VM_VirtualBox_Extension_Pack-${VBOXVERSION}.vbox-extpack"
 	sudo VBoxManage extpack install --replace Oracle*.vbox-extpack
-	rm Oracle*.vbox-extpack
-
+	rm -f Oracle*.vbox-extpack
 	local vboxExtPackVer=$(VBoxManage list extpacks | perl -ne 'print if s/Version:\s+([0-9]+)/\1/')
 	printf "VirtualBox extension pack version is %s\n" "$vboxExtPackVer"
 
 	printf "Reminder to restart VirtualBox (or the PC) to start using the new extension pack version\n"
 }
-
 function getVirtualBoxGuestAdditionsIso () {
 	local -r VBOXVERSION=$(VBoxManage --version | sed -r 's/([0-9])\.([0-9])\.([0-9]{1,2}).*/\1.\2.\3/')
-	wget -q -N "http://download.virtualbox.org/virtualbox/${VBOXVERSION}/VBoxGuestAdditions_${VBOXVERSION}.iso"
+	wget -q -N "https://download.virtualbox.org/virtualbox/${VBOXVERSION}/VBoxGuestAdditions_${VBOXVERSION}.iso"
 }
-
 # Installs PHP VirtualBox.
 # Requires: virtual box extension pack
 # Ref: https://www.ostechnix.com/install-oracle-virtualbox-ubuntu-16-04-headless-server/
 function installPhpVirtualBox () {
 	sudo apt install apache2 php php-mysql libapache2-mod-php php-soap php-xml
-
 	# Download the matching version of phpvirtualbox
 	#wget https://github.com/phpvirtualbox/phpvirtualbox/archive/5.2-1.zip
 	# Grab the latest develop, since 6.X isn't officially supported yet
@@ -116,7 +108,6 @@ function installPhpVirtualBox () {
 	sudo mv phpvirtualbox/ /var/www/html/phpvirtualbox
 	sudo chmod 777 /var/www/html/phpvirtualbox/
 	sudo cp /var/www/html/phpvirtualbox/config.php-example /var/www/html/phpvirtualbox/config.php
-
 	# Edit phpVirtualBox config.php file to configure the user, which is likely ${USER}
 	# According to https://sourceforge.net/p/phpvirtualbox/discussion/help/thread/0c491caa/#34c2
 	# the user must be the one that's actively logged in
@@ -129,11 +120,9 @@ function installPhpVirtualBox () {
 	sudo systemctl restart vboxweb-service
 	sudo systemctl restart vboxdrv
 	sudo systemctl restart apache2
-
 	# Permit incoming HTTP and HTTPS traffic for this profile
 	sudo ufw allow in "Apache Full"
 }
-
 # Note: likely
 function verifyUsbAccess () {
 	echo "User USB devices:"
@@ -141,12 +130,11 @@ function verifyUsbAccess () {
 	echo "sudo USB devices:"
 	VBoxManage list usbhost
 }
-
 _VERBOSE=1
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	installVirtualBoxFromOracle_v6
 	installVirtualBoxExtensionPack
-elif [[ "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
+elif [[ "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" || "$(getOsVers)" == "26.04" ]]; then
 	installVirtualBoxFromOracle_v7
 	installVirtualBoxExtensionPack
 else

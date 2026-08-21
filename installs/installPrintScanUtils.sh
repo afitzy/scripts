@@ -7,7 +7,6 @@ dateStamp=$(date --iso-8601="seconds")
 source "${scriptDir}/../utils.sh"
 
 _VERBOSE=1
-
 # Ref: https://askubuntu.com/a/1056078
 function uninstallHpTools ()
 {
@@ -32,14 +31,12 @@ function installHpTools ()
     # Fix for https://bugs.launchpad.net/ubuntu/+source/hplip/+bug/1306344
     sudo ln -f -s /usr/share/hplip/sendfax.py /usr/bin/hp-sendfax
 }
-
 # Ref: https://developers.hp.com/hp-linux-imaging-and-printing/gethplip
 function installHpToolsFromHp3.21.2 ()
 {
 	wget https://download.sourceforge.net/project/hplip/hplip/3.21.2/hplip-3.21.2.run
 	sh hplip-3.21.2.run
 }
-
 # Ref: https://developers.hp.com/hp-linux-imaging-and-printing/gethplip
 function installHpToolsFromHp3.22.10 ()
 {
@@ -51,35 +48,34 @@ function installHpToolsFromHp3.22.10 ()
 	wget https://developers.hp.com/sites/default/files/hplip-3.22.10-plugin.run
 	sh hplip-3.22.10-plugin.run
 }
-
 # Ref: https://developers.hp.com/hp-linux-imaging-and-printing/gethplip
 function installHpToolsFromMultiverse ()
 {
-	 sudo apt install hplip hplip-gui
+	 sudo apt install --yes hplip hplip-gui libsane-hpaio printer-driver-hpcups
 }
 
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
 	uninstallHpTools
 fi
-
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	sudo apt-get install --fix-missing --yes sane xsane ksaneplugin
 elif [[ "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
 	sudo apt-get install --fix-missing --yes sane xsane
+elif [[ "$(getOsVers)" == "26.04" ]]; then
+	# The sane-utils package provides the supported SANE command-line tools on Ubuntu 26.04.
+	sudo apt-get install --fix-missing --yes sane-utils xsane
 fi
-
 # installHpTools
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	installHpToolsFromHp3.21.2
 elif [[ "$(getOsVers)" == "22.04" ]]; then
 	installHpToolsFromHp3.22.10
-elif [[ "$(getOsVers)" == "24.04" ]]; then
+elif [[ "$(getOsVers)" == "24.04" || "$(getOsVers)" == "26.04" ]]; then
 	# See https://answers.launchpad.net/hplip/+question/817511
 	installHpToolsFromMultiverse
 fi
-
 # GUI tools
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" || "$(getOsVers)" == "26.04" ]]; then
 	sudo apt-get install --yes skanlite
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."

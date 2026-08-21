@@ -13,7 +13,6 @@ function cleanup () {
 	rm -rf "$tempdir"
 }
 trap cleanup EXIT
-
 # Install Gramps from GitHub
 # https://github.com/gramps-project/gramps
 function installGramps4.2.6 () {
@@ -24,7 +23,6 @@ function installGramps4.2.6 () {
 
 	# Pre-reqs
 	sudo apt-get install --yes python3-icu language-pack-gnome-en-base | log
-
 	local url='https://github.com/gramps-project/gramps/releases/download/v4.2.6/python3-gramps_4.2.6_all.deb'
 	local urlFilename="${url##*/}"
 	urlFilename="${urlFilename%%\?*}"
@@ -38,13 +36,11 @@ function installGramps4.2.6 () {
 
 	echo "${friendlyName}: installing"
 	sudo dpkg --install "$filename" 2>&1 | log
-
 	echo "${friendlyName}: attempting to satisfy unment dependencies"
 	sudo apt-get -f --yes install 2>&1 | log
 
 	echo "${friendlyName}: done"
 }
-
 # Install Gramps from GitHub
 # https://github.com/gramps-project/gramps
 function installGramps5.1.5 () {
@@ -57,7 +53,6 @@ function installGramps5.1.5 () {
 	echo "${friendlyName}: installing pre-requisites"
 	sudo apt-get install --yes python3-icu language-pack-gnome-en-base gir1.2-osmgpsmap-1.0 | log
 	sudo pip3 install pyexiv2 | log
-
 	local url='https://github.com/gramps-project/gramps/releases/download/v5.1.5/gramps_5.1.5-1_all.deb'
 	local urlFilename="${url##*/}"
 	urlFilename="${urlFilename%%\?*}"
@@ -71,10 +66,18 @@ function installGramps5.1.5 () {
 
 	echo "${friendlyName}: installing"
 	sudo dpkg --install "$filename" 2>&1 | log
-
 	echo "${friendlyName}: attempting to satisfy unment dependencies"
 	sudo apt-get -f --yes install 2>&1 | log
 
+	echo "${friendlyName}: done"
+}
+# Install the Ubuntu-packaged Gramps release.
+function installGrampsFromUbuntu () {
+	local friendlyName="gramps"
+
+	echo "${friendlyName}: installing from Ubuntu repositories"
+	sudo apt-get update
+	sudo apt-get install --yes gramps
 	echo "${friendlyName}: done"
 }
 
@@ -88,6 +91,8 @@ elif [[ "$(getOsVers)" == "22.04" ]]; then
 	installGramps5.1.5
 elif [[ "$(getOsVers)" == "24.04" ]]; then
 	installGramps5.1.5
+elif [[ "$(getOsVers)" == "26.04" ]]; then
+	installGrampsFromUbuntu
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi

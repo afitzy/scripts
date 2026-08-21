@@ -12,7 +12,6 @@ function installLibreofficePpa ()
     sudo apt-get remove --purge --yes libreoffice*
     sudo apt-get clean --yes
     sudo apt-get autoremove --yes
-
     # Add PPA for "LibreOffice fresh", the latest release of the newest series (but no alpha/beta releases)
     sudo add-apt-repository --yes ppa:libreoffice/ppa
     sudo apt-get update
@@ -28,22 +27,33 @@ function installLibreofficePpa ()
         libreoffice-style-* \
         libreoffice-templates \
         libreoffice-writer
-
 	# Workaround for transparent menu problem, per
 	# https://ask.libreoffice.org/en/question/201771/menus-are-transparent-after-recent-update/
 	sudo apt-get --yes install libreoffice-gtk*
 	sudo apt-get --yes install libreoffice-kde*
 
 }
-
+function installLibreofficeUbuntu26 ()
+{
+	# Ubuntu 26.04 ships a current LibreOffice release; use distro packages rather than the legacy PPA package names.
+	sudo apt-get update
+	sudo apt-get --yes install \
+		libreoffice \
+		libreoffice-help-en-us \
+		libreoffice-kf6 \
+		libreoffice-plasma \
+		libreoffice-templates
+}
 # Libreoffice
 if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" ]]; then
 	installLibreofficePpa
+elif [[ "$(getOsVers)" == "26.04" ]]; then
+	installLibreofficeUbuntu26
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
 fi
 
-if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" ]]; then
+if [[ "$(getOsVers)" == "16.04" || "$(getOsVers)" == "18.04" || "$(getOsVers)" == "20.04" || "$(getOsVers)" == "22.04" || "$(getOsVers)" == "24.04" || "$(getOsVers)" == "26.04" ]]; then
 	sudo apt-get install --yes zim
 else
 	echo "Unrecognized OS version. Not installed pre-requisites."
