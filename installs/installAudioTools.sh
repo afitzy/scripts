@@ -17,9 +17,18 @@ function installSilan ()
 	fi
 }
 
+function installStrawberry ()
+{
+	if [[ "$(getOsVers)" == "26.04" ]]; then
+		echo "Strawberry Music Player: installing"
+		sudo apt-get install --yes strawberry
+	fi
+}
+
 
 # GUI tools
 sudo apt-get install --yes audacity
+installStrawberry
 
 # CLI tools
 installSilan
